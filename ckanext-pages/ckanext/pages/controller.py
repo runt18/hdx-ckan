@@ -1,7 +1,7 @@
 import ckan.plugins as p
 import ckan.model as model
 from pylons import config
-import json
+import json, re
 
 _ = p.toolkit._
 
@@ -146,7 +146,7 @@ class PagesController(p.toolkit.BaseController):
 
     def _list_ids(self, ids):
         for i, v in enumerate(ids):
-            ids[i] = "'"+v+"'"
+            ids[i] = "'"+re.sub(r'^(a-z0-9-)','',v)+"'"
         return ','.join(ids)
 
     def _objectify_packages(self, res):
