@@ -36,6 +36,7 @@ class PagesController(p.toolkit.BaseController):
         )
         if _page is None:
             return self._org_list_pages(id)
+        _page = self._convert_content(_page)
         p.toolkit.c.page = _page
         return p.toolkit.render('ckanext_pages/organization_page.html')
 
@@ -83,7 +84,6 @@ class PagesController(p.toolkit.BaseController):
 
         if p.toolkit.request.method == 'POST' and not data:
             data = p.toolkit.request.POST
-            print data
             items = ['title', 'name', 'content', 'private']
             # update config from form
             for item in items:
