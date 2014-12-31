@@ -2,6 +2,9 @@ import ckan.plugins as p
 import ckan.model as model
 from pylons import config
 import json, re
+from ckan.common import request, c
+
+import ckanext.datastore.logic.action as datastore
 
 _ = p.toolkit._
 
@@ -25,6 +28,10 @@ class PagesController(p.toolkit.BaseController):
             p.toolkit.abort(401, _('Unauthorized to read organization %s') % id)
 
     def org_show(self, id, page=None):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'save': 'save' in request.params}
+
         if page:
             page = page[1:]
         self._template_setup_org(id)
@@ -37,6 +44,7 @@ class PagesController(p.toolkit.BaseController):
         if _page is None:
             return self._org_list_pages(id)
         _page = self._convert_content(_page)
+        print datastore.datastore_search(context, {'q':None})
         p.toolkit.c.page = _page
         return p.toolkit.render('ckanext_pages/organization_page.html')
 

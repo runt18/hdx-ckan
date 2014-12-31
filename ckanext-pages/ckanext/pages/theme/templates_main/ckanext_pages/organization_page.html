@@ -19,7 +19,7 @@
     </div>
     <div>
     <span class="mR45 pull-right" style="line-height: 50px;">
-        <a class="btn hdx-btn org-btn" href="{{h.url_for(controller='ckanext.pages.controller:PagesController', action='org_edit', id=c.group_dict.name, page=c.page.name) }}" title="Edit page">Edit</a>
+        <a class="btn hdx-btn org-btn" href="{% url_for controller='ckanext.pages.controller:PagesController', action='org_edit', id=c.group_dict.name, page=c.page.name %}" title="Edit page">Edit</a>
       </span>
       <span class="mR45 pull-right" style="line-height: 50px;">
         <a class="btn hdx-btn org-btn" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
@@ -120,19 +120,3 @@
   {{ super() }}
   {% resource 'hdx_theme/crisis-colombia' %}
 {% endblock %}
-
-
-
-{# {% extends 'organization/read_base.html' %}
-
-{% block subtitle %}{{ _('Pages') }} - {{ c.group_dict.display_name }}{% endblock %}
-
-{% block primary_content_inner %}
-  {% link_for _('Edit page'), controller='ckanext.pages.controller:PagesController', action='org_edit', id=c.group_dict.name, page='/' + c.page.name, class_='btn btn-primary pull-right', icon='edit' %}
-  <h1 class="page-heading">{{ c.page.title }}</h1>
-  {% if c.page.content %}
-    {{ h.render_markdown(c.page.content) }}
-  {% else %}
-    <p class="empty">{{ _('This page currently has no content') }}</p>
-  {% endif %}
-{% endblock %} #}
