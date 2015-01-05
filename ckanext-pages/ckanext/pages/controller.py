@@ -44,7 +44,6 @@ class PagesController(p.toolkit.BaseController):
         if _page is None:
             return self._org_list_pages(id)
         _page = self._convert_content(_page)
-        print datastore.datastore_search(context, {'q':None})
         p.toolkit.c.page = _page
         return p.toolkit.render('ckanext_pages/organization_page.html')
 
@@ -119,24 +118,30 @@ class PagesController(p.toolkit.BaseController):
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'page': page}
-
         return p.toolkit.render('ckanext_pages/organization_page_edit.html',
                                extra_vars=vars)
     def _merge_content(self, data):
         datasets = data.getall('datasets[]')
+        stats = self._assemble_stats(data.getall('stat_label[]'),data.getall('stat_figure[]'))
         content = data.get('content')
-        return json.dumps({'content':content, 'datasets': datasets})
+        return json.dumps({'content':content, 'datasets': datasets, 'stats':stats})
 
     def _convert_content(self, data):
+        print data
         if 'content' not in data:
             return data
         try:
             json_slug = json.loads(data['content'])
             data['content'] = json_slug['content']
             datasets = json_slug['datasets']
+            try:
+                data['stats'] = json_slug['stats']
+            except:
+                data['stats'] = list()
         except:
             data['content'] = data['content']
             datasets = data.getall('datasets[]')
+            stats = self._assemble_stats(data.getall('stat-label[]'),data.getall('stat-figure[]'))
 
         from sqlalchemy.engine import create_engine
         # grab dataset objects
@@ -150,6 +155,13 @@ class PagesController(p.toolkit.BaseController):
         else:
             data['datasets'] = self._objectify_packages(res)
 
+        return data
+
+    def _assemble_stats(self, labels,figures):
+        data = list()
+        for i, v in enumerate(labels):
+            if labels[i]:
+                data.append({'label':labels[i],'figure':figures[i]})
         return data
 
     def _list_ids(self, ids):

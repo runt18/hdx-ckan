@@ -63,9 +63,67 @@
 
   {% endif %}
 {# data.content #}
+<style>
+  .inline-control{
+    float:left;
+    margin-left: 30px;
+  }
+
+  .inline-control label{
+    margin-right: 5px;
+    width: 50px !important;
+    cursor: normal;
+  }
+
+  .add_stats, .del_stats{
+    margin-top: 3px;
+  }
+</style>
+
+<h1>{{ _('Stat Blocks') }}</h1>
+  {% for s in data.stats %}
+  <div class="control-group">
+      <div class="inline-control">
+      <label for="field-order" class="control-label">{{ _('Label') }}</label>
+        <input type="text" name="stat_label[]" value="{{s.label}}" class='form-control'>
+      </div>
+
+      <div class="inline-control">
+      <label for="field-order" class="control-label">{{ _('Value') }}</label>
+        <input type="text" name="stat_figure[]" value="{{s.figure}}" class='form-control'>
+      </div>
+    </div>
+    {% endfor %}
+    <div id="stats-group">
+    <div id="stats-init" class="control-group">
+      <div class="inline-control">
+      <label for="field-order" class="control-label">{{ _('Label') }}</label>
+        <input type="text" name="stat_label[]" class='form-control'>
+      </div>
+
+      <div class="inline-control">
+      <label for="field-order" class="control-label">{{ _('Value') }}</label>
+        <input type="text" name="stat_figure[]" class='form-control'>
+      </div>
+
+      <div class="inline-control">
+      <button class="btn btn-primary add_stats" type="button"> + </button>
+      <button class="btn btn-default del_stats" type="button"> - </button>
+      </div>
+    </div>
+  </div>
 
     <script>
       $(document).ready(function(){
+        var block = $('#stats-init').clone(true, true);
+        $('#stats-group').on("click", ".add_stats", function(){
+            $('#stats-group').append(block.clone(true, true));
+        });
+
+        $('#stats-group').on("click", ".del_stats", function(){
+            $(this).parent().parent().remove();
+        });
+
         $('#search').blur(function(){
             var q = $('#search').val();
             //Grab datasets through API
@@ -84,14 +142,17 @@
         });
       });
     </script>
+  <h1>{{ _('Selected Datasets') }}</h1>
+
   {{ form.input('search', id='search', label=_('Search for Datasets'), placeholder=_('eg. ebola'), classes=['control-full', 'control-large']) }}
-<h1>{{ _('Selected Datasets') }}</h1>
+
   <div id="setlist" class="well">
     {% for d in data.datasets %}
     <div class="checkbox"><label style="line-height:26px;"><input type="checkbox" name="datasets[]" value="{{d.id}}" checked><a href="/dataset/{{d.name}}" target="new">{{d.title}}</a></label></div>
     {% endfor %}
   </div>
 
+<h1>{{ _('Description') }}</h1>
   {{ form.markdown('content', id='field-content', label=_('Content'), placeholder=_('My content'), value=data.content, error=errors.content) }}
 
   <div class="form-actions">
