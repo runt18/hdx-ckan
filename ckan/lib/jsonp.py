@@ -9,7 +9,7 @@ def to_jsonp(data):
     if 'callback' in request.params:
         response.headers['Content-Type'] = content_type
         cbname = request.params['callback']
-        result = '%s(%s);' % (cbname, result)
+        result = '{0!s}({1!s});'.format(cbname, result)
     else:
         response.headers['Content-Type'] = content_type
     return result

@@ -52,7 +52,7 @@ class PackagesTestCase(BaseModelApiTestCase):
     def test_register_post_ok(self):
         assert not self.get_package_by_name(self.package_fixture_data['name'])
         offset = self.package_offset()
-        postparams = '%s=1' % self.dumps(self.package_fixture_data)
+        postparams = '{0!s}=1'.format(self.dumps(self.package_fixture_data))
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_201_CREATED,
                             extra_environ=self.admin_extra_environ)
@@ -90,8 +90,7 @@ class PackagesTestCase(BaseModelApiTestCase):
                     expected_resource_extras = expected_resource[key].items()
                     for expected_extras_key, expected_extras_value in expected_resource_extras:
                         package_resource_value = package_resource_extras[expected_extras_key],\
-                         'Package:%r Extras:%r Expected_extras:%r' % \
-                         (self.package_fixture_data['name'],
+                         'Package:{0!r} Extras:{1!r} Expected_extras:{2!r}'.format(self.package_fixture_data['name'],
                           package_resource_extras, expected_resource)
                 else:
                     package_resource_value = getattr(package_resource, key, None)
@@ -106,18 +105,18 @@ class PackagesTestCase(BaseModelApiTestCase):
         res = self.app.get(offset, status=self.STATUS_200_OK)
         # Todo: Instead loads() the data and then check actual values.
         assert self.package_fixture_data['name'] in res, res
-        assert '"license_id": "%s"' % self.package_fixture_data['license_id'] in res, res
+        assert '"license_id": "{0!s}"'.format(self.package_fixture_data['license_id']) in res, res
         assert self.package_fixture_data['tags'][0] in res, res
         assert self.package_fixture_data['tags'][1] in res, res
         assert '"extras": {' in res, res
         for key, value in self.package_fixture_data['extras'].items():
-            assert '"%s": "%s"' % (key, value) in res, res
+            assert '"{0!s}": "{1!s}"'.format(key, value) in res, res
 
         model.Session.remove()
 
         # Test Packages Register Post 409 (conflict - create duplicate package).
         offset = self.package_offset()
-        postparams = '%s=1' % self.dumps(self.package_fixture_data)
+        postparams = '{0!s}=1'.format(self.dumps(self.package_fixture_data))
         res = self.app.post(offset, params=postparams, status=self.STATUS_409_CONFLICT,
                 extra_environ=self.admin_extra_environ)
         model.Session.remove()
@@ -241,13 +240,13 @@ class PackagesTestCase(BaseModelApiTestCase):
             'resources':[u'should_be_a_dict'],
         }
         offset = self.offset('/rest/dataset')
-        postparams = '%s=1' % self.dumps(test_params)
+        postparams = '{0!s}=1'.format(self.dumps(test_params))
         res = self.app.post(offset, params=postparams, status=self.STATUS_400_BAD_REQUEST,
                 extra_environ=self.admin_extra_environ)
 
     def test_register_post_denied(self):
         offset = self.offset('/rest/dataset')
-        postparams = '%s=1' % self.dumps(self.package_fixture_data)
+        postparams = '{0!s}=1'.format(self.dumps(self.package_fixture_data))
         res = self.app.post(offset, params=postparams, status=self.STATUS_403_ACCESS_DENIED)
 
     def test_register_post_indexerror(self):
@@ -282,7 +281,7 @@ class PackagesTestCase(BaseModelApiTestCase):
     def test_entity_get_ok(self):
         package_refs = [self.anna.name, self.anna.id]
         for ref in package_refs:
-            offset = self.offset('/rest/dataset/%s' % ref)
+            offset = self.offset('/rest/dataset/{0!s}'.format(ref))
             res = self.app.get(offset, status=self.STATUS_200_OK)
             self.assert_msg_represents_anna(msg=res.body)
 
@@ -307,7 +306,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         res = self.app.get(offset, status=self.STATUS_200_OK)
         data = self.loads(res.body)
 
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
@@ -323,7 +322,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         # change name and create a new package
         data['name'] = u'newpkg'
         data['id'] = None # ensure this doesn't clash or you get 409 error
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         # use russianfan now because he has rights to add this package to
         # the 'david' group.
         extra_environ = {'REMOTE_USER': 'testsysadmin'}
@@ -343,7 +342,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         res = self.app.get(offset, status=self.STATUS_200_OK)
         data = self.loads(res.body)
         data['id'] = 'illegally changed value'
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_409_CONFLICT,
                             extra_environ=self.admin_extra_environ)
@@ -352,7 +351,7 @@ class PackagesTestCase(BaseModelApiTestCase):
 
     def test_entity_update_denied(self):
         offset = self.anna_offset()
-        postparams = '%s=1' % self.dumps(self.package_fixture_data)
+        postparams = '{0!s}=1'.format(self.dumps(self.package_fixture_data))
         res = self.app.post(offset, params=postparams, status=self.STATUS_403_ACCESS_DENIED)
 
     def test_entity_delete_denied(self):
@@ -361,7 +360,7 @@ class PackagesTestCase(BaseModelApiTestCase):
 
     def test_09_update_package_entity_not_found(self):
         offset = self.offset('/rest/dataset/22222')
-        postparams = '%s=1' % self.dumps(self.package_fixture_data)
+        postparams = '{0!s}=1'.format(self.dumps(self.package_fixture_data))
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_404_NOT_FOUND,
                             extra_environ=self.admin_extra_environ)
@@ -415,8 +414,8 @@ class PackagesTestCase(BaseModelApiTestCase):
         # because you should be able to specify the package both ways round
         # for both versions of the API.
         package_ref = getattr(pkg, package_ref_attribute)
-        offset = self.offset('/rest/dataset/%s' % package_ref)
-        params = '%s=1' % self.dumps(new_fixture_data)
+        offset = self.offset('/rest/dataset/{0!s}'.format(package_ref))
+        params = '{0!s}=1'.format(self.dumps(new_fixture_data))
         method_func = getattr(self.app, method_str)
         res = method_func(offset, params=params, status=self.STATUS_200_OK,
                           extra_environ=self.admin_extra_environ)
@@ -441,9 +440,9 @@ class PackagesTestCase(BaseModelApiTestCase):
             # - tags
             package_tagnames = [tag.name for tag in package.get_tags()]
             for tagname in new_fixture_data['tags']:
-                assert tagname in package_tagnames, 'tag %r not in %r' % (tagname, package_tagnames)
+                assert tagname in package_tagnames, 'tag {0!r} not in {1!r}'.format(tagname, package_tagnames)
             # - resources
-            assert len(package.resources), "Package has no resources: %s" % package
+            assert len(package.resources), "Package has no resources: {0!s}".format(package)
             self.assert_equal(len(package.resources), 2)
             resource = package.resources[0]
             self.assert_equal(resource.url, u'http://blah.com/file2.xml')
@@ -507,8 +506,8 @@ class PackagesTestCase(BaseModelApiTestCase):
         }
         self.create_package_with_admin_user(old_fixture_data)
         pkg = self.get_package_by_name(old_fixture_data['name'])
-        offset = self.offset('/rest/dataset/%s' % pkg.name)
-        params = '%s=1' % self.dumps(new_fixture_data)
+        offset = self.offset('/rest/dataset/{0!s}'.format(pkg.name))
+        params = '{0!s}=1'.format(self.dumps(new_fixture_data))
         res = self.app.post(offset, params=params,
                             status=self.STATUS_409_CONFLICT,
                             extra_environ=self.admin_extra_environ)
@@ -532,7 +531,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         }
         self.create_package_with_admin_user(old_fixture_data)
         offset = self.package_offset(old_fixture_data['name'])
-        params = '%s=1' % self.dumps(new_fixture_data)
+        params = '{0!s}=1'.format(self.dumps(new_fixture_data))
         res = self.app.post(offset, params=params, status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
 
@@ -566,7 +565,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         }
         self.create_package_with_admin_user(old_fixture_data)
         offset = self.package_offset(old_fixture_data['name'])
-        params = '%s=1' % self.dumps(new_fixture_data)
+        params = '{0!s}=1'.format(self.dumps(new_fixture_data))
         res = self.app.post(offset, params=params, status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
 
@@ -597,7 +596,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         }
         self.create_package_with_admin_user(old_fixture_data)
         offset = self.package_offset(name)
-        params = '%s=1' % self.dumps(new_fixture_data)
+        params = '{0!s}=1'.format(self.dumps(new_fixture_data))
         res = self.app.post(offset, params=params, status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
 
@@ -610,7 +609,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         assert len(package.get_tags()) == 1, package.get_tags()
 
         # now reinstate the tag
-        params = '%s=1' % self.dumps(old_fixture_data)
+        params = '{0!s}=1'.format(self.dumps(old_fixture_data))
         res = self.app.post(offset, params=params, status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
         pkg = self.loads(res.body)
@@ -678,7 +677,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         }
         self.create_package_with_admin_user(old_fixture_data)
         offset = self.package_offset(old_fixture_data['name'])
-        params = '%s=1' % self.dumps(new_fixture_data)
+        params = '{0!s}=1'.format(self.dumps(new_fixture_data))
         res = self.app.post(offset, params=params, status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
 
@@ -724,13 +723,13 @@ class PackagesTestCase(BaseModelApiTestCase):
     def test_entity_delete_not_found(self):
         package_name = u'random_one'
         assert not model.Session.query(model.Package).filter_by(name=package_name).count()
-        offset = self.offset('/rest/dataset/%s' % package_name)
+        offset = self.offset('/rest/dataset/{0!s}'.format(package_name))
         res = self.app.delete(offset, status=self.STATUS_404_NOT_FOUND,
                               extra_environ=self.admin_extra_environ)
 
     def test_package_revisions(self):
         # check original revision
-        res = self.app.get(self.offset('/rest/dataset/%s/revisions' % 'annakarenina'))
+        res = self.app.get(self.offset('/rest/dataset/{0!s}/revisions'.format('annakarenina')))
         revisions = res.json
         assert len(revisions) == 1, len(revisions)
         expected_keys = set(('id', 'message', 'author', 'timestamp', 'approved_timestamp'))
@@ -744,7 +743,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         model.repo.commit_and_remove()
 
         # check new revision is there
-        res = self.app.get(self.offset('/rest/dataset/%s/revisions' % 'annakarenina'))
+        res = self.app.get(self.offset('/rest/dataset/{0!s}/revisions'.format('annakarenina')))
         revisions = res.json
         assert len(revisions) == 2, len(revisions)
 
@@ -758,7 +757,7 @@ class PackagesTestCase(BaseModelApiTestCase):
         model.repo.commit_and_remove()
 
         # check new revision is there
-        res = self.app.get(self.offset('/rest/dataset/%s/revisions' % 'annakarenina'))
+        res = self.app.get(self.offset('/rest/dataset/{0!s}/revisions'.format('annakarenina')))
         revisions = res.json
         assert len(revisions) == 3, len(revisions)
 
@@ -800,7 +799,7 @@ class TestPackagesVersion1(Version1TestCase, PackagesTestCase):
             'download_url':u'ftp://ftp.monash.edu.au/pub/nihongo/JMdict.gz',
             }
         offset = self.package_offset()
-        postparams = '%s=1' % self.dumps(test_params)
+        postparams = '{0!s}=1'.format(self.dumps(test_params))
         res = self.app.post(offset, params=postparams,
                             extra_environ=self.admin_extra_environ)
         model.Session.remove()
@@ -831,7 +830,7 @@ class TestPackagesVersion1(Version1TestCase, PackagesTestCase):
         # edit it
         pkg_vals = {'download_url':u'newurl'}
         offset = self.package_offset(test_params['name'])
-        postparams = '%s=1' % self.dumps(pkg_vals)
+        postparams = '{0!s}=1'.format(self.dumps(pkg_vals))
         res = self.app.post(offset, params=postparams, status=[200],
                             extra_environ=self.admin_extra_environ)
         model.Session.remove()

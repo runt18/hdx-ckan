@@ -58,7 +58,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
         data = {
             'resource': {'package_id': package.id}
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_create', params=postparams,
                             extra_environ=auth, status=200)
@@ -122,7 +122,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
             'resource_id': resource.id,
             'resource': {'package_id': package.id}
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_create', params=postparams,
                             extra_environ=auth, status=409)
@@ -184,7 +184,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
                 'resource_id': resource.id
             }
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(user.apikey)}
         res = self.app.post('/api/action/datapusher_hook', params=postparams,
                             extra_environ=auth, status=200)
@@ -217,7 +217,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
         data = {
             'status': 'success',
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
 
         self.app.post('/api/action/datapusher_hook', params=postparams,
                       status=409)
@@ -226,7 +226,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
         data = {
             'metadata': {'resource_id': 'res_id'},
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
 
         self.app.post('/api/action/datapusher_hook', params=postparams,
                       status=409)
@@ -236,7 +236,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
             'status': 'success',
             'metadata': {}
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
 
         self.app.post('/api/action/datapusher_hook', params=postparams,
                       status=409)

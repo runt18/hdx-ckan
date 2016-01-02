@@ -93,7 +93,7 @@ class TestHelpers(TestController):
         email = 'zephod@gmail.com'
         default = config.get('ckan.gravatar_default', 'identicon')
         expected = ['<a href="https://gravatar.com/"',
-                   '<img src="//gravatar.com/avatar/7856421db6a63efa5b248909c472fbd2?s=200&amp;d=%s"' % default,
+                   '<img src="//gravatar.com/avatar/7856421db6a63efa5b248909c472fbd2?s=200&amp;d={0!s}"'.format(default),
                    '</a>']
         # Hash the email address
         import hashlib

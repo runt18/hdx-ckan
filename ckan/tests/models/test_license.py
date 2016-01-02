@@ -4,10 +4,10 @@ import datetime
 class TestCase(object):
 
     def assert_unicode(self, val):
-        assert isinstance(val, unicode), "Value is not a unicode value: %s" % repr(val)
+        assert isinstance(val, unicode), "Value is not a unicode value: {0!s}".format(repr(val))
 
     def assert_datetime(self, val):
-        assert isinstance(val, datetime.datetime), "Value is not a datetime value: %s" % repr(val)
+        assert isinstance(val, datetime.datetime), "Value is not a datetime value: {0!s}".format(repr(val))
 
 
 class TestLicense(TestCase):

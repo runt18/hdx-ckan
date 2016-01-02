@@ -106,11 +106,11 @@ def timer(params):
     if hasattr(params, '__call__'):
         # this is being used as a simple decorator
         fn = params
-        fn_name = '%s.%s' % (fn.__module__, fn.__name__)
+        fn_name = '{0!s}.{1!s}'.format(fn.__module__, fn.__name__)
         def wrapped(*args, **kw):
             start = time.time()
             result = fn(*args, **kw)
-            log.info('Timer: %s %.4f' % (fn_name, time.time() - start))
+            log.info('Timer: {0!s} {1:.4f}'.format(fn_name, time.time() - start))
             return result
         return wrapped
 
@@ -127,7 +127,7 @@ def timer(params):
             else:
                 # it could be passed in keywords
                 params_data.append((param))
-        fn_name = '%s.%s' % (fn.__module__, fn.__name__)
+        fn_name = '{0!s}.{1!s}'.format(fn.__module__, fn.__name__)
         def wrapped(*args, **kw):
             # store parameters being used in the call that we want to record
             params = []
@@ -139,12 +139,12 @@ def timer(params):
                     value = args[param[1]]
                 else:
                     continue
-                params.append(u'%s=%r' % (param[0], value))
+                params.append(u'{0!s}={1!r}'.format(param[0], value))
             p = ', '.join(params)
             start = time.time()
             # call the function
             result = fn(*args, **kw)
-            log.info('Timer: %s %.4f %s' % (fn_name, time.time() - start, p))
+            log.info('Timer: {0!s} {1:.4f} {2!s}'.format(fn_name, time.time() - start, p))
             return result
         return wrapped
     return decorator

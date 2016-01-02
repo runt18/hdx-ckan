@@ -99,21 +99,21 @@ def _make_jsmin(python_only=False):
     string1 = \
         r'(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|\r)[^\047\\\r\n]*)*\047)'
     string2 = r'(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|\r)[^"\\\r\n]*)*")'
-    strings = r'(?:%s|%s)' % (string1, string2)
+    strings = r'(?:{0!s}|{1!s})'.format(string1, string2)
 
     charclass = r'(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]*)*\])'
     nospecial = r'[^/\\\[\r\n]'
-    regex = r'(?:/(?![\r\n/*])%s*(?:(?:\\[^\r\n]|%s)%s*)*/)' % (
+    regex = r'(?:/(?![\r\n/*]){0!s}*(?:(?:\\[^\r\n]|{1!s}){2!s}*)*/)'.format(
         nospecial, charclass, nospecial
     )
-    space = r'(?:%s|%s)' % (space_chars, space_comment)
-    newline = r'(?:%s?[\r\n])' % line_comment
+    space = r'(?:{0!s}|{1!s})'.format(space_chars, space_comment)
+    newline = r'(?:{0!s}?[\r\n])'.format(line_comment)
 
     def fix_charclass(result):
         """ Fixup string of chars to fit into a regex char class """
         pos = result.find('-')
         if pos >= 0:
-            result = r'%s%s-' % (result[:pos], result[pos + 1:])
+            result = r'{0!s}{1!s}-'.format(result[:pos], result[pos + 1:])
 
         def sequentize(string):
             """
@@ -132,14 +132,14 @@ def _make_jsmin(python_only=False):
                     first = last = char
             if last is not None:
                 result.append((first, last))
-            return ''.join(['%s%s%s' % (
+            return ''.join(['{0!s}{1!s}{2!s}'.format(
                 chr(first),
                 last > first + 1 and '-' or '',
                 last != first and chr(last) or ''
             ) for first, last in result])
 
         return _re.sub(r'([\000-\040\047])', # for better portability
-            lambda m: '\\%03o' % ord(m.group(1)), (sequentize(result)
+            lambda m: '\\{0:03o}'.format(ord(m.group(1))), (sequentize(result)
                 .replace('\\', '\\\\')
                 .replace('[', '\\[')
                 .replace(']', '\\]')
@@ -152,7 +152,7 @@ def _make_jsmin(python_only=False):
         result = ''.join([
             chr(c) for c in xrange(127) if not match(chr(c))
         ])
-        return '[^%s]' % fix_charclass(result)
+        return '[^{0!s}]'.format(fix_charclass(result))
 
     def not_id_literal_(keep):
         """ Make negated id_literal like char class """
@@ -160,11 +160,11 @@ def _make_jsmin(python_only=False):
         result = ''.join([
             chr(c) for c in xrange(127) if not match(chr(c))
         ])
-        return r'[%s]' % fix_charclass(result)
+        return r'[{0!s}]'.format(fix_charclass(result))
 
     not_id_literal = not_id_literal_(r'[a-zA-Z0-9_$]')
     preregex1 = r'[(,=:\[!&|?{};\r\n]'
-    preregex2 = r'%(not_id_literal)sreturn' % locals()
+    preregex2 = r'{not_id_literal!s}return'.format(**locals())
 
     id_literal = id_literal_(r'[a-zA-Z0-9_$]')
     id_literal_open = id_literal_(r'[a-zA-Z0-9_${\[(+-]')
@@ -216,7 +216,7 @@ def _make_jsmin(python_only=False):
         :Return: Minified script
         :Rtype: ``str``
         """
-        return space_sub(space_subber, '\n%s\n' % script).strip()
+        return space_sub(space_subber, '\n{0!s}\n'.format(script)).strip()
 
     return jsmin
 
@@ -281,7 +281,7 @@ def jsmin_for_posers(script):
         r'\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=--)|(?:[\00'
         r'0-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:('
         r'?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]'
-        r'*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+        r'*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n{0!s}\n'.format(script)
     ).strip()
 
 

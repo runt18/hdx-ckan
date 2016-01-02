@@ -31,10 +31,10 @@ class DatapusherCommand(cli.CkanCommand):
         answer = cli.query_yes_no(question, default=None)
         if answer == 'yes':
             resources_ids = datastore_db.get_all_resources_ids_in_datastore()
-            print 'Submitting %d datastore resources' % len(resources_ids)
+            print 'Submitting {0:d} datastore resources'.format(len(resources_ids))
             datapusher_submit = p.toolkit.get_action('datapusher_submit')
             for resource_id in resources_ids:
-                print ('Submitting %s...' % resource_id),
+                print ('Submitting {0!s}...'.format(resource_id)),
                 data_dict = {
                     'resource_id': resource_id,
                     'ignore_hash': True,

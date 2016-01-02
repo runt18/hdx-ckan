@@ -72,12 +72,12 @@ class LicenseRegister(object):
             response = urllib2.urlopen(license_url)
             response_body = response.read()
         except Exception, inst:
-            msg = "Couldn't connect to licenses service %r: %s" % (license_url, inst)
+            msg = "Couldn't connect to licenses service {0!r}: {1!s}".format(license_url, inst)
             raise Exception, msg
         try:
             license_data = json.loads(response_body)
         except Exception, inst:
-            msg = "Couldn't read response from licenses service %r: %s" % (response_body, inst)
+            msg = "Couldn't read response from licenses service {0!r}: {1!s}".format(response_body, inst)
             raise Exception, inst
         self._create_license_list(license_data, license_url)
 
@@ -87,7 +87,7 @@ class LicenseRegister(object):
         elif isinstance(license_data, list):
             self.licenses = [License(entity) for entity in license_data]
         else:
-            msg = "Licenses at %s must be dictionary or list" % license_url
+            msg = "Licenses at {0!s} must be dictionary or list".format(license_url)
             raise ValueError(msg)
 
     def __getitem__(self, key, default=Exception):
@@ -97,7 +97,7 @@ class LicenseRegister(object):
         if default != Exception:
             return default
         else:
-            raise KeyError, "License not found: %s" % key
+            raise KeyError, "License not found: {0!s}".format(key)
 
     def get(self, key, default=None):
         return self.__getitem__(key, default=default)

@@ -79,12 +79,12 @@ class BaseCase(object):
         import commands
         (status, output) = commands.getstatusoutput(cmd)
         if status:
-            raise Exception, "Couldn't execute cmd: %s: %s" % (cmd, output)
+            raise Exception, "Couldn't execute cmd: {0!s}: {1!s}".format(cmd, output)
 
     @classmethod
     def _paster(cls, cmd, config_path_rel):
         config_path = os.path.join(config['here'], config_path_rel)
-        cls._system('paster --plugin ckan %s --config=%s' % (cmd, config_path))
+        cls._system('paster --plugin ckan {0!s} --config={1!s}'.format(cmd, config_path))
 
 
 class CommonFixtureMethods(BaseCase):
@@ -182,16 +182,16 @@ class CommonFixtureMethods(BaseCase):
 class CheckMethods(BaseCase):
 
     def assert_true(self, value):
-        assert value, "Not true: '%s'" % value
+        assert value, "Not true: '{0!s}'".format(value)
 
     def assert_false(self, value):
-        assert not value, "Not false: '%s'" % value
+        assert not value, "Not false: '{0!s}'".format(value)
 
     def assert_equal(self, value1, value2):
-        assert value1 == value2, 'Not equal: %s' % ((value1, value2),)
+        assert value1 == value2, 'Not equal: {0!s}'.format((value1, value2))
 
     def assert_isinstance(self, value, check):
-        assert isinstance(value, check), 'Not an instance: %s' % ((value, check),)
+        assert isinstance(value, check), 'Not an instance: {0!s}'.format((value, check))
 
     def assert_raises(self, exception_class, callable, *args, **kwds):
         try:
@@ -199,19 +199,19 @@ class CheckMethods(BaseCase):
         except exception_class:
             pass
         else:
-            assert False, "Didn't raise '%s' when calling: %s with %s" % (exception_class, callable, (args, kwds))
+            assert False, "Didn't raise '{0!s}' when calling: {1!s} with {2!s}".format(exception_class, callable, (args, kwds))
 
     def assert_contains(self, sequence, item):
-        assert item in sequence, "Sequence %s does not contain item: %s" % (sequence, item)
+        assert item in sequence, "Sequence {0!s} does not contain item: {1!s}".format(sequence, item)
 
     def assert_missing(self, sequence, item):
-        assert item not in sequence, "Sequence %s does contain item: %s" % (sequence, item)
+        assert item not in sequence, "Sequence {0!s} does contain item: {1!s}".format(sequence, item)
 
     def assert_len(self, sequence, count):
-        assert len(sequence) == count, "Length of sequence %s was not %s." % (sequence, count)
+        assert len(sequence) == count, "Length of sequence {0!s} was not {1!s}.".format(sequence, count)
 
     def assert_isinstance(self, object, kind):
-        assert isinstance(object, kind), "Object %s is not an instance of %s." % (object, kind)
+        assert isinstance(object, kind), "Object {0!s} is not an instance of {1!s}.".format(object, kind)
 
 
 class TestCase(CommonFixtureMethods, CheckMethods, BaseCase):
@@ -271,8 +271,8 @@ class CkanServerCase(BaseCase):
     def _stop_ckan_server(process):
         pid = process.pid
         pid = int(pid)
-        if os.system("kill -9 %d" % pid):
-            raise Exception, "Can't kill foreign CKAN instance (pid: %d)." % pid
+        if os.system("kill -9 {0:d}".format(pid)):
+            raise Exception, "Can't kill foreign CKAN instance (pid: {0:d}).".format(pid)
 
 
 class TestController(CommonFixtureMethods, CkanServerCase, WsgiAppCase, BaseCase):
@@ -359,9 +359,9 @@ try:
     from nose.tools import assert_in, assert_not_in
 except ImportError:
     def assert_in(a, b, msg=None):
-        assert a in b, msg or '%r was not in %r' % (a, b)
+        assert a in b, msg or '{0!r} was not in {1!r}'.format(a, b)
     def assert_not_in(a, b, msg=None):
-        assert a not in b, msg or '%r was in %r' % (a, b)
+        assert a not in b, msg or '{0!r} was in {1!r}'.format(a, b)
 
 class TestRoles:
     @classmethod
@@ -392,7 +392,7 @@ class TestRoles:
                 else:
                     pretty_role[key] = value
             if one_per_line:
-                pretty_role = '"%s" is "%s" on "%s"' % (
+                pretty_role = '"{0!s}" is "{1!s}" on "{2!s}"'.format(
                     pretty_role.get('user'),
                     pretty_role['role'],
                     pretty_role.get('package') or pretty_role.get('group') or pretty_role.get('context'))

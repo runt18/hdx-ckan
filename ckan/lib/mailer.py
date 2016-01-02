@@ -23,8 +23,8 @@ class MailerException(Exception):
 
 def add_msg_niceties(recipient_name, body, sender_name, sender_url):
     return _(u"Dear %s,") % recipient_name \
-           + u"\r\n\r\n%s\r\n\r\n" % body \
-           + u"--\r\n%s (%s)" % (sender_name, sender_url)
+           + u"\r\n\r\n{0!s}\r\n\r\n".format(body) \
+           + u"--\r\n{0!s} ({1!s})".format(sender_name, sender_url)
 
 def _mail_recipient(recipient_name, recipient_email,
         sender_name, sender_url, subject,
@@ -36,10 +36,10 @@ def _mail_recipient(recipient_name, recipient_email,
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
     msg['From'] = _("%s <%s>") % (sender_name, mail_from)
-    recipient = u"%s <%s>" % (recipient_name, recipient_email)
+    recipient = u"{0!s} <{1!s}>".format(recipient_name, recipient_email)
     msg['To'] = Header(recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
-    msg['X-Mailer'] = "CKAN %s" % ckan.__version__
+    msg['X-Mailer'] = "CKAN {0!s}".format(ckan.__version__)
 
     # Send the email using Python's smtplib.
     smtp_connection = smtplib.SMTP()
@@ -83,7 +83,7 @@ def _mail_recipient(recipient_name, recipient_email,
         log.info("Sent email to {0}".format(recipient_email))
 
     except smtplib.SMTPException, e:
-        msg = '%r' % e
+        msg = '{0!r}'.format(e)
         log.exception(msg)
         raise MailerException(msg)
     finally:

@@ -53,7 +53,7 @@ class ResourceSearchApiTestCase(ApiTestCase, ControllerTestCase):
     def test_02_url_qjson(self):
         query = {'url':'site'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         self.assert_urls_in_search_results(offset, [self.ab, self.cd])
 
     def test_03_post_qjson(self):

@@ -116,7 +116,7 @@ def upgrade(migrate_engine):
     #q = group_table.update(values={'state': 'active',
     #                               'revision_id': rev_id})
     #migrate_engine.execute(q)
-    migrate_engine.execute('UPDATE "group" SET revision_id = \'%s\', state=\'active\'' % rev_id)
+    migrate_engine.execute('UPDATE "group" SET revision_id = \'{0!s}\', state=\'active\''.format(rev_id))
     #fk = ForeignKeyConstraint(['revision_id'], [revision_table.c.id], table=group_table)
     #fk.create(migrate_engine)
     migrate_engine.execute('ALTER TABLE "group" ADD CONSTRAINT "group_revision_id_fkey" ' + \

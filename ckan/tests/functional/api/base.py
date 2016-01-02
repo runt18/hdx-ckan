@@ -43,7 +43,7 @@ class ApiTestCase(object):
         return response
 
     def post(self, offset, data, status=[200,201], *args, **kwds):
-        params = '%s=1' % url_escape(self.dumps(data))
+        params = '{0!s}=1'.format(url_escape(self.dumps(data)))
         if 'extra_environ' in kwds:
             self.extra_environ = kwds['extra_environ']
         response = self.app.post(offset, params=params, status=status,
@@ -83,8 +83,8 @@ class ApiTestCase(object):
         assert self.api_version != None, "API version is missing."
         base = '/api'
         if self.api_version:
-            base += '/%s' % self.api_version
-        utf8_encoded = (u'%s%s' % (base, path)).encode('utf8')
+            base += '/{0!s}'.format(self.api_version)
+        utf8_encoded = (u'{0!s}{1!s}'.format(base, path)).encode('utf8')
         url_encoded = urllib.quote(utf8_encoded)
         return url_encoded
 
@@ -102,7 +102,7 @@ class ApiTestCase(object):
         assert 'annakarenina.com/download' in msg, msg
         assert '"plain text"' in msg, msg
         assert '"Index of the novel"' in msg, msg
-        assert '"id": "%s"' % self.anna.id in msg, msg
+        assert '"id": "{0!s}"'.format(self.anna.id) in msg, msg
         expected = '"groups": ['
         assert expected in msg, (expected, msg)
         expected = self.group_ref_from_name('roger')
@@ -139,7 +139,7 @@ class ApiTestCase(object):
         expected_pkgs = set([self.package_ref_from_name('annakarenina'),
                              self.package_ref_from_name('warandpeace')])
         differences = expected_pkgs ^ pkgs
-        assert not differences, '%r != %r' % (pkgs, expected_pkgs)
+        assert not differences, '{0!r} != {1!r}'.format(pkgs, expected_pkgs)
 
     def assert_msg_represents_flexible_tag(self, msg):
         """
@@ -152,7 +152,7 @@ class ApiTestCase(object):
         expected_pkgs = set([self.package_ref_from_name('annakarenina'),
                              self.package_ref_from_name('warandpeace')])
         differences = expected_pkgs ^ pkgs
-        assert not differences, '%r != %r' % (pkgs, expected_pkgs)
+        assert not differences, '{0!r} != {1!r}'.format(pkgs, expected_pkgs)
 
     def data_from_res(self, res):
         return self.loads(res.body)
@@ -185,7 +185,7 @@ class ApiTestCase(object):
         try:
             return json.loads(chars)
         except ValueError, inst:
-            raise Exception, "Couldn't loads string '%s': %s" % (chars, inst)
+            raise Exception, "Couldn't loads string '{0!s}': {1!s}".format(chars, inst)
 
     def assert_json_response(self, res, expected_in_body=None):
         content_type = res.header_dict['Content-Type']
@@ -194,8 +194,7 @@ class ApiTestCase(object):
         if expected_in_body:
             assert expected_in_body in res_json or \
                    expected_in_body in str(res_json), \
-                   'Expected to find %r in JSON response %r' % \
-                   (expected_in_body, res_json)
+                   'Expected to find {0!r} in JSON response {1!r}'.format(expected_in_body, res_json)
 
 class Api1and2TestCase(object):
     ''' Utils for v1 and v2 API.
@@ -208,7 +207,7 @@ class Api1and2TestCase(object):
         else:
             # Package Entity
             package_ref = self.package_ref_from_name(package_name)
-            return self.offset('/rest/dataset/%s' % package_ref)
+            return self.offset('/rest/dataset/{0!s}'.format(package_ref))
 
     def group_offset(self, group_name=None):
         if group_name is None:
@@ -217,7 +216,7 @@ class Api1and2TestCase(object):
         else:
             # Group Entity
             group_ref = self.group_ref_from_name(group_name)
-            return self.offset('/rest/group/%s' % group_ref)
+            return self.offset('/rest/group/{0!s}'.format(group_ref))
 
     def group_ref_from_name(self, group_name):
         group = self.get_group_by_name(unicode(group_name))
@@ -236,7 +235,7 @@ class Api1and2TestCase(object):
             return self.offset('/rest/revision')
         else:
             # Revision Entity
-            return self.offset('/rest/revision/%s' % revision_id)
+            return self.offset('/rest/revision/{0!s}'.format(revision_id))
 
     def rating_offset(self, package_name=None):
         if package_name is None:
@@ -245,7 +244,7 @@ class Api1and2TestCase(object):
         else:
             # Revision Entity
             package_ref = self.package_ref_from_name(package_name)
-            return self.offset('/rest/rating/%s' % package_ref)
+            return self.offset('/rest/rating/{0!s}'.format(package_ref))
 
     def anna_offset(self, postfix=''):
         return self.package_offset('annakarenina') + postfix
@@ -257,7 +256,7 @@ class Api1and2TestCase(object):
         else:
             # Tag Entity
             tag_ref = self.tag_ref_from_name(tag_name)
-            return self.offset('/rest/tag/%s' % tag_ref)
+            return self.offset('/rest/tag/{0!s}'.format(tag_ref))
 
     def tag_ref_from_name(self, tag_name):
         tag = self.get_tag_by_name(unicode(tag_name))

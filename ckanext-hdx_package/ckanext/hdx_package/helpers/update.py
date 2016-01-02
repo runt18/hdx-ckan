@@ -134,7 +134,7 @@ def package_update(context, data_dict):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug('Updated object %s' % pkg.name)
+    log.debug('Updated object {0!s}'.format(pkg.name))
 
     return_id_only = context.get('return_id_only', False)
 

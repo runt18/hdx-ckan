@@ -225,7 +225,7 @@ class I18nMiddleware(object):
             if qs:
                 # sort out weird encodings
                 #qs = urllib.quote(qs, '')
-                environ['CKAN_CURRENT_URL'] = '%s?%s' % (path_info, qs)
+                environ['CKAN_CURRENT_URL'] = '{0!s}?{1!s}'.format(path_info, qs)
             else:
                 environ['CKAN_CURRENT_URL'] = path_info
 
@@ -269,7 +269,7 @@ class PageCacheMiddleware(object):
                     return self.app(environ, start_response)
 
         # Make our cache key
-        key = 'page:%s?%s' % (environ['PATH_INFO'], environ['QUERY_STRING'])
+        key = 'page:{0!s}?{1!s}'.format(environ['PATH_INFO'], environ['QUERY_STRING'])
 
         # Try to connect if we don't have a connection. Doing this here
         # allows the redis server to be unavailable at times.

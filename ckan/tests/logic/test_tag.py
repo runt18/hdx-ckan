@@ -22,7 +22,7 @@ class TestAction(WsgiAppCase):
         model.repo.rebuild_db()
 
     def test_06a_tag_list(self):
-        postparams = '%s=1' % json.dumps({})
+        postparams = '{0!s}=1'.format(json.dumps({}))
         res = self.app.post('/api/action/tag_list', params=postparams)
         resbody = json.loads(res.body)
         assert resbody['success'] is True
@@ -31,7 +31,7 @@ class TestAction(WsgiAppCase):
                 'tolerance'])
         assert '/api/3/action/help_show?name=tag_list' in resbody['help']
         #Get all fields
-        postparams = '%s=1' % json.dumps({'all_fields':True})
+        postparams = '{0!s}=1'.format(json.dumps({'all_fields':True}))
         res = self.app.post('/api/action/tag_list', params=postparams)
         res_obj = json.loads(res.body)
         pprint(res_obj)
@@ -69,7 +69,7 @@ class TestAction(WsgiAppCase):
         assert response.json['success'] == True
 
         # check that tag shows up in list
-        params = '%s=1' % json.dumps({'vocabulary_id': vocab_name})
+        params = '{0!s}=1'.format(json.dumps({'vocabulary_id': vocab_name}))
         res = self.app.post('/api/action/tag_list', params=params)
         body = json.loads(res.body)
         assert body['success'] is True
@@ -77,11 +77,11 @@ class TestAction(WsgiAppCase):
         assert '/api/3/action/help_show?name=tag_list' in body['help']
 
         # check that invalid vocab name results in a 404
-        params = '%s=1' % json.dumps({'vocabulary_id': 'invalid-vocab-name'})
+        params = '{0!s}=1'.format(json.dumps({'vocabulary_id': 'invalid-vocab-name'}))
         res = self.app.post('/api/action/tag_list', params=params, status=404)
 
     def test_07_tag_show(self):
-        postparams = '%s=1' % json.dumps({'id':'russian'})
+        postparams = '{0!s}=1'.format(json.dumps({'id':'russian'}))
         res = self.app.post('/api/action/tag_show', params=postparams)
         res_obj = json.loads(res.body)
         assert '/api/3/action/help_show?name=tag_show' in res_obj['help']
@@ -99,7 +99,7 @@ class TestAction(WsgiAppCase):
         expected_packages = ['annakarenina', 'warandpeace'] + (
             ['moo'] if 'moo' in packages else [])
 
-        assert sorted(packages) == sorted(expected_packages), "%s != %s" %(packages, expected_packages)
+        assert sorted(packages) == sorted(expected_packages), "{0!s} != {1!s}".format(packages, expected_packages)
 
     def test_07_flexible_tag_show(self):
         """
@@ -108,7 +108,7 @@ class TestAction(WsgiAppCase):
         The flexible tag is the tag with spaces, punctuation and foreign
         characters in its name, that's created in `ckan/lib/create_test_data.py`.
         """
-        postparams = '%s=1' % json.dumps({'id':u'Flexible \u30a1'})
+        postparams = '{0!s}=1'.format(json.dumps({'id':u'Flexible \u30a1'}))
         res = self.app.post('/api/action/tag_show', params=postparams)
         res_obj = json.loads(res.body)
         assert '/api/3/action/help_show?name=tag_show' in res_obj['help']
@@ -128,7 +128,7 @@ class TestAction(WsgiAppCase):
             'tags': u'tolstoy',
             'license': 'never_heard_of_it',
             }])
-        postparams = '%s=1' % json.dumps({'id':'tolstoy'})
+        postparams = '{0!s}=1'.format(json.dumps({'id':'tolstoy'}))
         res = self.app.post('/api/action/tag_show', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success'] == True
@@ -142,7 +142,7 @@ class TestAction(WsgiAppCase):
         assert_equal(pkg['isopen'], False)
 
     def test_08_user_create_not_authorized(self):
-        postparams = '%s=1' % json.dumps({'name':'test_create_from_action_api', 'password':'testpass'})
+        postparams = '{0!s}=1'.format(json.dumps({'name':'test_create_from_action_api', 'password':'testpass'}))
         res = self.app.post('/api/action/user_create', params=postparams,
                             status=StatusCodes.STATUS_403_ACCESS_DENIED)
         res_obj = json.loads(res.body)
@@ -156,7 +156,7 @@ class TestAction(WsgiAppCase):
                       'email': 'me@test.org',
                       'password':'testpass'}
 
-        postparams = '%s=1' % json.dumps(user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(user_dict))
         res = self.app.post('/api/action/user_create', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
         res_obj = json.loads(res.body)
@@ -284,7 +284,7 @@ class TestAction(WsgiAppCase):
 
     def test_15_tag_autocomplete(self):
         #Empty query
-        postparams = '%s=1' % json.dumps({})
+        postparams = '{0!s}=1'.format(json.dumps({}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success'] == True
@@ -292,7 +292,7 @@ class TestAction(WsgiAppCase):
         assert '/api/3/action/help_show?name=tag_autocomplete' in res_obj['help']
 
         #Normal query
-        postparams = '%s=1' % json.dumps({'q':'r'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'r'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success'] == True
@@ -308,7 +308,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':'w'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'w'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -323,7 +323,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':'greek'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'greek'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -338,7 +338,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':'fullstop'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'fullstop'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -355,7 +355,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':'idea'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'idea'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -372,7 +372,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':'th sp'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'th sp'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -389,7 +389,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':u'\u03b2'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':u'\u03b2'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -406,7 +406,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':u'stop.'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':u'stop.'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -423,7 +423,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':u'CAPITAL'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':u'CAPITAL'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']
@@ -436,7 +436,7 @@ class TestAction(WsgiAppCase):
             'license': 'never_heard_of_it',
             }])
 
-        postparams = '%s=1' % json.dumps({'q':u'lower case'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':u'lower case'}))
         res = self.app.post('/api/action/tag_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['success']

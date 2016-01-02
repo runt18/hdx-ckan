@@ -9,14 +9,14 @@ from ckan.lib.dumper import SimpleDumper
 
 
 q_packages = model.Session.query(model.Package)
-print 'Total packages: %i' % q_packages.count()
+print 'Total packages: {0:d}'.format(q_packages.count())
 
 active = model.State.ACTIVE
 q_active = q_packages.filter_by(state=active)
-print 'Active packages: %i' % q_active.count()
+print 'Active packages: {0:d}'.format(q_active.count())
 
 q_group = q_packages.join('groups').filter(model.Group.name==u'ukgov')
-print 'Packages in group ukgov: %i' % q_group.count()
+print 'Packages in group ukgov: {0:d}'.format(q_group.count())
 
 print_those_not_in_group = True
 if print_those_not_in_group:
@@ -51,10 +51,10 @@ for pkg in q_packages:
             not_in_group.append(pkg.name)
 if print_those_not_in_group:
     if not_in_group:
-        print ' Not in the group: %s' % ', '.join(not_in_group)
+        print ' Not in the group: {0!s}'.format(', '.join(not_in_group))
     
 for source, pkgs in pkgs_by_source.items():
-    print 'Source: %s \t items: %i' % (source, len(pkgs))
+    print 'Source: {0!s} \t items: {1:d}'.format(source, len(pkgs))
 
 ##ons_pkgs_titles = []
 ##for pkg in pkgs_by_source['ONS']:

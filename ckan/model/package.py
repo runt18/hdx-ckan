@@ -206,7 +206,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
                               for res in self.resources]
         site_url = config.get('ckan.site_url', None)
         if site_url:
-            _dict['ckan_url'] = '%s/dataset/%s' % (site_url, self.name)
+            _dict['ckan_url'] = '{0!s}/dataset/{1!s}'.format(site_url, self.name)
         _dict['relationships'] = [rel.as_dict(self, ref_package_by=ref_package_by) for rel in self.get_relationships()]
         _dict['metadata_modified'] = self.metadata_modified.isoformat() \
             if self.metadata_modified else None
@@ -233,7 +233,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
             subject = related_package
             object_ = self
         else:
-            raise KeyError, 'Package relationship type: %r' % type_
+            raise KeyError, 'Package relationship type: {0!r}'.format(type_)
 
         rels = self.get_relationships(with_package=related_package,
                                       type=type_, active=False, direction="forward")
@@ -356,7 +356,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
         elif type(license) == dict:
             self.license_id = license['id']
         else:
-            msg = "Value not a license object or entity: %s" % repr(license)
+            msg = "Value not a license object or entity: {0!s}".format(repr(license))
             raise Exception, msg
 
     license = property(get_license, set_license)
@@ -443,7 +443,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
                             display_id = to_obj_rev.key
                         else:
                             display_id = related_obj_id[:4]
-                        key = '%s-%s-%s' % (obj_class.__name__, display_id, col)
+                        key = '{0!s}-{1!s}-{2!s}'.format(obj_class.__name__, display_id, col)
                         results[key] = value_diff
         return results
 
@@ -535,7 +535,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
             d = {'package': dictization.table_dictize(self,
                 context={'model': ckan.model})}
             return activity.Activity(user_id, self.id, revision.id,
-                    "%s package" % activity_type, d)
+                    "{0!s} package".format(activity_type), d)
         except ckan.logic.NotFound:
             # This happens if this package is being purged and therefore has no
             # current revision.

@@ -447,7 +447,7 @@ class TestRelatedActionAPI(apibase.BaseModelApiTestCase):
             "type": rtype,
             "title": title
         }
-        postparams = '%s=1' % json.dumps(r)
+        postparams = '{0!s}=1'.format(json.dumps(r))
         res = self.app.post("/api/3/action/related_create", params=postparams,
                             status=self.STATUS_200_OK,
                             extra_environ=self.extra_environ)
@@ -466,7 +466,7 @@ class TestRelatedActionAPI(apibase.BaseModelApiTestCase):
         r = {
             "id": existing["result"]["id"]
         }
-        postparams = '%s=1' % json.dumps(r)
+        postparams = '{0!s}=1'.format(json.dumps(r))
         res = self.app.post("/api/3/action/related_show", params=postparams,
                             status=self.STATUS_200_OK,
                             extra_environ=self.extra_environ)
@@ -487,7 +487,7 @@ class TestRelatedActionAPI(apibase.BaseModelApiTestCase):
         r = {
             "id": p.id
         }
-        postparams = '%s=1' % json.dumps(r)
+        postparams = '{0!s}=1'.format(json.dumps(r))
         res = self.app.post("/api/3/action/related_list", params=postparams,
                             status=self.STATUS_200_OK,
                             extra_environ=self.extra_environ)
@@ -507,7 +507,7 @@ class TestRelatedActionAPI(apibase.BaseModelApiTestCase):
         r = {
             "id": existing["result"]["id"]
         }
-        postparams = '%s=1' % json.dumps(r)
+        postparams = '{0!s}=1'.format(json.dumps(r))
         res = self.app.post("/api/3/action/related_delete", params=postparams,
                             status=self.STATUS_200_OK,
                             extra_environ=self.extra_environ)
@@ -524,7 +524,7 @@ class TestRelatedActionAPI(apibase.BaseModelApiTestCase):
         usr = model.User.by_name("annafan")
         extra={'Authorization' : str(usr.apikey)}
 
-        postparams = '%s=1' % json.dumps(r)
+        postparams = '{0!s}=1'.format(json.dumps(r))
         res = self.app.post("/api/3/action/related_delete", params=postparams,
                             status=self.STATUS_403_ACCESS_DENIED,
                             extra_environ=extra)

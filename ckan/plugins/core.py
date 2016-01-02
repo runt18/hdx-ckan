@@ -143,7 +143,7 @@ def load(*plugins):
     observers = PluginImplementations(interfaces.IPluginObserver)
     for plugin in plugins:
         if plugin in _PLUGINS:
-            raise Exception('Plugin `%s` already loaded' % plugin)
+            raise Exception('Plugin `{0!s}` already loaded'.format(plugin))
 
         service = _get_service(plugin)
         for observer_plugin in observers:
@@ -194,7 +194,7 @@ def unload(*plugins):
             if plugin in _PLUGINS_SERVICE:
                 del _PLUGINS_SERVICE[plugin]
         else:
-            raise Exception('Cannot unload plugin `%s`' % plugin)
+            raise Exception('Cannot unload plugin `{0!s}`'.format(plugin))
 
         service = _get_service(plugin)
         for observer_plugin in observers:

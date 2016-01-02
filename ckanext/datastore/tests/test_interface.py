@@ -78,8 +78,7 @@ class TestInterfaces(object):
             {'age': 20}, {'age': 30}, {'age': 40}
         ]
         resource = self._create_datastore_resource(records)
-        sql_inject = '1=1); DELETE FROM "%s"; COMMIT; SELECT * FROM "%s";--' \
-                     % (resource['id'], resource['id'])
+        sql_inject = '1=1); DELETE FROM "{0!s}"; COMMIT; SELECT * FROM "{1!s}";--'.format(resource['id'], resource['id'])
         filters = {
             'insecure_filter': sql_inject
         }
@@ -145,8 +144,7 @@ class TestInterfaces(object):
             {'age': 20}, {'age': 30}, {'age': 40}
         ]
         resource = self._create_datastore_resource(records)
-        sql_inject = '1=1); DELETE FROM "%s"; SELECT * FROM "%s";--' \
-                     % (resource['id'], resource['id'])
+        sql_inject = '1=1); DELETE FROM "{0!s}"; SELECT * FROM "{1!s}";--'.format(resource['id'], resource['id'])
         filters = {
             'age': 20,
             'insecure_filter': sql_inject

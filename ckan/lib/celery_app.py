@@ -44,7 +44,7 @@ for entry_point in iter_entry_points(group='ckan.celery_task'):
             entry_point.load()()
         )
     except VersionConflict, e:
-        error = 'ERROR in entry point load: %s %s' % (entry_point, e)
+        error = 'ERROR in entry point load: {0!s} {1!s}'.format(entry_point, e)
         log.critical(error)
         pass
 

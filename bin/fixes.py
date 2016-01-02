@@ -21,7 +21,7 @@ def fix_package_tags():
         mostrecent = revs[0]
         pkgtag.revision_id = mostrecent.revision_id
         count += 1
-    print('Updated %s PackageTags' % count)
+    print('Updated {0!s} PackageTags'.format(count))
     model.Session.commit()
     
     count = 0
@@ -30,13 +30,13 @@ def fix_package_tags():
         pkgtagrev.package_id = pkgtagrev.continuity.package_id
         pkgtagrev.tag_id = pkgtagrev.continuity.tag_id
         count += 1
-    print('Updated %s PackageTagRevisions' % count)
+    print('Updated {0!s} PackageTagRevisions'.format(count))
     model.Session.commit()
 
     count = 0
     for pkgtag in model.Session.query(model.PackageTag).filter_by(package_id=None):
         pkgtag.purge()
         count += 1
-    print('Deleted %s PackageTags' % count)
+    print('Deleted {0!s} PackageTags'.format(count))
     model.Session.commit()
 

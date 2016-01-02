@@ -46,7 +46,7 @@ class TestDatastoreDump(object):
                         {u'b\xfck': 'warandpeace', 'author': 'tolstoy',
                          'nested': {'a': 'b'}}]
         }
-        postparams = '%s=1' % json.dumps(cls.data)
+        postparams = '{0!s}=1'.format(json.dumps(cls.data))
         auth = {'Authorization': str(cls.sysadmin_user.apikey)}
         res = cls.app.post('/api/action/datastore_create', params=postparams,
                            extra_environ=auth)

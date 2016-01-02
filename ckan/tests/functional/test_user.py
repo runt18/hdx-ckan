@@ -18,7 +18,7 @@ class TestUserController(FunctionalTestCase, HtmlCheckMethods, PylonsTestCase, S
         if smtp_server:
             host, port = smtp_server.split(':')
             port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
-            config['smtp.test_server'] = '%s:%s' % (host, port)
+            config['smtp.test_server'] = '{0!s}:{1!s}'.format(host, port)
 
         PylonsTestCase.setup_class()
         SmtpServerHarness.setup_class()
@@ -28,7 +28,7 @@ class TestUserController(FunctionalTestCase, HtmlCheckMethods, PylonsTestCase, S
         for i in range(3):
             rev = model.repo.new_revision()
             pkg = model.Package.by_name(u'annakarenina')
-            pkg.notes = u'Changed notes %i' % i
+            pkg.notes = u'Changed notes {0:d}'.format(i)
             rev.author = u'annafan'
             model.repo.commit_and_remove()
 

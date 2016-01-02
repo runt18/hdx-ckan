@@ -86,7 +86,7 @@ class Resource(vdm.sqlalchemy.RevisionedObjectMixin,
             if value is not None:
                 setattr(self, field, value)
         if kwargs:
-            raise TypeError('unexpected keywords %s' % kwargs)
+            raise TypeError('unexpected keywords {0!s}'.format(kwargs))
 
     def as_dict(self, core_columns_only=False):
         _dict = OrderedDict()

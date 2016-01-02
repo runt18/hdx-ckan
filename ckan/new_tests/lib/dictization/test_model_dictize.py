@@ -320,12 +320,11 @@ class TestPackageDictize:
     def assert_equals_expected(self, expected_dict, result_dict):
         result_dict = self.remove_changable_values(result_dict)
         superfluous_keys = set(result_dict) - set(expected_dict)
-        assert not superfluous_keys, 'Did not expect key: %s' % \
-            ' '.join(('%s=%s' % (k, result_dict[k]) for k in superfluous_keys))
+        assert not superfluous_keys, 'Did not expect key: {0!s}'.format( \
+            ' '.join(('{0!s}={1!s}'.format(k, result_dict[k]) for k in superfluous_keys)))
         for key in expected_dict:
             assert expected_dict[key] == result_dict[key], \
-                '%s=%s should be %s' % \
-                (key, result_dict[key], expected_dict[key])
+                '{0!s}={1!s} should be {2!s}'.format(key, result_dict[key], expected_dict[key])
 
     def test_package_dictize_basic(self):
         dataset = factories.Dataset(name='test_dataset_dictize',
@@ -505,7 +504,6 @@ class TestPackageDictize:
 
 def assert_equal_for_keys(dict1, dict2, *keys):
     for key in keys:
-        assert key in dict1, 'Dict 1 misses key "%s"' % key
-        assert key in dict2, 'Dict 2 misses key "%s"' % key
-        assert dict1[key] == dict2[key], '%s != %s (key=%s)' % \
-            (dict1[key], dict2[key], key)
+        assert key in dict1, 'Dict 1 misses key "{0!s}"'.format(key)
+        assert key in dict2, 'Dict 2 misses key "{0!s}"'.format(key)
+        assert dict1[key] == dict2[key], '{0!s} != {1!s} (key={2!s})'.format(dict1[key], dict2[key], key)

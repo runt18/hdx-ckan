@@ -10,25 +10,25 @@ def upgrade(migrate_engine):
 
 -- make sure all tables have an entry in the revision_table
 
-insert into revision values ('%(id)s' , '%(timestamp)s', 'admin', 'Admin: make sure every object has a row in a revision table', 'active');
+insert into revision values ('{id!s}' , '{timestamp!s}', 'admin', 'Admin: make sure every object has a row in a revision table', 'active');
 
-insert into package_tag_revision (id,package_id,tag_id,revision_id,state,continuity_id) select id,package_id,tag_id, '%(id)s' ,state, id from package_tag where package_tag.id not in (select id from package_tag_revision);
+insert into package_tag_revision (id,package_id,tag_id,revision_id,state,continuity_id) select id,package_id,tag_id, '{id!s}' ,state, id from package_tag where package_tag.id not in (select id from package_tag_revision);
 
-insert into resource_revision (id,resource_group_id,url,format,description,position,revision_id,hash,state,extras,continuity_id) select id,resource_group_id,url,format,description,position, '%(id)s' ,hash,state,extras, id from resource where resource.id not in (select id from resource_revision);
+insert into resource_revision (id,resource_group_id,url,format,description,position,revision_id,hash,state,extras,continuity_id) select id,resource_group_id,url,format,description,position, '{id!s}' ,hash,state,extras, id from resource where resource.id not in (select id from resource_revision);
 
-insert into group_extra_revision (id,group_id,key,value,state,revision_id,continuity_id) select id,group_id,key,value,state, '%(id)s' , id from group_extra where group_extra.id not in (select id from group_extra_revision);
+insert into group_extra_revision (id,group_id,key,value,state,revision_id,continuity_id) select id,group_id,key,value,state, '{id!s}' , id from group_extra where group_extra.id not in (select id from group_extra_revision);
 
-insert into resource_group_revision (id,package_id,label,sort_order,extras,state,revision_id,continuity_id) select id,package_id,label,sort_order,extras,state, '%(id)s', id from resource_group where resource_group.id not in (select id from resource_group_revision);
+insert into resource_group_revision (id,package_id,label,sort_order,extras,state,revision_id,continuity_id) select id,package_id,label,sort_order,extras,state, '{id!s}', id from resource_group where resource_group.id not in (select id from resource_group_revision);
 
-insert into package_extra_revision (id,package_id,key,value,revision_id,state,continuity_id) select id,package_id,key,value, '%(id)s',state, id from package_extra where package_extra.id not in (select id from package_extra_revision);
+insert into package_extra_revision (id,package_id,key,value,revision_id,state,continuity_id) select id,package_id,key,value, '{id!s}',state, id from package_extra where package_extra.id not in (select id from package_extra_revision);
 
-insert into package_relationship_revision (id,subject_package_id,object_package_id,type,comment,revision_id,state,continuity_id) select id,subject_package_id,object_package_id,type,comment, '%(id)s',state, id from package_relationship where package_relationship.id not in (select id from package_relationship_revision);
+insert into package_relationship_revision (id,subject_package_id,object_package_id,type,comment,revision_id,state,continuity_id) select id,subject_package_id,object_package_id,type,comment, '{id!s}',state, id from package_relationship where package_relationship.id not in (select id from package_relationship_revision);
                            
-insert into group_revision (id,name,title,description,created,state,revision_id,continuity_id) select id,name,title,description,created,state, '%(id)s', id from "group" where "group".id not in (select id from group_revision);
+insert into group_revision (id,name,title,description,created,state,revision_id,continuity_id) select id,name,title,description,created,state, '{id!s}', id from "group" where "group".id not in (select id from group_revision);
 
-insert into package_revision (id,name,title,url,notes,license_id,revision_id,version,author,author_email,maintainer,maintainer_email,state,continuity_id) select id,name,title,url,notes,license_id, '%(id)s',version,author,author_email,maintainer,maintainer_email,state, id from package where package.id not in (select id from package_revision);
+insert into package_revision (id,name,title,url,notes,license_id,revision_id,version,author,author_email,maintainer,maintainer_email,state,continuity_id) select id,name,title,url,notes,license_id, '{id!s}',version,author,author_email,maintainer,maintainer_email,state, id from package where package.id not in (select id from package_revision);
 
-''' % dict(id=id, timestamp=datetime.datetime.utcnow().isoformat())
+'''.format(**dict(id=id, timestamp=datetime.datetime.utcnow().isoformat()))
 
 
     update_schema = '''
@@ -208,10 +208,10 @@ update revision set approved_timestamp = timestamp;
     
     for table in ['package', 'resource', 'resource_group', 'package_extra', 
                   'package_tag', 'package_relationship', 'group', 'group_extra']:
-        count = migrate_engine.execute('''select count(*) from "%s"''' % table).first()[0]
-        revision_expired_id_count = migrate_engine.execute('''select count(*) from %s_revision where %s_revision.expired_id is null''' % (table, table)).first()[0]
-        revision_expired_data_count = migrate_engine.execute('''select count(*) from %s_revision where %s_revision.expired_timestamp = '9999-12-31' ''' % (table, table)).first()[0]
-        revision_current = migrate_engine.execute('''select count(*) from %s_revision where %s_revision.current = '1' ''' % (table, table)).first()[0]
+        count = migrate_engine.execute('''select count(*) from "{0!s}"'''.format(table)).first()[0]
+        revision_expired_id_count = migrate_engine.execute('''select count(*) from {0!s}_revision where {1!s}_revision.expired_id is null'''.format(table, table)).first()[0]
+        revision_expired_data_count = migrate_engine.execute('''select count(*) from {0!s}_revision where {1!s}_revision.expired_timestamp = '9999-12-31' '''.format(table, table)).first()[0]
+        revision_current = migrate_engine.execute('''select count(*) from {0!s}_revision where {1!s}_revision.current = '1' '''.format(table, table)).first()[0]
         assert count == revision_expired_id_count
         assert count == revision_expired_data_count
         assert count == revision_current

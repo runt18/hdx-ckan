@@ -138,7 +138,7 @@ def url_for(*args, **kw):
         if not ver:
             raise Exception('api calls must specify the version! e.g. ver=3')
         # fix ver to include the slash
-        kw['ver'] = '/%s' % ver
+        kw['ver'] = '/{0!s}'.format(ver)
     my_url = _routes_default_url_for(*args, **kw)
     kw['__ckan_no_root'] = no_root
     return _add_i18n_to_url(my_url, locale=locale, **kw)
@@ -238,7 +238,7 @@ def _add_i18n_to_url(url_to_amend, **kw):
         if root[-1] == '/':
             root = root[:-1]
         url = url_to_amend[len(re.sub('/{{LANG}}', '', root_path)):]
-        url = '%s%s' % (root, url)
+        url = '{0!s}{1!s}'.format(root, url)
         root = re.sub('/{{LANG}}', '', root_path)
     else:
         if default_locale:
@@ -247,16 +247,16 @@ def _add_i18n_to_url(url_to_amend, **kw):
             # we need to strip the root from the url and the add it before
             # the language specification.
             url = url_to_amend[len(root):]
-            url = '%s/%s%s' % (root, locale, url)
+            url = '{0!s}/{1!s}{2!s}'.format(root, locale, url)
 
     # stop the root being added twice in redirects
     if no_root:
         url = url_to_amend[len(root):]
         if not default_locale:
-            url = '/%s%s' % (locale, url)
+            url = '/{0!s}{1!s}'.format(locale, url)
 
     if url == '/packages':
-        error = 'There is a broken url being created %s' % kw
+        error = 'There is a broken url being created {0!s}'.format(kw)
         raise ckan.exceptions.CkanUrlException(error)
 
     return url
@@ -338,15 +338,14 @@ class _Flash(object):
         if default_category is not None:
             self.default_category = default_category
         if self.categories and self.default_category not in self.categories:
-            raise ValueError("unrecognized default category %r"
-                             % (self.default_category, ))
+            raise ValueError("unrecognized default category {0!r}".format(self.default_category ))
 
     def __call__(self, message, category=None, ignore_duplicate=False,
                  allow_html=False):
         if not category:
             category = self.default_category
         elif self.categories and category not in self.categories:
-            raise ValueError("unrecognized category %r" % (category, ))
+            raise ValueError("unrecognized category {0!r}".format(category ))
         # Don't store Message objects in the session, to avoid unpickling
         # errors in edge cases.
         new_message_tuple = (category, message, allow_html)
@@ -426,7 +425,7 @@ def _link_to(text, *args, **kwargs):
         if kwargs.pop('inner_span', None):
             text = literal('<span>') + text + literal('</span>')
         if icon:
-            text = literal('<i class="icon-%s"></i> ' % icon) + text
+            text = literal('<i class="icon-{0!s}"></i> '.format(icon)) + text
         return text
 
     icon = kwargs.pop('icon', None)
@@ -560,15 +559,14 @@ def _make_menu_item(menu_item, title, **kw):
     '''
     _menu_items = config['routes.named_routes']
     if menu_item not in _menu_items:
-        raise Exception('menu item `%s` cannot be found' % menu_item)
+        raise Exception('menu item `{0!s}` cannot be found'.format(menu_item))
     item = copy.copy(_menu_items[menu_item])
     item.update(kw)
     active = _link_active(item)
     needed = item.pop('needed')
     for need in needed:
         if need not in kw:
-            raise Exception('menu item `%s` need parameter `%s`'
-                            % (menu_item, need))
+            raise Exception('menu item `{0!s}` need parameter `{1!s}`'.format(menu_item, need))
     link = _link_to(title, menu_item, suppress_active_class=True, **item)
     if active:
         return literal('<li class="active">') + link + literal('</li>')
@@ -674,7 +672,7 @@ def unselected_facet_items(facet, limit=10):
 def get_facet_title(name):
     '''Deprecated in ckan 2.0 '''
     # if this is set in the config use this
-    config_title = config.get('search.facets.%s.title' % name)
+    config_title = config.get('search.facets.{0!s}.title'.format(name))
     if config_title:
         return config_title
 
@@ -802,7 +800,7 @@ def markdown_extract(text, extract_length=190):
 
 
 def icon_url(name):
-    return url_for_static('/images/icons/%s.png' % name)
+    return url_for_static('/images/icons/{0!s}.png'.format(name))
 
 
 def icon_html(url, alt=None, inline=True):
@@ -855,8 +853,8 @@ def dict_list_reduce(list_, key, unique=True):
 def linked_gravatar(email_hash, size=100, default=None):
     return literal(
         '<a href="https://gravatar.com/" target="_blank" ' +
-        'title="%s" alt="">' % _('Update your avatar at gravatar.com') +
-        '%s</a>' % gravatar(email_hash, size, default)
+        'title="{0!s}" alt="">'.format(_('Update your avatar at gravatar.com')) +
+        '{0!s}</a>'.format(gravatar(email_hash, size, default))
     )
 
 _VALID_GRAVATAR_DEFAULTS = ['404', 'mm', 'identicon', 'monsterid',
@@ -871,9 +869,8 @@ def gravatar(email_hash, size=100, default=None):
         # treat the default as a url
         default = urllib.quote(default, safe='')
 
-    return literal('''<img src="//gravatar.com/avatar/%s?s=%d&amp;d=%s"
-        class="gravatar" width="%s" height="%s" />'''
-                   % (email_hash, size, default, size, size)
+    return literal('''<img src="//gravatar.com/avatar/{0!s}?s={1:d}&amp;d={2!s}"
+        class="gravatar" width="{3!s}" height="{4!s}" />'''.format(email_hash, size, default, size, size)
                    )
 
 
@@ -918,7 +915,7 @@ class Page(paginate.Page):
         html = re.sub(dotdot, dotdot_link, html)
 
         # Convert current page
-        text = '%s' % self.page
+        text = '{0!s}'.format(self.page)
         current_page_span = str(HTML.span(c=text, **self.curpage_attr))
         current_page_link = self._pagerlink(self.page, text,
                                             extra_attributes=self.curpage_attr)
@@ -973,8 +970,8 @@ def date_str_to_datetime(date_str):
         m = re.match('(?P<seconds>\d{2})(\.(?P<microseconds>\d{6}))?$',
                      time_tuple[5])
         if not m:
-            raise ValueError('Unable to parse %s as seconds.microseconds' %
-                             time_tuple[5])
+            raise ValueError('Unable to parse {0!s} as seconds.microseconds'.format(
+                             time_tuple[5]))
         seconds = int(m.groupdict().get('seconds'))
         microseconds = int(m.groupdict(0).get('microseconds'))
         time_tuple = time_tuple[:5] + [seconds, microseconds]
@@ -1078,7 +1075,7 @@ def time_ago_from_timestamp(timestamp):
 
 def button_attr(enable, type='primary'):
     if enable:
-        return 'class="btn %s"' % type
+        return 'class="btn {0!s}"'.format(type)
     return 'disabled class="btn disabled"'
 
 
@@ -1170,16 +1167,16 @@ def auto_log_message():
 
 
 def activity_div(template, activity, actor, object=None, target=None):
-    actor = '<span class="actor">%s</span>' % actor
+    actor = '<span class="actor">{0!s}</span>'.format(actor)
     if object:
-        object = '<span class="object">%s</span>' % object
+        object = '<span class="object">{0!s}</span>'.format(object)
     if target:
-        target = '<span class="target">%s</span>' % target
+        target = '<span class="target">{0!s}</span>'.format(target)
     rendered_datetime = render_datetime(activity['timestamp'])
-    date = '<span class="date">%s</span>' % rendered_datetime
+    date = '<span class="date">{0!s}</span>'.format(rendered_datetime)
     template = template.format(actor=actor, date=date,
                                object=object, target=target)
-    template = '<div class="activity">%s %s</div>' % (template, date)
+    template = '<div class="activity">{0!s} {1!s}</div>'.format(template, date)
     return literal(template)
 
 
@@ -1247,7 +1244,7 @@ def follow_button(obj_type, obj_id):
     # If the user is logged in show the follow/unfollow button
     if c.user:
         context = {'model': model, 'session': model.Session, 'user': c.user}
-        action = 'am_following_%s' % obj_type
+        action = 'am_following_{0!s}'.format(obj_type)
         following = logic.get_action(action)(context, {'id': obj_id})
         return snippet('snippets/follow_button.html',
                        following=following,
@@ -1270,7 +1267,7 @@ def follow_count(obj_type, obj_id):
     '''
     obj_type = obj_type.lower()
     assert obj_type in _follow_objects
-    action = '%s_follower_count' % obj_type
+    action = '{0!s}_follower_count'.format(obj_type)
     context = {'model': model, 'session': model.Session, 'user': c.user}
     return logic.get_action(action)(context, {'id': obj_id})
 
@@ -1384,7 +1381,7 @@ def urls_for_resource(resource):
         else:
             relpath = resource.relpath
 
-        out.append('%s/%s' % (root_path, relpath))
+        out.append('{0!s}/{1!s}'.format(root_path, relpath))
     return out
 
 
@@ -1420,7 +1417,7 @@ def debug_full_info_as_list(debug_info):
             if not key in ignored_context_keys:
                 data = pprint.pformat(getattr(debug_vars['tmpl_context'], key))
                 data = data.decode('utf-8')
-                out.append(('c.%s' % key, data))
+                out.append(('c.{0!s}'.format(key), data))
 
     return out
 
@@ -1602,12 +1599,11 @@ def html_auto_link(data):
     def makelink(matchobj):
         obj = matchobj.group(1)
         name = matchobj.group(2)
-        title = '%s:%s' % (obj, name)
+        title = '{0!s}:{1!s}'.format(obj, name)
         return LINK_FNS[obj]({'name': name.strip('"'), 'title': title})
 
     def link(matchobj):
-        return '<a href="%s" target="_blank" rel="nofollow">%s</a>' \
-            % (matchobj.group(1), matchobj.group(1))
+        return '<a href="{0!s}" target="_blank" rel="nofollow">{1!s}</a>'.format(matchobj.group(1), matchobj.group(1))
 
     def process(matchobj):
         data = matchobj.group(2)
@@ -1954,7 +1950,7 @@ def resource_formats():
             try:
                 file_resource_formats = json.loads(format_file.read())
             except ValueError, e:  # includes simplejson.decoder.JSONDecodeError
-                raise ValueError('Invalid JSON syntax in %s: %s' % (format_file_path, e))
+                raise ValueError('Invalid JSON syntax in {0!s}: {1!s}'.format(format_file_path, e))
 
             for format_line in file_resource_formats:
                 if format_line[0] == '_comment':

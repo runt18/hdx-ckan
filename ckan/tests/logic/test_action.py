@@ -57,7 +57,7 @@ class TestAction(WsgiAppCase):
         }
         package.update(kwargs)
 
-        postparams = '%s=1' % json.dumps(package)
+        postparams = '{0!s}=1'.format(json.dumps(package))
         res = self.app.post('/api/action/package_create', params=postparams,
                             extra_environ={'Authorization': 'tester'})
         return json.loads(res.body)['result']
@@ -71,7 +71,7 @@ class TestAction(WsgiAppCase):
         assert 'annakarenina' in res['result']
         assert "/api/3/action/help_show?name=package_list" in res['help']
 
-        postparams = '%s=1' % json.dumps({'limit': 1})
+        postparams = '{0!s}=1'.format(json.dumps({'limit': 1}))
         res = json.loads(self.app.post('/api/action/package_list',
                          params=postparams).body)
         assert res['success'] is True
@@ -116,7 +116,7 @@ class TestAction(WsgiAppCase):
 
     def test_01_package_show_with_jsonp(self):
         anna_id = model.Package.by_name(u'annakarenina').id
-        postparams = '%s=1' % json.dumps({'id': anna_id})
+        postparams = '{0!s}=1'.format(json.dumps({'id': anna_id}))
         res = self.app.post('/api/action/package_show?callback=jsoncallback', params=postparams)
 
         assert re.match('jsoncallback\(.*\);', res.body), res
@@ -131,7 +131,7 @@ class TestAction(WsgiAppCase):
         assert not missing_keys, missing_keys
 
     def test_02_package_autocomplete_match_name(self):
-        postparams = '%s=1' % json.dumps({'q':'war', 'limit': 5})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'war', 'limit': 5}))
         res = self.app.post('/api/action/package_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert_equal(res_obj['success'], True)
@@ -142,7 +142,7 @@ class TestAction(WsgiAppCase):
         assert_equal(res_obj['result'][0]['match_displayed'], 'warandpeace')
 
     def test_02_package_autocomplete_match_title(self):
-        postparams = '%s=1' % json.dumps({'q':'a%20w', 'limit': 5})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'a%20w', 'limit': 5}))
         res = self.app.post('/api/action/package_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert_equal(res_obj['success'], True)
@@ -184,13 +184,13 @@ class TestAction(WsgiAppCase):
         }
 
         wee = json.dumps(package)
-        postparams = '%s=1' % json.dumps(package)
+        postparams = '{0!s}=1'.format(json.dumps(package))
         res = self.app.post('/api/action/package_create', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
         package_created = json.loads(res.body)['result']
         print package_created
         package_created['name'] = 'moo'
-        postparams = '%s=1' % json.dumps(package_created)
+        postparams = '{0!s}=1'.format(json.dumps(package_created))
         res = self.app.post('/api/action/package_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
 
@@ -282,7 +282,7 @@ class TestAction(WsgiAppCase):
         }
 
         wee = json.dumps(package)
-        postparams = '%s=1' % json.dumps(package)
+        postparams = '{0!s}=1'.format(json.dumps(package))
         res = self.app.post('/api/action/package_create', params=postparams,
                                      status=StatusCodes.STATUS_403_ACCESS_DENIED)
 
@@ -291,7 +291,7 @@ class TestAction(WsgiAppCase):
         anna_id = model.Package.by_name(u'annakarenina').id
         resource = {'package_id': anna_id, 'url': 'http://new_url'}
         api_key = model.User.get('testsysadmin').apikey.encode('utf8')
-        postparams = '%s=1' % json.dumps(resource)
+        postparams = '{0!s}=1'.format(json.dumps(resource))
         res = self.app.post('/api/action/resource_create', params=postparams,
                             extra_environ={'Authorization': api_key })
 
@@ -305,7 +305,7 @@ class TestAction(WsgiAppCase):
         resource = {'package_id': anna_id, 'url': 'new_url', 'created': 'bad_date'}
         api_key = model.User.get('testsysadmin').apikey.encode('utf8')
 
-        postparams = '%s=1' % json.dumps(resource)
+        postparams = '{0!s}=1'.format(json.dumps(resource))
         res = self.app.post('/api/action/resource_create', params=postparams,
                             extra_environ={'Authorization': api_key},
                             status=StatusCodes.STATUS_409_CONFLICT)
@@ -316,7 +316,7 @@ class TestAction(WsgiAppCase):
     def test_10_user_create_parameters_missing(self):
         user_dict = {}
 
-        postparams = '%s=1' % json.dumps(user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(user_dict))
         res = self.app.post('/api/action/user_create', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
                             status=StatusCodes.STATUS_409_CONFLICT)
@@ -335,7 +335,7 @@ class TestAction(WsgiAppCase):
                 'email':'me@test.org',
                       'password':'tes'} #Too short
 
-        postparams = '%s=1' % json.dumps(user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(user_dict))
         res = self.app.post('/api/action/user_create', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
                             status=StatusCodes.STATUS_409_CONFLICT)
@@ -359,7 +359,7 @@ class TestAction(WsgiAppCase):
                             'about':'Updated sysadmin user about'}
 
         #Normal users can update themselves
-        postparams = '%s=1' % json.dumps(normal_user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(normal_user_dict))
         res = self.app.post('/api/action/user_update', params=postparams,
                             extra_environ={'Authorization': str(self.normal_user.apikey)})
 
@@ -379,7 +379,7 @@ class TestAction(WsgiAppCase):
         assert not 'password' in result
 
         #Sysadmin users can update themselves
-        postparams = '%s=1' % json.dumps(sysadmin_user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(sysadmin_user_dict))
         res = self.app.post('/api/action/user_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
 
@@ -393,7 +393,7 @@ class TestAction(WsgiAppCase):
         assert result['about'] == sysadmin_user_dict['about']
 
         #Sysadmin users can update all users
-        postparams = '%s=1' % json.dumps(normal_user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(normal_user_dict))
         res = self.app.post('/api/action/user_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
 
@@ -407,7 +407,7 @@ class TestAction(WsgiAppCase):
         assert result['about'] == normal_user_dict['about']
 
         #Normal users can not update other users
-        postparams = '%s=1' % json.dumps(sysadmin_user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(sysadmin_user_dict))
         res = self.app.post('/api/action/user_update', params=postparams,
                             extra_environ={'Authorization': str(self.normal_user.apikey)},
                             status=StatusCodes.STATUS_403_ACCESS_DENIED)
@@ -442,7 +442,7 @@ class TestAction(WsgiAppCase):
                  )
 
         for test_call in test_calls:
-            postparams = '%s=1' % json.dumps(test_call['user_dict'])
+            postparams = '{0!s}=1'.format(json.dumps(test_call['user_dict']))
             res = self.app.post('/api/action/user_update', params=postparams,
                                 extra_environ={'Authorization': str(self.normal_user.apikey)},
                                 status=StatusCodes.STATUS_409_CONFLICT)
@@ -455,7 +455,7 @@ class TestAction(WsgiAppCase):
         CreateTestData.create_user(name)
         user = model.User.get(name)
         user_dict = {'id': user.id}
-        postparams = '%s=1' % json.dumps(user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(user_dict))
 
         res = self.app.post('/api/action/user_delete', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
@@ -467,7 +467,7 @@ class TestAction(WsgiAppCase):
 
     def test_user_delete_requires_data_dict_with_key_id(self):
         user_dict = {'name': 'normal_user'}
-        postparams = '%s=1' % json.dumps(user_dict)
+        postparams = '{0!s}=1'.format(json.dumps(user_dict))
 
         res = self.app.post('/api/action/user_delete', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -484,7 +484,7 @@ class TestAction(WsgiAppCase):
         model.repo.commit()
 
         #Empty query
-        postparams = '%s=1' % json.dumps({})
+        postparams = '{0!s}=1'.format(json.dumps({}))
         res = self.app.post(
             '/api/action/user_autocomplete',
             params=postparams,
@@ -494,7 +494,7 @@ class TestAction(WsgiAppCase):
         assert res_obj['success'] is False
 
         #Normal query
-        postparams = '%s=1' % json.dumps({'q':'joe'})
+        postparams = '{0!s}=1'.format(json.dumps({'q':'joe'}))
         res = self.app.post('/api/action/user_autocomplete', params=postparams)
         res_obj = json.loads(res.body)
         assert res_obj['result'][0]['name'] == 'joeadmin'
@@ -502,7 +502,7 @@ class TestAction(WsgiAppCase):
 
     def test_17_bad_action(self):
         #Empty query
-        postparams = '%s=1' % json.dumps({})
+        postparams = '{0!s}=1'.format(json.dumps({}))
         res = self.app.post('/api/action/bad_action_name', params=postparams,
                             status=400)
         res_obj = json.loads(res.body)
@@ -524,7 +524,7 @@ class TestAction(WsgiAppCase):
             'url': u'http://www.annakarenina.com',
         }
 
-        postparams = '%s=1' % json.dumps(package)
+        postparams = '{0!s}=1'.format(json.dumps(package))
         res = self.app.post('/api/action/package_create', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
         package_created = json.loads(res.body)['result']
@@ -532,7 +532,7 @@ class TestAction(WsgiAppCase):
         resource_created = package_created['resources'][0]
         new_resource_url = u'http://www.annakareinanew.com/download/'
         resource_created['url'] = new_resource_url
-        postparams = '%s=1' % json.dumps(resource_created)
+        postparams = '{0!s}=1'.format(json.dumps(resource_created))
         res = self.app.post('/api/action/resource_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)})
 
@@ -559,7 +559,7 @@ class TestAction(WsgiAppCase):
             'state': u'test_state',
             'error': u'test_error',
         }
-        postparams = '%s=1' % json.dumps(task_status)
+        postparams = '{0!s}=1'.format(json.dumps(task_status))
         res = self.app.post(
             '/api/action/task_status_update', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -572,7 +572,7 @@ class TestAction(WsgiAppCase):
 
         task_status_updated['id'] = task_status_id
         task_status_updated['value'] = u'test_value_2'
-        postparams = '%s=1' % json.dumps(task_status_updated)
+        postparams = '{0!s}=1'.format(json.dumps(task_status_updated))
         res = self.app.post(
             '/api/action/task_status_update', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -605,7 +605,7 @@ class TestAction(WsgiAppCase):
                 }
             ]
         }
-        postparams = '%s=1' % json.dumps(task_statuses)
+        postparams = '{0!s}=1'.format(json.dumps(task_statuses))
         res = self.app.post(
             '/api/action/task_status_update_many', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -620,7 +620,7 @@ class TestAction(WsgiAppCase):
 
     def test_22_task_status_normal_user_not_authorized(self):
         task_status = {}
-        postparams = '%s=1' % json.dumps(task_status)
+        postparams = '{0!s}=1'.format(json.dumps(task_status))
         res = self.app.post(
             '/api/action/task_status_update', params=postparams,
             extra_environ={'Authorization': str(self.normal_user.apikey)},
@@ -633,7 +633,7 @@ class TestAction(WsgiAppCase):
 
     def test_23_task_status_validation(self):
         task_status = {}
-        postparams = '%s=1' % json.dumps(task_status)
+        postparams = '{0!s}=1'.format(json.dumps(task_status))
         res = self.app.post(
             '/api/action/task_status_update', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -652,7 +652,7 @@ class TestAction(WsgiAppCase):
             'state': u'test_state',
             'error': u'test_error'
         }
-        postparams = '%s=1' % json.dumps(task_status)
+        postparams = '{0!s}=1'.format(json.dumps(task_status))
         res = self.app.post(
             '/api/action/task_status_update', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -660,7 +660,7 @@ class TestAction(WsgiAppCase):
         task_status_updated = json.loads(res.body)['result']
 
         # make sure show works when giving a task status ID
-        postparams = '%s=1' % json.dumps({'id': task_status_updated['id']})
+        postparams = '{0!s}=1'.format(json.dumps({'id': task_status_updated['id']}))
         res = self.app.post(
             '/api/action/task_status_show', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -672,11 +672,11 @@ class TestAction(WsgiAppCase):
         assert task_status_show == task_status_updated, (task_status_show, task_status_updated)
 
         # make sure show works when giving a (entity_id, task_type, key) tuple
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
             'entity_id': task_status['entity_id'],
             'task_type': task_status['task_type'],
             'key': task_status['key']
-        })
+        }))
         res = self.app.post(
             '/api/action/task_status_show', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -698,14 +698,14 @@ class TestAction(WsgiAppCase):
             'state': u'test_state',
             'error': u'test_error'
         }
-        postparams = '%s=1' % json.dumps(task_status)
+        postparams = '{0!s}=1'.format(json.dumps(task_status))
         res = self.app.post(
             '/api/action/task_status_update', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
         )
         task_status_updated = json.loads(res.body)['result']
 
-        postparams = '%s=1' % json.dumps({'id': task_status_updated['id']})
+        postparams = '{0!s}=1'.format(json.dumps({'id': task_status_updated['id']}))
         res = self.app.post(
             '/api/action/task_status_delete', params=postparams,
             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -716,7 +716,7 @@ class TestAction(WsgiAppCase):
     def test_26_resource_show(self):
         pkg = model.Package.get('annakarenina')
         resource = pkg.resources[0]
-        postparams = '%s=1' % json.dumps({'id': resource.id})
+        postparams = '{0!s}=1'.format(json.dumps({'id': resource.id}))
         res = self.app.post('/api/action/resource_show', params=postparams)
         result = json.loads(res.body)['result']
 
@@ -760,7 +760,7 @@ class TestAction(WsgiAppCase):
 
 
     def test_30_status_show(self):
-        postparams = '%s=1' % json.dumps({})
+        postparams = '{0!s}=1'.format(json.dumps({}))
         res = self.app.post('/api/action/status_show', params=postparams)
         status = json.loads(res.body)['result']
         assert_equal(status['site_title'], 'CKAN')
@@ -768,7 +768,7 @@ class TestAction(WsgiAppCase):
         assert_equal(status['site_url'], 'http://test.ckan.net')
 
     def test_31_bad_request_format(self):
-        postparams = '%s=1' % json.dumps('not a dict')
+        postparams = '{0!s}=1'.format(json.dumps('not a dict'))
         res = self.app.post('/api/action/package_list', params=postparams,
                             status=400)
         assert "Bad request - JSON Error: Request data JSON decoded to 'not a dict' but it needs to be a dictionary." in res.body, res.body
@@ -790,7 +790,7 @@ class TestAction(WsgiAppCase):
     def test_33_roles_show(self):
         anna = model.Package.by_name(u'annakarenina')
         annafan = model.User.by_name(u'annafan')
-        postparams = '%s=1' % json.dumps({'domain_object': anna.id})
+        postparams = '{0!s}=1'.format(json.dumps({'domain_object': anna.id}))
         res = self.app.post('/api/action/roles_show', params=postparams,
                             extra_environ={'Authorization': str(annafan.apikey)},
                             status=200)
@@ -806,8 +806,8 @@ class TestAction(WsgiAppCase):
     def test_34_roles_show_for_user(self):
         anna = model.Package.by_name(u'annakarenina')
         annafan = model.User.by_name(u'annafan')
-        postparams = '%s=1' % json.dumps({'domain_object': anna.id,
-                                          'user': 'annafan'})
+        postparams = '{0!s}=1'.format(json.dumps({'domain_object': anna.id,
+                                          'user': 'annafan'}))
         res = self.app.post('/api/action/roles_show', params=postparams,
                             extra_environ={'Authorization': str(annafan.apikey)},
                             status=200)
@@ -828,9 +828,9 @@ class TestAction(WsgiAppCase):
                                  ({'model': model, 'session': model.Session}, \
                                   {'domain_object': anna.id,
                                    'user': 'tester'})
-        postparams = '%s=1' % json.dumps({'user': 'tester',
+        postparams = '{0!s}=1'.format(json.dumps({'user': 'tester',
                                           'domain_object': anna.id,
-                                          'roles': ['reader']})
+                                          'roles': ['reader']}))
 
         res = self.app.post('/api/action/user_role_update', params=postparams,
                             extra_environ={'Authorization': str(annafan.apikey)},
@@ -854,9 +854,9 @@ class TestAction(WsgiAppCase):
         # Roles are no longer used so ignore this test
         raise SkipTest
         anna = model.Package.by_name(u'annakarenina')
-        postparams = '%s=1' % json.dumps({'user': 'tester',
+        postparams = '{0!s}=1'.format(json.dumps({'user': 'tester',
                                           'domain_object': anna.id,
-                                          'roles': ['editor']})
+                                          'roles': ['editor']}))
         # tester has no admin priviledges for this package
         res = self.app.post('/api/action/user_role_update', params=postparams,
                             extra_environ={'Authorization': 'tester'},
@@ -870,13 +870,13 @@ class TestAction(WsgiAppCase):
         roles_before = get_action('roles_show') \
                                  ({'model': model, 'session': model.Session}, \
                                   {'domain_object': anna.id})
-        postparams = '%s=1' % json.dumps({'domain_object': anna.id,
+        postparams = '{0!s}=1'.format(json.dumps({'domain_object': anna.id,
                                           'user_roles': [
                     {'user': 'annafan',
                      'roles': ('admin', 'editor')},
                     {'user': 'russianfan',
                      'roles': ['editor']},
-                                              ]})
+                                              ]}))
 
         res = self.app.post('/api/action/user_role_bulk_update', params=postparams,
                             extra_environ={'Authorization': str(annafan.apikey)},
@@ -1079,12 +1079,12 @@ class TestActionTermTranslation(WsgiAppCase):
         model.repo.rebuild_db()
 
     def test_1_update_single(self):
-        postparams = '%s=1' % json.dumps(
+        postparams = '{0!s}=1'.format(json.dumps(
             {"term" : "moo",
              "term_translation": "moo",
              "lang_code" : "fr"
             }
-        )
+        ))
 
         res = self.app.post('/api/action/term_translation_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -1092,12 +1092,12 @@ class TestActionTermTranslation(WsgiAppCase):
 
         assert json.loads(res.body)['success']
 
-        postparams = '%s=1' % json.dumps(
+        postparams = '{0!s}=1'.format(json.dumps(
             {"term" : "moo",
              "term_translation": "moomoo",
              "lang_code" : "fr"
             }
-        )
+        ))
 
         res = self.app.post('/api/action/term_translation_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -1105,12 +1105,12 @@ class TestActionTermTranslation(WsgiAppCase):
 
         assert json.loads(res.body)['success']
 
-        postparams = '%s=1' % json.dumps(
+        postparams = '{0!s}=1'.format(json.dumps(
             {"term" : "moo",
              "term_translation": "moomoo",
              "lang_code" : "en"
             }
-        )
+        ))
 
         res = self.app.post('/api/action/term_translation_update', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -1118,7 +1118,7 @@ class TestActionTermTranslation(WsgiAppCase):
 
         assert json.loads(res.body)['success']
 
-        postparams = '%s=1' % json.dumps({"terms" : ["moo"]})
+        postparams = '{0!s}=1'.format(json.dumps({"terms" : ["moo"]}))
 
         res = self.app.post('/api/action/term_translation_show', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
@@ -1134,7 +1134,7 @@ class TestActionTermTranslation(WsgiAppCase):
 
     def test_2_update_many(self):
 
-        postparams = '%s=1' % json.dumps({'data': [
+        postparams = '{0!s}=1'.format(json.dumps({'data': [
              {"term" : "many",
               "term_translation": "manymoo",
               "lang_code" : "fr"
@@ -1149,14 +1149,14 @@ class TestActionTermTranslation(WsgiAppCase):
              }
             ]
         }
-        )
+        ))
         res = self.app.post('/api/action/term_translation_update_many', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
                             status=200)
 
         assert json.loads(res.body)['result']['success'] == '3 rows updated', json.loads(res.body)
 
-        postparams = '%s=1' % json.dumps({"terms" : ["many"]})
+        postparams = '{0!s}=1'.format(json.dumps({"terms" : ["many"]}))
         res = self.app.post('/api/action/term_translation_show', params=postparams,
                             extra_environ={'Authorization': str(self.sysadmin_user.apikey)},
                             status=200)
@@ -1190,7 +1190,7 @@ class TestActionPackageSearch(WsgiAppCase):
                 'rows': 20,
                 'start': 0,
             }
-        postparams = '%s=1' % json.dumps(params)
+        postparams = '{0!s}=1'.format(json.dumps(params))
         res = self.app.post('/api/action/package_search', params=postparams)
         res = json.loads(res.body)
         result = res['result']
@@ -1216,7 +1216,7 @@ class TestActionPackageSearch(WsgiAppCase):
                 'rows': 20,
                 'start': 0,
             }
-        postparams = '%s=1' % json.dumps(params)
+        postparams = '{0!s}=1'.format(json.dumps(params))
         res = self.app.post('/api/action/package_search', params=postparams)
         res = json.loads(res.body)
         assert_equal(res['success'], True)
@@ -1230,7 +1230,7 @@ class TestActionPackageSearch(WsgiAppCase):
                 'rows': 20,
                 'start': 0,
             }
-        postparams = '%s=1' % json.dumps(params)
+        postparams = '{0!s}=1'.format(json.dumps(params))
         res = self.app.post('/api/action/package_search', params=postparams)
         res = json.loads(res.body)
         assert_equal(res['success'], True)
@@ -1244,7 +1244,7 @@ class TestActionPackageSearch(WsgiAppCase):
                 'rows': 20,
                 'start': 0,
             }
-        postparams = '%s=1' % json.dumps(params)
+        postparams = '{0!s}=1'.format(json.dumps(params))
         res = self.app.post('/api/action/package_search', params=postparams)
         res = json.loads(res.body)
         assert_equal(res['success'], True)
@@ -1252,7 +1252,7 @@ class TestActionPackageSearch(WsgiAppCase):
         assert_equal(len(res['result']['search_facets']['groups']['items']), 2)
 
     def test_1_basic_no_params(self):
-        postparams = '%s=1' % json.dumps({})
+        postparams = '{0!s}=1'.format(json.dumps({}))
         res = self.app.post('/api/action/package_search', params=postparams)
         res = json.loads(res.body)
         result = res['result']
@@ -1269,9 +1269,9 @@ class TestActionPackageSearch(WsgiAppCase):
         assert result['results'][0]['name'] in ('annakarenina', 'warandpeace')
 
     def test_2_bad_param(self):
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
                 'sort':'metadata_modified',
-            })
+            }))
         res = self.app.post('/api/action/package_search', params=postparams,
                             status=409)
         assert '"message": "Search error:' in res.body, res.body
@@ -1281,20 +1281,20 @@ class TestActionPackageSearch(WsgiAppCase):
         assert 'sort' in res.body, res.body
 
     def test_3_bad_param(self):
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
                 'weird_param':True,
-            })
+            }))
         res = self.app.post('/api/action/package_search', params=postparams,
                             status=400)
         assert '"message": "Search Query is invalid:' in res.body, res.body
         assert '"Invalid search parameters: [\'weird_param\']' in res.body, res.body
 
     def test_4_sort_by_metadata_modified(self):
-        search_params = '%s=1' % json.dumps({
+        search_params = '{0!s}=1'.format(json.dumps({
             'q': '*:*',
             'fl': 'name, metadata_modified',
             'sort': u'metadata_modified desc'
-        })
+        }))
 
         # modify warandpeace, check that it is the first search result
         rev = model.repo.new_revision()
@@ -1323,11 +1323,11 @@ class TestActionPackageSearch(WsgiAppCase):
 
         # add a tag to warandpeace, check that it is the first result
         pkg = model.Package.get('warandpeace')
-        pkg_params = '%s=1' % json.dumps({'id': pkg.id})
+        pkg_params = '{0!s}=1'.format(json.dumps({'id': pkg.id}))
         res = self.app.post('/api/action/package_show', params=pkg_params)
         pkg_dict = json.loads(res.body)['result']
         pkg_dict['tags'].append({'name': 'new-tag'})
-        pkg_params = '%s=1' % json.dumps(pkg_dict)
+        pkg_params = '{0!s}=1'.format(json.dumps(pkg_dict))
         res = self.app.post('/api/action/package_update', params=pkg_params,
                             extra_environ={'Authorization':  str(self.sysadmin_user.apikey)})
 
@@ -1402,10 +1402,10 @@ class TestSearchPluginInterface(WsgiAppCase):
 
     def test_search_plugin_interface_search(self):
         avoid = 'Tolstoy'
-        search_params = '%s=1' % json.dumps({
+        search_params = '{0!s}=1'.format(json.dumps({
             'q': '*:*',
             'extras' : {'ext_avoid':avoid}
-        })
+        }))
 
         res = self.app.post('/api/action/package_search', params=search_params)
 
@@ -1417,10 +1417,10 @@ class TestSearchPluginInterface(WsgiAppCase):
 
     def test_search_plugin_interface_abort(self):
 
-        search_params = '%s=1' % json.dumps({
+        search_params = '{0!s}=1'.format(json.dumps({
             'q': '*:*',
             'extras' : {'ext_abort':True}
-        })
+        }))
 
         res = self.app.post('/api/action/package_search', params=search_params)
 
@@ -1432,9 +1432,9 @@ class TestSearchPluginInterface(WsgiAppCase):
     def test_before_index(self):
 
         # no datasets get aaaaaaaa
-        search_params = '%s=1' % json.dumps({
+        search_params = '{0!s}=1'.format(json.dumps({
             'q': 'aaaaaaaa',
-        })
+        }))
 
         res = self.app.post('/api/action/package_search', params=search_params)
 
@@ -1443,9 +1443,9 @@ class TestSearchPluginInterface(WsgiAppCase):
         assert len(res_dict['results']) == 0
 
         # all datasets should get abcabcabc
-        search_params = '%s=1' % json.dumps({
+        search_params = '{0!s}=1'.format(json.dumps({
             'q': 'abcabcabc',
-        })
+        }))
         res = self.app.post('/api/action/package_search', params=search_params)
 
         res_dict = json.loads(res.body)['result']
@@ -1472,9 +1472,9 @@ class TestBulkActions(WsgiAppCase):
         ])
         model.Session.commit()
 
-        data_dict = '%s=1' % json.dumps({
+        data_dict = '{0!s}=1'.format(json.dumps({
             'name': 'org',
-        })
+        }))
         res = cls.app.post('/api/action/organization_create',
                             extra_environ={'Authorization': 'sysadmin'},
                             params=data_dict)
@@ -1482,10 +1482,10 @@ class TestBulkActions(WsgiAppCase):
 
         cls.package_ids = []
         for i in range(0,12):
-            data_dict = '%s=1' % json.dumps({
+            data_dict = '{0!s}=1'.format(json.dumps({
                 'name': 'name{i}'.format(i=i),
                 'owner_org': 'org',
-            })
+            }))
             res = cls.app.post('/api/action/package_create',
                                 extra_environ={'Authorization': 'sysadmin'},
                                 params=data_dict)
@@ -1497,10 +1497,10 @@ class TestBulkActions(WsgiAppCase):
         model.repo.rebuild_db()
 
     def test_01_make_private_then_public(self):
-        data_dict = '%s=1' % json.dumps({
+        data_dict = '{0!s}=1'.format(json.dumps({
             'datasets': self.package_ids,
             'org_id': self.org_id,
-        })
+        }))
         res = self.app.post('/api/action/bulk_update_private',
                             extra_environ={'Authorization': 'sysadmin'},
                             params=data_dict)
@@ -1527,10 +1527,10 @@ class TestBulkActions(WsgiAppCase):
 
     def test_02_bulk_delete(self):
 
-        data_dict = '%s=1' % json.dumps({
+        data_dict = '{0!s}=1'.format(json.dumps({
             'datasets': self.package_ids,
             'org_id': self.org_id,
-        })
+        }))
         res = self.app.post('/api/action/bulk_update_delete',
                             extra_environ={'Authorization': 'sysadmin'},
                             params=data_dict)
@@ -1572,7 +1572,7 @@ class TestResourceAction(WsgiAppCase):
         }
         package.update(kwargs)
 
-        postparams = '%s=1' % json.dumps(package)
+        postparams = '{0!s}=1'.format(json.dumps(package))
         res = self.app.post('/api/action/package_create', params=postparams,
                             extra_environ={'Authorization': 'tester'})
         return json.loads(res.body)['result']
@@ -1632,10 +1632,10 @@ class TestMember(WsgiAppCase):
         group = model.Group.get(group_id)
         url = '/api/action/group_member_create'
         role = 'member'
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
             'id': group_id,
             'username': user_id,
-            'role': role})
+            'role': role}))
 
         res = self.app.post(url, params=postparams,
                             extra_environ={'Authorization': str(user.apikey)})
@@ -1675,7 +1675,7 @@ class TestRelatedAction(WsgiAppCase):
         }
         package.update(kwargs)
 
-        postparams = '%s=1' % json.dumps(package)
+        postparams = '{0!s}=1'.format(json.dumps(package))
         res = self.app.post('/api/action/package_create', params=postparams,
                             extra_environ={'Authorization': 'tester'})
         return json.loads(res.body)['result']

@@ -29,14 +29,14 @@ class RevisionSearchApiTestCase(ApiTestCase, ControllerTestCase):
         offset = self.offset('/search/revision')
         revs = model.Session.query(model.Revision).all()
         rev_first = revs[-1]
-        params = "?since_id=%s" % rev_first.id
+        params = "?since_id={0!s}".format(rev_first.id)
         res = self.app.get(offset+params, status=200)
         res_list = self.data_from_res(res)
         assert rev_first.id not in res_list
         for rev in revs[:-1]:
             assert rev.id in res_list, (rev.id, res_list)
         rev_last = revs[0]
-        params = "?since_id=%s" % rev_last.id
+        params = "?since_id={0!s}".format(rev_last.id)
         res = self.app.get(offset+params, status=200)
         res_list = self.data_from_res(res)
         assert res_list == [], res_list
@@ -46,7 +46,7 @@ class RevisionSearchApiTestCase(ApiTestCase, ControllerTestCase):
         revs = model.Session.query(model.Revision).all()
         # Check since time of first.
         rev_first = revs[-1]
-        params = "?since_time=%s" % rev_first.timestamp.isoformat()
+        params = "?since_time={0!s}".format(rev_first.timestamp.isoformat())
         res = self.app.get(offset+params, status=200)
         res_list = self.data_from_res(res)
         assert rev_first.id not in res_list
@@ -54,7 +54,7 @@ class RevisionSearchApiTestCase(ApiTestCase, ControllerTestCase):
             assert rev.id in res_list, (rev.id, res_list)
         # Check since time of last.
         rev_last = revs[0]
-        params = "?since_time=%s" % rev_last.timestamp.isoformat()
+        params = "?since_time={0!s}".format(rev_last.timestamp.isoformat())
         res = self.app.get(offset+params, status=200)
         res_list = self.data_from_res(res)
         assert res_list == [], res_list

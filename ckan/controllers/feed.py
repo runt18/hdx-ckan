@@ -170,7 +170,7 @@ class FeedController(base.BaseController):
 
         data_dict, params = self._parse_url_params()
         key = 'owner_org' if is_org else 'groups'
-        data_dict['fq'] = '%s:"%s"' % (key, obj_dict['id'],)
+        data_dict['fq'] = '{0!s}:"{1!s}"'.format(key, obj_dict['id'])
         group_type = 'organization'
         if not is_org:
             group_type = 'group'
@@ -188,23 +188,20 @@ class FeedController(base.BaseController):
                                   action=group_type,
                                   id=obj_dict['name'])
 
-        guid = _create_atom_id(u'/feeds/group/%s.atom' %
-                               obj_dict['name'])
+        guid = _create_atom_id(u'/feeds/group/{0!s}.atom'.format(
+                               obj_dict['name']))
         alternate_url = self._alternate_url(params, groups=obj_dict['name'])
-        desc = u'Recently created or updated datasets on %s by group: "%s"' %\
-            (g.site_title, obj_dict['title'])
-        title = u'%s - Group: "%s"' %\
-            (g.site_title, obj_dict['title'])
+        desc = u'Recently created or updated datasets on {0!s} by group: "{1!s}"'.format(g.site_title, obj_dict['title'])
+        title = u'{0!s} - Group: "{1!s}"'.format(g.site_title, obj_dict['title'])
 
         if is_org:
-            guid = _create_atom_id(u'/feeds/organization/%s.atom' %
-                                   obj_dict['name'])
+            guid = _create_atom_id(u'/feeds/organization/{0!s}.atom'.format(
+                                   obj_dict['name']))
             alternate_url = self._alternate_url(params,
                                                 organization=obj_dict['name'])
             desc = u'Recently created or  updated datasets on %s '\
                 'by organization: "%s"' % (g.site_title, obj_dict['title'])
-            title = u'%s - Organization: "%s"' %\
-                (g.site_title, obj_dict['title'])
+            title = u'{0!s} - Organization: "{1!s}"'.format(g.site_title, obj_dict['title'])
 
         return self.output_feed(results,
                                 feed_title=title,
@@ -237,7 +234,7 @@ class FeedController(base.BaseController):
 
     def tag(self, id):
         data_dict, params = self._parse_url_params()
-        data_dict['fq'] = 'tags:"%s"' % id
+        data_dict['fq'] = 'tags:"{0!s}"'.format(id)
 
         item_count, results = _package_search(data_dict)
 
@@ -256,14 +253,13 @@ class FeedController(base.BaseController):
         alternate_url = self._alternate_url(params, tags=id)
 
         return self.output_feed(results,
-                                feed_title=u'%s - Tag: "%s"' %
-                                (g.site_title, id),
+                                feed_title=u'{0!s} - Tag: "{1!s}"'.format(g.site_title, id),
                                 feed_description=u'Recently created or '
                                 'updated datasets on %s by tag: "%s"' %
                                 (g.site_title, id),
                                 feed_link=alternate_url,
                                 feed_guid=_create_atom_id
-                                (u'/feeds/tag/%s.atom' % id),
+                                (u'/feeds/tag/{0!s}.atom'.format(id)),
                                 feed_url=feed_url,
                                 navigation_urls=navigation_urls)
 
@@ -304,7 +300,7 @@ class FeedController(base.BaseController):
             if param not in ['q', 'page', 'sort'] \
                     and len(value) and not param.startswith('_'):
                 search_params[param] = value
-                fq += ' %s:"%s"' % (param, value)
+                fq += ' {0!s}:"{1!s}"'.format(param, value)
 
         page = self._get_page_number(request.params)
 
@@ -335,7 +331,7 @@ class FeedController(base.BaseController):
         alternate_url = self._alternate_url(request.params)
 
         return self.output_feed(results,
-                                feed_title=u'%s - Custom query' % g.site_title,
+                                feed_title=u'{0!s} - Custom query'.format(g.site_title),
                                 feed_description=u'Recently created or updated'
                                 ' datasets on %s. Custom query: \'%s\'' %
                                 (g.site_title, q),
@@ -376,7 +372,7 @@ class FeedController(base.BaseController):
                 description=pkg.get('notes', ''),
                 updated=h.date_str_to_datetime(pkg.get('metadata_modified')),
                 published=h.date_str_to_datetime(pkg.get('metadata_created')),
-                unique_id=_create_atom_id(u'/dataset/%s' % pkg['id']),
+                unique_id=_create_atom_id(u'/dataset/{0!s}'.format(pkg['id'])),
                 author_name=pkg.get('author', ''),
                 author_email=pkg.get('author_email', ''),
                 categories=[t['name'] for t in pkg.get('tags', [])],

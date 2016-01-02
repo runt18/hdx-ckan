@@ -90,11 +90,11 @@ def set_global(key, value):
     model.set_system_info('ckan.config_update', str(time.time()))
     # update the config
     config[key] = value
-    log.info('config `%s` set to `%s`' % (key, value))
+    log.info('config `{0!s}` set to `{1!s}`'.format(key, value))
 
 def delete_global(key):
     model.delete_system_info(key)
-    log.info('config `%s` deleted' % (key))
+    log.info('config `{0!s}` deleted'.format((key)))
 
 def get_globals_key(key):
     # create our globals key
@@ -125,11 +125,11 @@ def reset():
         if key not in _CONFIG_CACHE:
             _CONFIG_CACHE[key] = config_value
         if value is not None:
-            log.debug('config `%s` set to `%s` from db' % (key, value))
+            log.debug('config `{0!s}` set to `{1!s}` from db'.format(key, value))
         else:
             value = _CONFIG_CACHE[key]
             if value:
-                log.debug('config `%s` set to `%s` from config' % (key, value))
+                log.debug('config `{0!s}` set to `{1!s}` from config'.format(key, value))
             else:
                 value = default
         setattr(app_globals, get_globals_key(key), value)

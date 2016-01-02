@@ -1043,7 +1043,7 @@ class TestVocabulary(object):
                 status=404)
         assert response.json['success'] is False
         msg = response.json['error']['message']
-        assert msg == u'Not found: Could not find tag "%s"' % 'nonexistent', \
+        assert msg == u'Not found: Could not find tag "{0!s}"'.format('nonexistent'), \
                 msg
 
     def test_delete_tag_vocab_not_exists(self):
@@ -1084,7 +1084,7 @@ class TestVocabulary(object):
                     status=404)
             assert response.json['success'] is False
             msg = response.json['error']['message']
-            assert msg == u'Not found: Could not find tag "%s"' % tag_name, msg
+            assert msg == u'Not found: Could not find tag "{0!s}"'.format(tag_name), msg
 
     def test_delete_tag_invalid_vocab(self):
         '''Test the error response when a user tries to delete a tag but gives
@@ -1103,8 +1103,7 @@ class TestVocabulary(object):
                     status=404)
             assert response.json['success'] is False
             msg = response.json['error']['message']
-            assert msg == u"Not found: could not find vocabulary '%s'" \
-                    % vocab_name, msg
+            assert msg == u"Not found: could not find vocabulary '{0!s}'".format(vocab_name), msg
 
     def test_delete_tag_not_logged_in(self):
         vocab = self.genre_vocab

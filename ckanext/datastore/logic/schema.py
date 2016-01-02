@@ -45,7 +45,7 @@ def list_of_strings_or_lists(key, data, errors, context):
         raise df.Invalid('Not a list')
     for x in value:
         if not isinstance(x, basestring) and not isinstance(x, list):
-            raise df.Invalid('%s: %s' % ('Neither a string nor a list', x))
+            raise df.Invalid('{0!s}: {1!s}'.format('Neither a string nor a list', x))
 
 
 def list_of_strings_or_string(key, data, errors, context):

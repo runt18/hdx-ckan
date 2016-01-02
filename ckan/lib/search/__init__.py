@@ -79,7 +79,7 @@ def index_for(_type):
         _type_n = _normalize_type(_type)
         return _INDICES[_type_n]()
     except KeyError, ke:
-        log.warn("Unknown search type: %s" % _type)
+        log.warn("Unknown search type: {0!s}".format(_type))
         return NoopSearchIndex()
 
 
@@ -90,7 +90,7 @@ def query_for(_type):
         _type_n = _normalize_type(_type)
         return _QUERIES[_type_n]()
     except KeyError, ke:
-        raise SearchError("Unknown search type: %s" % _type)
+        raise SearchError("Unknown search type: {0!s}".format(_type))
 
 
 def dispatch_by_operation(entity_type, entity, operation):
@@ -104,7 +104,7 @@ def dispatch_by_operation(entity_type, entity, operation):
         elif operation == model.domain_object.DomainObjectOperation.deleted:
             index.remove_dict(entity)
         else:
-            log.warn("Unknown operation: %s" % operation)
+            log.warn("Unknown operation: {0!s}".format(operation))
     except Exception, ex:
         log.exception(ex)
         # we really need to know about any exceptions, so reraise
@@ -132,7 +132,7 @@ class SynchronousSearchPlugin(p.SingletonPlugin):
             dispatch_by_operation(entity.__class__.__name__,
                                   {'id': entity.id}, operation)
         else:
-            log.warn("Discarded Sync. indexing for: %s" % entity)
+            log.warn("Discarded Sync. indexing for: {0!s}".format(entity))
 
 
 def rebuild(package_id=None, only_missing=False, force=False, refresh=False, defer_commit=False, package_ids=None):
@@ -192,8 +192,7 @@ def rebuild(package_id=None, only_missing=False, force=False, refresh=False, def
                     defer_commit
                 )
             except Exception, e:
-                log.error('Error while indexing dataset %s: %s' %
-                          (pkg_id, str(e)))
+                log.error('Error while indexing dataset {0!s}: {1!s}'.format(pkg_id, str(e)))
                 if force:
                     log.error(text_traceback())
                     continue
@@ -218,7 +217,7 @@ def check():
     pkgs = set([pkg.id for pkg in pkgs_q])
     indexed_pkgs = set(package_query.get_all_entity_ids(max_results=len(pkgs)))
     pkgs_not_indexed = pkgs - indexed_pkgs
-    print 'Packages not indexed = %i out of %i' % (len(pkgs_not_indexed),
+    print 'Packages not indexed = {0:d} out of {1:d}'.format(len(pkgs_not_indexed),
                                                    len(pkgs))
     for pkg_id in pkgs_not_indexed:
         pkg = model.Session.query(model.Package).get(pkg_id)
@@ -234,8 +233,8 @@ def show(package_reference):
 def clear(package_reference=None):
     package_index = index_for(model.Package)
     if package_reference:
-        log.debug("Clearing search index for dataset %s..." %
-                  package_reference)
+        log.debug("Clearing search index for dataset {0!s}...".format(
+                  package_reference))
         package_index.delete_package({'id': package_reference})
     elif not SIMPLE_SEARCH:
         log.debug("Clearing search index...")
@@ -290,7 +289,7 @@ def check_solr_schema_version(schema_file=None):
 
         res = urllib2.urlopen(req)
     else:
-        url = 'file://%s' % schema_file
+        url = 'file://{0!s}'.format(schema_file)
         res = urllib2.urlopen(url)
 
     tree = xml.dom.minidom.parseString(res.read())

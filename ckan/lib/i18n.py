@@ -41,7 +41,7 @@ def _get_locales():
     locales += [l for l in os.listdir(i18n_path) if localedata.exists(l)]
 
     assert locale_default in locales, \
-            'default language "%s" not available' % locale_default
+            'default language "{0!s}" not available'.format(locale_default)
 
     locale_list = []
     for locale in locales:

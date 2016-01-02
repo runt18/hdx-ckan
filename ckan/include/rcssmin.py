@@ -108,7 +108,7 @@ def _make_cssmin(python_only=False):
 
     unicoded = r'[0-9a-fA-F]{1,6}(?:[\040\n\t\f]|\r\n?)?'
     escaped = r'[^\n\r\f0-9a-fA-F]'
-    escape = r'(?:\\(?:%(unicoded)s|%(escaped)s))' % locals()
+    escape = r'(?:\\(?:{unicoded!s}|{escaped!s}))'.format(**locals())
 
     nmchar = r'[^\000-\054\056\057\072-\100\133-\136\140\173-\177]'
     #nmstart = r'[^\000-\100\133-\136\140\173-\177]'
@@ -124,20 +124,20 @@ def _make_cssmin(python_only=False):
     string1 = \
         r'(?:\047[^\047\\\r\n\f]*(?:\\[^\r\n\f][^\047\\\r\n\f]*)*\047)'
     string2 = r'(?:"[^"\\\r\n\f]*(?:\\[^\r\n\f][^"\\\r\n\f]*)*")'
-    strings = r'(?:%s|%s)' % (string1, string2)
+    strings = r'(?:{0!s}|{1!s})'.format(string1, string2)
 
     nl_string1 = \
         r'(?:\047[^\047\\\r\n\f]*(?:\\(?:[^\r]|\r\n?)[^\047\\\r\n\f]*)*\047)'
     nl_string2 = r'(?:"[^"\\\r\n\f]*(?:\\(?:[^\r]|\r\n?)[^"\\\r\n\f]*)*")'
-    nl_strings = r'(?:%s|%s)' % (nl_string1, nl_string2)
+    nl_strings = r'(?:{0!s}|{1!s})'.format(nl_string1, nl_string2)
 
     uri_nl_string1 = r'(?:\047[^\047\\]*(?:\\(?:[^\r]|\r\n?)[^\047\\]*)*\047)'
     uri_nl_string2 = r'(?:"[^"\\]*(?:\\(?:[^\r]|\r\n?)[^"\\]*)*")'
-    uri_nl_strings = r'(?:%s|%s)' % (uri_nl_string1, uri_nl_string2)
+    uri_nl_strings = r'(?:{0!s}|{1!s})'.format(uri_nl_string1, uri_nl_string2)
 
-    nl_escaped = r'(?:\\%(nl)s)' % locals()
+    nl_escaped = r'(?:\\{nl!s})'.format(**locals())
 
-    space = r'(?:%(spacechar)s|%(comment)s)' % locals()
+    space = r'(?:{spacechar!s}|{comment!s})'.format(**locals())
 
     ie7hack = r'(?:>/\*\*/)'
 
@@ -292,7 +292,7 @@ def _make_cssmin(python_only=False):
             fn_open,                            # {
             fn_close,                           # }
             lambda g: g(11),                    # string
-            lambda g: 'url(%s)' % uri_space_sub(uri_space_subber, g(12)),
+            lambda g: 'url({0!s})'.format(uri_space_sub(uri_space_subber, g(12))),
                                                 # url(...)
             fn_media,                           # @media
             None,

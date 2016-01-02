@@ -651,7 +651,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     }
     logic.get_action('member_create')(member_create_context, member_dict)
 
-    log.debug('Created object %s' % group.name)
+    log.debug('Created object {0!s}'.format(group.name))
     return model_dictize.group_dictize(group, context)
 
 

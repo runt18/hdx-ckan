@@ -33,10 +33,10 @@ try:
 except ImportError:
     # Python 2.6 doesn't have these, so define them here
     def assert_in(a, b, msg=None):
-        assert a in b, msg or '%r was not in %r' % (a, b)
+        assert a in b, msg or '{0!r} was not in {1!r}'.format(a, b)
 
     def assert_not_in(a, b, msg=None):
-        assert a not in b, msg or '%r was in %r' % (a, b)
+        assert a not in b, msg or '{0!r} was in {1!r}'.format(a, b)
 
 
 def reset_db():

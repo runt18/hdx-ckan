@@ -69,7 +69,7 @@ class PackageSearchApiTestCase(ApiTestCase, ControllerTestCase):
         check_error(UnicodeMultiDict({'{"q": illegal json}': u'1'}))
 
     def test_01_uri_q(self):
-        offset = self.base_url + '?q=%s' % self.package_fixture_data['name']
+        offset = self.base_url + '?q={0!s}'.format(self.package_fixture_data['name'])
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, ['testpkg'])
@@ -86,7 +86,7 @@ class PackageSearchApiTestCase(ApiTestCase, ControllerTestCase):
     def test_03_uri_qjson(self):
         query = {'q': self.package_fixture_data['name']}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, ['testpkg'])
@@ -104,7 +104,7 @@ class PackageSearchApiTestCase(ApiTestCase, ControllerTestCase):
     def test_05_uri_json_tags(self):
         query = {'q': 'annakarenina tags:russian tags:tolstoy'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina'])
@@ -113,7 +113,7 @@ class PackageSearchApiTestCase(ApiTestCase, ControllerTestCase):
     def test_05_uri_json_tags_multiple(self):
         query = {'q': 'tags:russian tags:tolstoy'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina'])
@@ -121,7 +121,7 @@ class PackageSearchApiTestCase(ApiTestCase, ControllerTestCase):
 
     def test_06_uri_q_tags(self):
         query = webhelpers.util.html_escape('annakarenina tags:russian tags:tolstoy')
-        offset = self.base_url + '?q=%s' % query
+        offset = self.base_url + '?q={0!s}'.format(query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina'])
@@ -147,7 +147,7 @@ class PackageSearchApiTestCase(ApiTestCase, ControllerTestCase):
     def test_12_all_packages_qjson(self):
         query = {'q': ''}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         assert_equal(res_dict['count'], 3)
@@ -204,7 +204,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
     def test_07_uri_qjson_tags(self):
         query = {'q': '', 'tags':['tolstoy']}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina'])
@@ -213,7 +213,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
     def test_07_uri_qjson_tags_with_flexible_query(self):
         query = {'q': '', 'tags':['Flexible \u30a1']}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina', u'warandpeace'])
@@ -222,7 +222,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
     def test_07_uri_qjson_tags_multiple(self):
         query = {'q': '', 'tags':['tolstoy', 'russian', u'Flexible \u30a1']}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         print offset
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
@@ -232,7 +232,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
     def test_07_uri_qjson_tags_reverse(self):
         query = {'q': '', 'tags':['russian']}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina', u'warandpeace'])
@@ -246,7 +246,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
     
         query = {"geographic_coverage":"England"}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, ['testpkg'])
@@ -255,7 +255,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
     def test_07_uri_qjson_extras_2(self):
         query = {"national_statistic":"yes"}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, ['testpkg'])
@@ -270,7 +270,7 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
         
         query = {'q': 'russian', 'all_fields': 1}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         assert res_dict['count'] == 2, res_dict
@@ -305,14 +305,14 @@ class LegacyOptionsTestCase(ApiTestCase, ControllerTestCase):
 
     def test_10_single_tag_with_plus(self):
         tagname = "Flexible+" + quote(u'\u30a1'.encode('utf8'))
-        offset = self.base_url + "?tags=%s&all_fields=1"%tagname
+        offset = self.base_url + "?tags={0!s}&all_fields=1".format(tagname)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         assert res_dict['count'] == 2, res_dict
 
     def test_10_multi_tags_with_ampersand_including_a_multiword_tagame(self):
         tagname = "Flexible+" + quote(u'\u30a1'.encode('utf8'))
-        offset = self.base_url + '?tags=tolstoy&tags=%s&all_fields=1' % tagname
+        offset = self.base_url + '?tags=tolstoy&tags={0!s}&all_fields=1'.format(tagname)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         assert res_dict['count'] == 1, res_dict
@@ -372,7 +372,7 @@ class TestPackageSearchApi3(Api3TestCase, PackageSearchApiTestCase):
     def test_07_uri_qjson_tags(self):
         query = {'q': 'tags:tolstoy'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina'])
@@ -381,7 +381,7 @@ class TestPackageSearchApi3(Api3TestCase, PackageSearchApiTestCase):
     def test_07_uri_qjson_tags_with_unicode(self):
         query = {'q': u'tags:"Flexible \u30a1"'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina', u'warandpeace'])
@@ -390,7 +390,7 @@ class TestPackageSearchApi3(Api3TestCase, PackageSearchApiTestCase):
     def test_07_uri_qjson_tags_multiple(self):
         query = {'q': 'tags:tolstoy tags:russian'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         print offset
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
@@ -400,7 +400,7 @@ class TestPackageSearchApi3(Api3TestCase, PackageSearchApiTestCase):
     def test_07_uri_qjson_tags_reverse(self):
         query = {'q': 'tags:russian'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, [u'annakarenina', u'warandpeace'])
@@ -409,7 +409,7 @@ class TestPackageSearchApi3(Api3TestCase, PackageSearchApiTestCase):
     def test_07_uri_qjson_extras_2(self):
         query = {'q': "national_statistic:yes"}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         self.assert_results(res_dict, ['testpkg'])
@@ -418,7 +418,7 @@ class TestPackageSearchApi3(Api3TestCase, PackageSearchApiTestCase):
     def test_08_all_fields(self):
         query = {'q': 'russian', 'fl': '*'}
         json_query = self.dumps(query)
-        offset = self.base_url + '?qjson=%s' % json_query
+        offset = self.base_url + '?qjson={0!s}'.format(json_query)
         res = self.app.get(offset, status=200)
         res_dict = self.data_from_res(res)
         assert res_dict['count'] == 2, res_dict

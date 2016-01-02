@@ -37,7 +37,7 @@ def copy_packages(source_ckan_uri,
                      'title': group_title}
             ckan2.group_register_post(group)
             existing_groups.add(group_name)
-            print 'Created group: %s' % group_name
+            print 'Created group: {0!s}'.format(group_name)
 
     if dest_group_name:
         add_group_if_needed(dest_group_name, dest_group_title)
@@ -45,29 +45,29 @@ def copy_packages(source_ckan_uri,
     existing_pkgs = ckan2.package_register_get()
 
     if site_name:
-        import_tag = 'meta.imported-from.%s' % re.sub('[^a-zA-Z0-9-_.]', '', site_name)
-        print 'Tagging with: %s' % import_tag
+        import_tag = 'meta.imported-from.{0!s}'.format(re.sub('[^a-zA-Z0-9-_.]', '', site_name))
+        print 'Tagging with: {0!s}'.format(import_tag)
     else:
         import_tag = None
     
     # go through all packages
     package_list = ckan1.package_register_get()
-    print 'Found %i packages to copy' % len(package_list)
+    print 'Found {0:d} packages to copy'.format(len(package_list))
 
     if filter:
         filter_re = re.compile(filter)
         package_list = [pkg for pkg in package_list \
                         if filter_re.match(pkg)]
-        print 'Filtered down to %i packages' % len(package_list)
+        print 'Filtered down to {0:d} packages'.format(len(package_list))
     
     for package_ref in package_list[:]:
         try:
             pkg = ckan1.package_entity_get(package_ref)
         except ckanclient.CkanApiNotAuthorizedError:
-            print '!! Not authorized: %s' % package_ref
+            print '!! Not authorized: {0!s}'.format(package_ref)
             package_list.remove(package_ref)
             continue
-        print 'Got package: %s' % pkg['name']
+        print 'Got package: {0!s}'.format(pkg['name'])
 
         # put in groups
         for group_name in pkg['groups']:
@@ -99,13 +99,13 @@ def copy_packages(source_ckan_uri,
             group = ckan2.group_entity_get(group_ref)
             group['packages'].append(pkg['name'])
             ckan2.group_entity_put(group)
-            print '...and added to group %s' % group_ref
+            print '...and added to group {0!s}'.format(group_ref)
 
     if dest_group_name:
         group = ckan2.group_entity_get(dest_group_name)
         pkgs_to_add_to_group = list(set(package_list) - set(group['packages']))
         if pkgs_to_add_to_group:
-            print 'Adding %i packages to group %s: %r' % (len(pkgs_to_add_to_group), dest_group_name, pkgs_to_add_to_group)
+            print 'Adding {0:d} packages to group {1!s}: {2!r}'.format(len(pkgs_to_add_to_group), dest_group_name, pkgs_to_add_to_group)
             group['packages'].extend(pkgs_to_add_to_group)
             ckan2.group_entity_put(group)
 
@@ -141,7 +141,7 @@ parser.add_option("-f", "--filter", dest="filter",
 
 (options, args) = parser.parse_args()
 
-assert len(args) == 2, 'The source and destination CKAN API URIs are the only two arguments. Found: %r' % args
+assert len(args) == 2, 'The source and destination CKAN API URIs are the only two arguments. Found: {0!r}'.format(args)
 source_ckan_uri, destination_ckan_uri = args
 print 'Key: ', options.destination_ckan_api_key
 

@@ -52,7 +52,7 @@ class TestActivity(HtmlCheckMethods):
         offset = url_for(controller='user', action='activity', id=user['id'])
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s signed up' % user['fullname'] in stripped, stripped
+        assert '{0!s} signed up'.format(user['fullname']) in stripped, stripped
 
         # Create a new package.
         package = {
@@ -69,7 +69,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_create(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s created the dataset %s ' % (
+        assert '{0!s} created the dataset {1!s} '.format(
                 user['fullname'], package['title']) in stripped, stripped
 
         # Add a resource to the package.
@@ -87,8 +87,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_update(context, request_data)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s added the resource %s to the dataset %s' % \
-                (user['fullname'], resource['name'], package['title']) \
+        assert '{0!s} added the resource {1!s} to the dataset {2!s}'.format(user['fullname'], resource['name'], package['title']) \
                 in stripped, stripped
 
         # Update the package.
@@ -96,8 +95,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s updated the dataset %s' \
-                % (user['fullname'], package['title']) \
+        assert '{0!s} updated the dataset {1!s}'.format(user['fullname'], package['title']) \
                 in stripped, stripped
 
         # Update the resource.
@@ -106,8 +104,7 @@ class TestActivity(HtmlCheckMethods):
         resource = resource_update(context, resource)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s updated the resource %s in the dataset %s' \
-                % (user['fullname'], resource['name'], package['title']) \
+        assert '{0!s} updated the resource {1!s} in the dataset {2!s}'.format(user['fullname'], resource['name'], package['title']) \
                 in stripped, stripped
 
         # Delete the resource.
@@ -116,22 +113,21 @@ class TestActivity(HtmlCheckMethods):
         package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s deleted the resource %s from the dataset %s' % \
-                (user['fullname'], resource['name'], package['title']) \
+        assert '{0!s} deleted the resource {1!s} from the dataset {2!s}'.format(user['fullname'], resource['name'], package['title']) \
                 in stripped, stripped
 
         # Follow the package.
         follow_dataset(context, {'id': package['id']})
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s started following %s' % (user['fullname'],
+        assert '{0!s} started following {1!s}'.format(user['fullname'],
                 package['title']) not in stripped, stripped
 
         # Follow another user.
         follow_user(context, {'id': 'joeadmin'})
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s started following %s' % (user['fullname'],
+        assert '{0!s} started following {1!s}'.format(user['fullname'],
                 'joeadmin') not in stripped, stripped
 
         # Create a new group.
@@ -143,7 +139,7 @@ class TestActivity(HtmlCheckMethods):
         group = group_create(context, group)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s created the group %s' % (user['fullname'], group['title']) \
+        assert '{0!s} created the group {1!s}'.format(user['fullname'], group['title']) \
                 in stripped, stripped
 
         # Update the group.
@@ -151,7 +147,7 @@ class TestActivity(HtmlCheckMethods):
         group = group_update(context, group)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s updated the group %s' % (user['fullname'], group['title']) \
+        assert '{0!s} updated the group {1!s}'.format(user['fullname'], group['title']) \
                 in stripped, stripped
 
         # Delete the group.
@@ -159,7 +155,7 @@ class TestActivity(HtmlCheckMethods):
         group_update(context, group)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s deleted the group %s' % (user['fullname'], group['title']) \
+        assert '{0!s} deleted the group {1!s}'.format(user['fullname'], group['title']) \
                 in stripped, stripped
 
         # Add a new tag to the package.
@@ -168,8 +164,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s added the tag %s to the dataset %s' % \
-                (user['fullname'], tag['name'], package['title']) \
+        assert '{0!s} added the tag {1!s} to the dataset {2!s}'.format(user['fullname'], tag['name'], package['title']) \
                 in stripped, stripped
 
         # Remove the tag from the package.
@@ -178,8 +173,7 @@ class TestActivity(HtmlCheckMethods):
         package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s removed the tag %s from the dataset %s' % \
-                (user['fullname'], tag['name'], package['title']) \
+        assert '{0!s} removed the tag {1!s} from the dataset {2!s}'.format(user['fullname'], tag['name'], package['title']) \
                 in stripped, stripped
 
         # Add an extra to the package.
@@ -187,8 +181,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s added the extra "%s" to the dataset %s' % \
-                (user['fullname'], 'quality', package['title']) \
+        assert '{0!s} added the extra "{1!s}" to the dataset {2!s}'.format(user['fullname'], 'quality', package['title']) \
                 in stripped, stripped
 
         # Update the extra.
@@ -196,8 +189,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s changed the extra "%s" of the dataset %s' % \
-                (user['fullname'], 'quality', package['title']) \
+        assert '{0!s} changed the extra "{1!s}" of the dataset {2!s}'.format(user['fullname'], 'quality', package['title']) \
                 in stripped, stripped
 
         # Delete the extra.
@@ -205,8 +197,7 @@ class TestActivity(HtmlCheckMethods):
         package = package_update(context, package)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s deleted the extra "%s" from the dataset %s' % \
-                (user['fullname'], 'quality', package['title']) \
+        assert '{0!s} deleted the extra "{1!s}" from the dataset {2!s}'.format(user['fullname'], 'quality', package['title']) \
                 in stripped, stripped
 
         # Delete the package.
@@ -216,8 +207,7 @@ class TestActivity(HtmlCheckMethods):
         del context['ignore_auth']
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s deleted the dataset %s' % \
-                (user['fullname'], package['title']) \
+        assert '{0!s} deleted the dataset {1!s}'.format(user['fullname'], package['title']) \
                 in stripped, stripped
 
         # Update the user's profile.
@@ -225,7 +215,7 @@ class TestActivity(HtmlCheckMethods):
         user_update(context, user)
         result = self.app.get(offset, status=200)
         stripped = self.strip_tags(result)
-        assert '%s updated their profile' % user['fullname'] \
+        assert '{0!s} updated their profile'.format(user['fullname']) \
                 in stripped, stripped
 
         # By now we've created >15 activities, but only the latest 15 should

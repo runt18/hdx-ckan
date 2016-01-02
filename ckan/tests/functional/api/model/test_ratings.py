@@ -55,7 +55,7 @@ class RatingsTestCase(BaseModelApiTestCase):
         rating_opts = {'package':u'warandpeace',
                        'rating':5}
         pkg_name = rating_opts['package']
-        postparams = '%s=1' % self.dumps(rating_opts)
+        postparams = '{0!s}=1'.format(self.dumps(rating_opts))
         res = self.app.post(offset, params=postparams, status=[201],
                 extra_environ=self.extra_environ)
         model.Session.remove()
@@ -68,14 +68,14 @@ class RatingsTestCase(BaseModelApiTestCase):
         offset = self.package_offset(pkg_name)
         res = self.app.get(offset, status=[200])
         assert pkg_name in res, res
-        assert '"ratings_average": %s.0' % rating_opts['rating'] in res, res
+        assert '"ratings_average": {0!s}.0'.format(rating_opts['rating']) in res, res
         assert '"ratings_count": 1' in res, res
         
         model.Session.remove()
         
         # Rerate package
         offset = self.rating_offset()
-        postparams = '%s=1' % self.dumps(rating_opts)
+        postparams = '{0!s}=1'.format(self.dumps(rating_opts))
         res = self.app.post(offset, params=postparams, status=[201],
                 extra_environ=self.extra_environ)
         model.Session.remove()
@@ -89,7 +89,7 @@ class RatingsTestCase(BaseModelApiTestCase):
         offset = self.rating_offset()
         rating_opts = {'package':u'warandpeace',
                        'rating':0}
-        postparams = '%s=1' % self.dumps(rating_opts)
+        postparams = '{0!s}=1'.format(self.dumps(rating_opts))
         res = self.app.post(offset, params=postparams, status=[409],
                             extra_environ=self.extra_environ)
         self.assert_json_response(res, 'rating')

@@ -261,7 +261,7 @@ class StorageAPIController(BaseController):
         if storage_backend in ['google', 's3']:
             if not label.startswith("/"):
                 label = "/" + label
-            url = "https://%s%s" % (
+            url = "https://{0!s}{1!s}".format(
                 self.ofs.conn.calling_format.build_host(
                     self.ofs.conn.server_name(), bucket), label)
         else:
@@ -338,7 +338,7 @@ class StorageAPIController(BaseController):
         fields = [{
             'name': self.ofs.conn.provider.metadata_prefix + 'uploaded-by',
             'value': c.userobj.id}]
-        conditions = ['{"%s": "%s"}' % (x['name'], x['value']) for x in
+        conditions = ['{{"{0!s}": "{1!s}"}}'.format(x['name'], x['value']) for x in
                       fields]
         # In FF redirect to this breaks js upload as FF attempts to open file
         # (presumably because mimetype = javascript) and this stops js

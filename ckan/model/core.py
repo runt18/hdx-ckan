@@ -19,7 +19,7 @@ class System(domain_object.DomainObject):
     name = 'system'
 
     def __unicode__(self):
-        return u'<%s>' % self.__class__.__name__
+        return u'<{0!s}>'.format(self.__class__.__name__)
 
     def purge(self):
         pass

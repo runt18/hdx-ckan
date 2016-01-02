@@ -158,7 +158,7 @@ def _activity_list(context, activity_stream, extra_vars):
                 if object_type == 'PackageExtra':
                     object_type = 'package_extra'
 
-                new_activity_type = '%s %s' % (detail['activity_type'],
+                new_activity_type = '{0!s} {1!s}'.format(detail['activity_type'],
                                                object_type.lower())
                 if new_activity_type in activity_streams.activity_stream_string_functions:
                     activity_type = new_activity_type
@@ -463,7 +463,7 @@ def package_create(context, data_dict):
     context["package"] = pkg
     # this is added so that the rest controller can make a new location
     context["id"] = pkg.id
-    log.debug('Created object %s' % pkg.name)
+    log.debug('Created object {0!s}'.format(pkg.name))
 
     # Make sure that a user provided schema is not used on package_show
     context.pop('schema', None)
@@ -535,9 +535,9 @@ def filesize_format(size_in_bytes):
 
         for unit in ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
             if size < d:
-                return "%3.1f%s" % (size, unit)
+                return "{0:3.1f}{1!s}".format(size, unit)
             size /= d
-        return "%.1f%s" % (size, 'Yi')
+        return "{0:.1f}{1!s}".format(size, 'Yi')
     except Exception, e:
         log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
         return size_in_bytes

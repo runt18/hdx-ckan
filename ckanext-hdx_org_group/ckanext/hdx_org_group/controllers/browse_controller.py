@@ -108,8 +108,8 @@ class BrowseController(base.BaseController):
                 context, {'vocabulary_id': 'Topics'})
         except NotFound, e:
             all_topics = []
-            log.error('ERROR getting vocabulary named Topics: %r' %
-                      str(e.extra_msg))
+            log.error('ERROR getting vocabulary named Topics: {0!r}'.format(
+                      str(e.extra_msg)))
         return all_topics
 
     def _get_dataset_counts(self, context, package_type):

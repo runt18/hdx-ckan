@@ -56,21 +56,21 @@ def convert_legacy_parameters_to_solr(legacy_params):
         elif search_key == 'limit':
             solr_params['rows'] = value
         elif search_key == 'order_by':
-            solr_params['sort'] = '%s asc' % value
+            solr_params['sort'] = '{0!s} asc'.format(value)
         elif search_key == 'tags':
             if isinstance(value_obj, list):
                 tag_list = value_obj
             elif isinstance(value_obj, basestring):
                 tag_list = [value_obj]
             else:
-                raise SearchQueryError('Was expecting either a string or JSON list for the tags parameter: %r' % value)
-            solr_q_list.extend(['tags:"%s"' % escape_legacy_argument(tag) for tag in tag_list])
+                raise SearchQueryError('Was expecting either a string or JSON list for the tags parameter: {0!r}'.format(value))
+            solr_q_list.extend(['tags:"{0!s}"'.format(escape_legacy_argument(tag)) for tag in tag_list])
         else:
             if len(value.strip()):
                 value = escape_legacy_argument(value)
                 if ' ' in value:
-                    value = '"%s"' % value
-                solr_q_list.append('%s:%s' % (search_key, value))
+                    value = '"{0!s}"'.format(value)
+                solr_q_list.append('{0!s}:{1!s}'.format(search_key, value))
         del solr_params[search_key]
     solr_params['q'] = ' '.join(solr_q_list)
     if non_solr_params:
@@ -107,14 +107,14 @@ class QueryOptions(dict):
                 try:
                     value = asbool(value)
                 except ValueError:
-                    raise SearchQueryError('Value for search option %r must be True or False (1 or 0) but received %r' % (key, value))
+                    raise SearchQueryError('Value for search option {0!r} must be True or False (1 or 0) but received {1!r}'.format(key, value))
             elif key in self.INTEGER_OPTIONS:
                 try:
                     value = int(value)
                 except ValueError:
-                    raise SearchQueryError('Value for search option %r must be an integer but received %r' % (key, value))
+                    raise SearchQueryError('Value for search option {0!r} must be an integer but received {1!r}'.format(key, value))
             elif key in self.UNSUPPORTED_OPTIONS:
-                    raise SearchQueryError('Search option %r is not supported' % key)
+                    raise SearchQueryError('Search option {0!r} is not supported'.format(key))
             self[key] = value
 
     def __getattr__(self, name):
@@ -250,7 +250,7 @@ class PackageSearchQuery(SearchQuery):
         Return a list of the IDs of all indexed packages.
         """
         query = "*:*"
-        fq = "+site_id:\"%s\" " % config.get('ckan.site_id')
+        fq = "+site_id:\"{0!s}\" ".format(config.get('ckan.site_id'))
         fq += "+state:active "
 
         conn = make_connection()
@@ -264,22 +264,21 @@ class PackageSearchQuery(SearchQuery):
     def get_index(self,reference):
         query = {
             'rows': 1,
-            'q': 'name:"%s" OR id:"%s"' % (reference,reference),
+            'q': 'name:"{0!s}" OR id:"{1!s}"'.format(reference, reference),
             'wt': 'json',
-            'fq': 'site_id:"%s"' % config.get('ckan.site_id')}
+            'fq': 'site_id:"{0!s}"'.format(config.get('ckan.site_id'))}
 
         conn = make_connection()
-        log.debug('Package query: %r' % query)
+        log.debug('Package query: {0!r}'.format(query))
         try:
             solr_response = conn.raw_query(**query)
         except SolrException, e:
-            raise SearchError('SOLR returned an error running query: %r Error: %r' %
-                              (query, e.reason))
+            raise SearchError('SOLR returned an error running query: {0!r} Error: {1!r}'.format(query, e.reason))
         try:
             data = json.loads(solr_response)
 
             if data['response']['numFound'] == 0:
-                raise SearchError('Dataset not found in the search index: %s' % reference)
+                raise SearchError('Dataset not found in the search index: {0!s}'.format(reference))
             else:
                 return data['response']['docs'][0]
         except Exception, e:
@@ -303,7 +302,7 @@ class PackageSearchQuery(SearchQuery):
         # check that query keys are valid
         if not set(query.keys()) <= VALID_SOLR_PARAMETERS:
             invalid_params = [s for s in set(query.keys()) - VALID_SOLR_PARAMETERS]
-            raise SearchQueryError("Invalid search parameters: %s" % invalid_params)
+            raise SearchQueryError("Invalid search parameters: {0!s}".format(invalid_params))
 
         # default query is to return all documents
         q = query.get('q')
@@ -323,7 +322,7 @@ class PackageSearchQuery(SearchQuery):
         # show only results from this CKAN instance
         fq = query.get('fq', '')
         if not '+site_id:' in fq:
-            fq += ' +site_id:"%s"' % config.get('ckan.site_id')
+            fq += ' +site_id:"{0!s}"'.format(config.get('ckan.site_id'))
 
         # filter for package status
         if not '+state:' in fq:
@@ -356,12 +355,11 @@ class PackageSearchQuery(SearchQuery):
 
 
         conn = make_connection()
-        log.debug('Package query: %r' % query)
+        log.debug('Package query: {0!r}'.format(query))
         try:
             solr_response = conn.raw_query(**query)
         except SolrException, e:
-            raise SearchError('SOLR returned an error running query: %r Error: %r' %
-                              (query, e.reason))
+            raise SearchError('SOLR returned an error running query: {0!r} Error: {1!r}'.format(query, e.reason))
         try:
             data = json.loads(solr_response)
             response = data['response']

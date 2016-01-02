@@ -24,9 +24,9 @@ class TestSolrConfig(TestController):
             conn.close()
         except socket.error, e:
             if not config.get('solr_url'):
-                raise AssertionError("Config option 'solr_url' needs to be defined in this CKAN's development.ini. Default of %s didn't work: %s" % (search.DEFAULT_SOLR_URL, e))
+                raise AssertionError("Config option 'solr_url' needs to be defined in this CKAN's development.ini. Default of {0!s} didn't work: {1!s}".format(search.DEFAULT_SOLR_URL, e))
             else:
-                raise AssertionError('SOLR connection problem. Connection defined in development.ini as: solr_url=%s Error: %s' % (config['solr_url'], e))
+                raise AssertionError('SOLR connection problem. Connection defined in development.ini as: solr_url={0!s} Error: {1!s}'.format(config['solr_url'], e))
 
 
 class TestSolrSearch:
@@ -35,7 +35,7 @@ class TestSolrSearch:
         setup_test_search_index()
         CreateTestData.create_search_test_data()
         cls.solr = search.make_connection()
-        cls.fq = " +site_id:\"%s\" " % config['ckan.site_id']
+        cls.fq = " +site_id:\"{0!s}\" ".format(config['ckan.site_id'])
         search.rebuild()
 
     @classmethod

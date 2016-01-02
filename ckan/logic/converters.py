@@ -116,7 +116,7 @@ def convert_user_name_or_id_to_id(user_name_or_id, context):
         result = session.query(model.User).filter_by(
                 name=user_name_or_id).first()
     if not result:
-        raise df.Invalid('%s: %s' % (_('Not found'), _('User')))
+        raise df.Invalid('{0!s}: {1!s}'.format(_('Not found'), _('User')))
     return result.id
 
 def convert_package_name_or_id_to_id(package_name_or_id, context):
@@ -141,7 +141,7 @@ def convert_package_name_or_id_to_id(package_name_or_id, context):
         result = session.query(model.Package).filter_by(
                 name=package_name_or_id).first()
     if not result:
-        raise df.Invalid('%s: %s' % (_('Not found'), _('Dataset')))
+        raise df.Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Dataset')))
     return result.id
 
 def convert_group_name_or_id_to_id(group_name_or_id, context):
@@ -166,7 +166,7 @@ def convert_group_name_or_id_to_id(group_name_or_id, context):
         result = session.query(model.Group).filter_by(
                 name=group_name_or_id).first()
     if not result:
-        raise df.Invalid('%s: %s' % (_('Not found'), _('Group')))
+        raise df.Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Group')))
     return result.id
 
 

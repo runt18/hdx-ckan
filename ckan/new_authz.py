@@ -45,11 +45,11 @@ class AuthFunctions:
         module_root = 'ckan.logic.auth'
 
         for auth_module_name in ['get', 'create', 'update', 'delete', 'patch']:
-            module_path = '%s.%s' % (module_root, auth_module_name,)
+            module_path = '{0!s}.{1!s}'.format(module_root, auth_module_name)
             try:
                 module = __import__(module_path)
             except ImportError:
-                log.debug('No auth module for action "%s"' % auth_module_name)
+                log.debug('No auth module for action "{0!s}"'.format(auth_module_name))
                 continue
 
             for part in module_path.split('.')[1:]:
@@ -76,7 +76,7 @@ class AuthFunctions:
             for name, auth_function in plugin.get_auth_functions().items():
                 if name in resolved_auth_function_plugins:
                     raise Exception(
-                        'The auth function %r is already implemented in %r' % (
+                        'The auth function {0!r} is already implemented in {1!r}'.format(
                             name,
                             resolved_auth_function_plugins[name]
                         )
@@ -175,7 +175,7 @@ def is_authorized(action, context, data_dict=None):
 
         return auth_function(context, data_dict)
     else:
-        raise ValueError(_('Authorization function not found: %s' % action))
+        raise ValueError(_('Authorization function not found: {0!s}'.format(action)))
 
 
 # these are the permissions that roles have
@@ -200,7 +200,7 @@ def _trans_role_member():
 
 def trans_role(role):
     module = sys.modules[__name__]
-    return getattr(module, '_trans_role_%s' % role)()
+    return getattr(module, '_trans_role_{0!s}'.format(role))()
 
 
 def roles_list():

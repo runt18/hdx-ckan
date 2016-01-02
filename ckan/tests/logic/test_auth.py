@@ -44,15 +44,14 @@ class TestAuth(tests.WsgiAppCase):
 
     @classmethod
     def _call_api(cls, action, data, user, status=None):
-        params = '%s=1' % json.dumps(data)
-        res = cls.app.post('/api/action/%s' % action,
+        params = '{0!s}=1'.format(json.dumps(data))
+        res = cls.app.post('/api/action/{0!s}'.format(action),
                             params=params,
                             extra_environ={'Authorization': cls.apikeys[user]},
                             status=[200, 403, 409])
         if res.status != (status or 200):
             error = json.loads(res.body)['error']
-            raise AssertionError('Status was %s but should be %s. Error: %s' %
-                                 (res.status, status, error))
+            raise AssertionError('Status was {0!s} but should be {1!s}. Error: {2!s}'.format(res.status, status, error))
         return res
 
     @classmethod

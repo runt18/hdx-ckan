@@ -38,15 +38,15 @@ class _TestSync(TestController):
         count = 0
         while True:
             try:
-                f = urllib2.urlopen('http://localhost:5050%s' % offset)
+                f = urllib2.urlopen('http://localhost:5050{0!s}'.format(offset))
             except urllib2.URLError, e:
                 if hasattr(e, 'reason') and type(e.reason) == urllib2.socket.error:
                     # i.e. process not started up yet
                     count += 1
                     time.sleep(1)
-                    assert count < 5, '%s: %r; %r' % (offset, e, e.args)
+                    assert count < 5, '{0!s}: {1!r}; {2!r}'.format(offset, e, e.args)
                 else:
-                    print 'Error opening url: %s' % offset
+                    print 'Error opening url: {0!s}'.format(offset)
                     assert 0, e # Print exception
             else:
                 break
@@ -77,12 +77,12 @@ class _TestSync(TestController):
         assert last_sync_rev_id == None # no syncs yet
 
         # get revision ids since then
-        remote_rev_ids = self.sub_app_get_deserialized('%s/api/search/revision?since=%s' % (server, last_sync_rev_id))
+        remote_rev_ids = self.sub_app_get_deserialized('{0!s}/api/search/revision?since={1!s}'.format(server, last_sync_rev_id))
         assert len(remote_rev_ids) == 3
         remote_latest_rev_id = remote_rev_ids[-1]
 
         # get revision diffs
-        diffs = self.sub_app_get_deserialized('%s/api/diff/revision?diff=%s&oldid=%s' % (server, remote_latest_rev_id, last_sync_rev_id))
+        diffs = self.sub_app_get_deserialized('{0!s}/api/diff/revision?diff={1!s}&oldid={2!s}'.format(server, remote_latest_rev_id, last_sync_rev_id))
         assert len(diffs) == 3
                                       
         # apply diffs

@@ -61,7 +61,7 @@ class ApiController(base.BaseController):
             # Call start_response manually instead of the parent __call__
             # because we want to end the request instead of continuing.
             response_msg = response_msg.encode('utf8')
-            body = '%i %s' % (response.status_int, response_msg)
+            body = '{0:d} {1!s}'.format(response.status_int, response_msg)
             start_response(body, response.headers.items())
             return [response_msg]
 
@@ -117,30 +117,29 @@ class ApiController(base.BaseController):
     def _finish_not_authz(self, extra_msg=None):
         response_data = _('Access denied')
         if extra_msg:
-            response_data = '%s - %s' % (response_data, extra_msg)
+            response_data = '{0!s} - {1!s}'.format(response_data, extra_msg)
         return self._finish(403, response_data, 'json')
 
     def _finish_not_found(self, extra_msg=None):
         response_data = _('Not found')
         if extra_msg:
-            response_data = '%s - %s' % (response_data, extra_msg)
+            response_data = '{0!s} - {1!s}'.format(response_data, extra_msg)
         return self._finish(404, response_data, 'json')
 
     def _finish_bad_request(self, extra_msg=None):
         response_data = _('Bad request')
         if extra_msg:
-            response_data = '%s - %s' % (response_data, extra_msg)
+            response_data = '{0!s} - {1!s}'.format(response_data, extra_msg)
         return self._finish(400, response_data, 'json')
 
     def _wrap_jsonp(self, callback, response_msg):
-        return '%s(%s);' % (callback, response_msg)
+        return '{0!s}({1!s});'.format(callback, response_msg)
 
     def _set_response_header(self, name, value):
         try:
             value = str(value)
         except Exception, inst:
-            msg = "Couldn't convert '%s' header value '%s' to string: %s" % \
-                (name, value, inst)
+            msg = "Couldn't convert '{0!s}' header value '{1!s}' to string: {2!s}".format(name, value, inst)
             raise Exception(msg)
         response.headers[name] = value
 
@@ -159,7 +158,7 @@ class ApiController(base.BaseController):
         try:
             function = get_action(logic_function)
         except KeyError:
-            log.error('Can\'t find logic function: %s' % logic_function)
+            log.error('Can\'t find logic function: {0!s}'.format(logic_function))
             return self._finish_bad_request(
                 _('Action name not known: %s') % logic_function)
 
@@ -180,12 +179,12 @@ class ApiController(base.BaseController):
             request_data = self._get_request_data(try_url_params=
                                                   side_effect_free)
         except ValueError, inst:
-            log.error('Bad request data: %s' % inst)
+            log.error('Bad request data: {0!s}'.format(inst))
             return self._finish_bad_request(
                 _('JSON Error: %s') % inst)
         if not isinstance(request_data, dict):
             # this occurs if request_data is blank
-            log.error('Bad request data - not dict: %r' % request_data)
+            log.error('Bad request data - not dict: {0!r}'.format(request_data))
             return self._finish_bad_request(
                 _('Bad request data: %s') %
                 'Request data JSON decoded to %r but '
@@ -198,7 +197,7 @@ class ApiController(base.BaseController):
             return_dict['success'] = True
             return_dict['result'] = result
         except DataError, e:
-            log.error('Format incorrect: %s - %s' % (e.error, request_data))
+            log.error('Format incorrect: {0!s} - {1!s}'.format(e.error, request_data))
             return_dict['error'] = {'__type': 'Integrity Error',
                                     'message': e.error,
                                     'data': request_data}
@@ -210,14 +209,14 @@ class ApiController(base.BaseController):
             return_dict['success'] = False
             
             if unicode(e):
-                return_dict['error']['message'] += u': %s' % e
+                return_dict['error']['message'] += u': {0!s}'.format(e)
 
             return self._finish(403, return_dict, content_type='json')
         except NotFound, e:
             return_dict['error'] = {'__type': 'Not Found Error',
                                     'message': _('Not found')}
             if unicode(e):
-                return_dict['error']['message'] += u': %s' % e
+                return_dict['error']['message'] += u': {0!s}'.format(e)
             return_dict['success'] = False
             return self._finish(404, return_dict, content_type='json')
         except ValidationError, e:
@@ -226,23 +225,23 @@ class ApiController(base.BaseController):
             return_dict['error'] = error_dict
             return_dict['success'] = False
             # CS nasty_string ignore
-            log.error('Validation error: %r' % str(e.error_dict))
+            log.error('Validation error: {0!r}'.format(str(e.error_dict)))
             return self._finish(409, return_dict, content_type='json')
         except search.SearchQueryError, e:
             return_dict['error'] = {'__type': 'Search Query Error',
-                                    'message': 'Search Query is invalid: %r' %
-                                    e.args}
+                                    'message': 'Search Query is invalid: {0!r}'.format(
+                                    e.args)}
             return_dict['success'] = False
             return self._finish(400, return_dict, content_type='json')
         except search.SearchError, e:
             return_dict['error'] = {'__type': 'Search Error',
-                                    'message': 'Search error: %r' % e.args}
+                                    'message': 'Search error: {0!r}'.format(e.args)}
             return_dict['success'] = False
             return self._finish(409, return_dict, content_type='json')
         except search.SearchIndexError, e:
             return_dict['error'] = {'__type': 'Search Index Error',
-                    'message': 'Unable to add package to search index: %s' %
-                    str(e)}
+                    'message': 'Unable to add package to search index: {0!s}'.format(
+                    str(e))}
             return_dict['success'] = False
             return self._finish(500, return_dict, content_type='json')
         return self._finish_ok(return_dict)
@@ -265,7 +264,7 @@ class ApiController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user, 'api_version': ver,
                    'auth_user_obj': c.userobj}
-        log.debug('listing: %s' % context)
+        log.debug('listing: {0!s}'.format(context))
         action_map = {
             'revision': 'revision_list',
             'group': 'group_list',
@@ -310,7 +309,7 @@ class ApiController(base.BaseController):
                    'api_version': ver, 'auth_user_obj': c.userobj}
         data_dict = {'id': id, 'id2': id2, 'rel': subregister}
 
-        log.debug('show: %s' % context)
+        log.debug('show: {0!s}'.format(context))
 
         action = self._get_action_from_map(action_map, register, subregister)
         if not action:
@@ -342,7 +341,7 @@ class ApiController(base.BaseController):
 
         context = {'model': model, 'session': model.Session, 'user': c.user,
                    'api_version': ver, 'auth_user_obj': c.userobj}
-        log.debug('create: %s' % (context))
+        log.debug('create: {0!s}'.format((context)))
         try:
             request_data = self._get_request_data()
             data_dict = {'id': id, 'id2': id2, 'rel': subregister}
@@ -361,7 +360,7 @@ class ApiController(base.BaseController):
             response_data = action(context, data_dict)
             location = None
             if "id" in data_dict:
-                location = str('%s/%s' % (request.path.replace('package',
+                location = str('{0!s}/{1!s}'.format(request.path.replace('package',
                                                                'dataset'),
                                           data_dict.get("id")))
             return self._finish_ok(response_data,
@@ -372,10 +371,10 @@ class ApiController(base.BaseController):
             return self._finish_not_found(unicode(e))
         except ValidationError, e:
             # CS: nasty_string ignore
-            log.error('Validation error: %r' % str(e.error_dict))
+            log.error('Validation error: {0!r}'.format(str(e.error_dict)))
             return self._finish(409, e.error_dict, content_type='json')
         except DataError, e:
-            log.error('Format incorrect: %s - %s' % (e.error, request_data))
+            log.error('Format incorrect: {0!s} - {1!s}'.format(e.error, request_data))
             error_dict = {
                 'success': False,
                 'error': {'__type': 'Integrity Error',
@@ -383,8 +382,8 @@ class ApiController(base.BaseController):
                                     'data': request_data}}
             return self._finish(400, error_dict, content_type='json')
         except search.SearchIndexError:
-            log.error('Unable to add package to search index: %s' %
-                      request_data)
+            log.error('Unable to add package to search index: {0!s}'.format(
+                      request_data))
             return self._finish(500,
                                 _(u'Unable to add package to search index') %
                                 request_data)
@@ -404,7 +403,7 @@ class ApiController(base.BaseController):
 
         context = {'model': model, 'session': model.Session, 'user': c.user,
                    'api_version': ver, 'id': id, 'auth_user_obj': c.userobj}
-        log.debug('update: %s' % (context))
+        log.debug('update: {0!s}'.format((context)))
         try:
             request_data = self._get_request_data()
             data_dict = {'id': id, 'id2': id2, 'rel': subregister}
@@ -427,10 +426,10 @@ class ApiController(base.BaseController):
             return self._finish_not_found(unicode(e))
         except ValidationError, e:
             # CS: nasty_string ignore
-            log.error('Validation error: %r' % str(e.error_dict))
+            log.error('Validation error: {0!r}'.format(str(e.error_dict)))
             return self._finish(409, e.error_dict, content_type='json')
         except DataError, e:
-            log.error('Format incorrect: %s - %s' % (e.error, request_data))
+            log.error('Format incorrect: {0!s} - {1!s}'.format(e.error, request_data))
             error_dict = {
                 'success': False,
                 'error': {'__type': 'Integrity Error',
@@ -438,7 +437,7 @@ class ApiController(base.BaseController):
                                     'data': request_data}}
             return self._finish(400, error_dict, content_type='json')
         except search.SearchIndexError:
-            log.error('Unable to update search index: %s' % request_data)
+            log.error('Unable to update search index: {0!s}'.format(request_data))
             return self._finish(500, _(u'Unable to update search index') %
                                 request_data)
 
@@ -458,7 +457,7 @@ class ApiController(base.BaseController):
 
         data_dict = {'id': id, 'id2': id2, 'rel': subregister}
 
-        log.debug('delete %s/%s/%s/%s' % (register, id, subregister, id2))
+        log.debug('delete {0!s}/{1!s}/{2!s}/{3!s}'.format(register, id, subregister, id2))
 
         action = self._get_action_from_map(action_map, register, subregister)
         if not action:
@@ -474,12 +473,12 @@ class ApiController(base.BaseController):
             return self._finish_not_found(unicode(e))
         except ValidationError, e:
             # CS: nasty_string ignore
-            log.error('Validation error: %r' % str(e.error_dict))
+            log.error('Validation error: {0!r}'.format(str(e.error_dict)))
             return self._finish(409, e.error_dict, content_type='json')
 
     def search(self, ver=None, register=None):
 
-        log.debug('search %s params: %r' % (register, request.params))
+        log.debug('search {0!s} params: {1!r}'.format(register, request.params))
         if register == 'revision':
             since_time = None
             if 'since_id' in request.params:
@@ -497,7 +496,7 @@ class ApiController(base.BaseController):
                 try:
                     since_time = h.date_str_to_datetime(since_time_str)
                 except ValueError, inst:
-                    return self._finish_bad_request('ValueError: %s' % inst)
+                    return self._finish_bad_request('ValueError: {0!s}'.format(inst))
             else:
                 return self._finish_bad_request(
                     _("Missing search term ('since_id=UUID' or " +
@@ -510,7 +509,7 @@ class ApiController(base.BaseController):
                 params = MultiDict(self._get_search_params(request.params))
             except ValueError, e:
                 return self._finish_bad_request(
-                    _('Could not read parameters: %r' % e))
+                    _('Could not read parameters: {0!r}'.format(e)))
 
             # if using API v2, default to returning the package ID if
             # no field list is specified
@@ -627,10 +626,10 @@ class ApiController(base.BaseController):
         timing_cache_path = self._get_timing_cache_path()
         call_count = 0
         for t in range(0, period):
-            expr = '%s/%s*' % (
+            expr = '{0!s}/{1!s}*'.format(
                 timing_cache_path,
                 (datetime.datetime.now() -
-                 datetime.timedelta(0, t)).isoformat()[0:19],
+                 datetime.timedelta(0, t)).isoformat()[0:19]
             )
             call_count += len(glob.glob(expr))
         # Todo: Clear old records.
@@ -699,7 +698,7 @@ class ApiController(base.BaseController):
             response_data = dict(valid=not (group_exists(slug) or
                                  slug in disallowed))
             return self._finish_ok(response_data)
-        return self._finish_bad_request('Bad slug type: %s' % slugtype)
+        return self._finish_bad_request('Bad slug type: {0!s}'.format(slugtype))
 
     def dataset_autocomplete(self):
         q = request.params.get('incomplete', '')
@@ -786,7 +785,7 @@ class ApiController(base.BaseController):
         ''' translation strings for front end '''
         ckan_path = os.path.join(os.path.dirname(__file__), '..')
         source = os.path.abspath(os.path.join(ckan_path, 'public',
-                                 'base', 'i18n', '%s.js' % lang))
+                                 'base', 'i18n', '{0!s}.js'.format(lang)))
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         if not os.path.exists(source):
             return '{}'
@@ -833,9 +832,9 @@ class ApiController(base.BaseController):
             else:
                 return entity
 
-        cls.log.debug('Retrieving request params: %r' % request.params)
-        cls.log.debug('Retrieving request POST: %r' % request.POST)
-        cls.log.debug('Retrieving request GET: %r' % request.GET)
+        cls.log.debug('Retrieving request params: {0!r}'.format(request.params))
+        cls.log.debug('Retrieving request POST: {0!r}'.format(request.POST))
+        cls.log.debug('Retrieving request GET: {0!r}'.format(request.GET))
         request_data = None
         if request.POST and request.content_type == 'multipart/form-data':
             request_data = dict(request.POST)
@@ -849,8 +848,7 @@ class ApiController(base.BaseController):
                 else:
                     request_data = urllib.unquote_plus(request.body)
             except Exception, inst:
-                msg = "Could not find the POST data: %r : %s" % \
-                      (request.POST, inst)
+                msg = "Could not find the POST data: {0!r} : {1!s}".format(request.POST, inst)
                 raise ValueError(msg)
 
         elif try_url_params and request.GET:
@@ -863,10 +861,10 @@ class ApiController(base.BaseController):
                 else:
                     request_data = None
             except Exception, inst:
-                msg = "Could not extract request body data: %s" % \
-                      (inst)
+                msg = "Could not extract request body data: {0!s}".format( \
+                      (inst))
                 raise ValueError(msg)
-            cls.log.debug('Retrieved request body: %r' % request.body)
+            cls.log.debug('Retrieved request body: {0!r}'.format(request.body))
             if not request_data:
                 if not try_url_params:
                     msg = "No request body data"
@@ -889,5 +887,5 @@ class ApiController(base.BaseController):
                 # if val is str then assume it is ascii, since json converts
                 # utf8 encoded JSON to unicode
                 request_data[key] = make_unicode(val)
-        cls.log.debug('Request data extracted: %r' % request_data)
+        cls.log.debug('Request data extracted: {0!r}'.format(request_data))
         return request_data

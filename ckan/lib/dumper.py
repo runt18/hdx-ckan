@@ -18,7 +18,7 @@ class SimpleDumper(object):
         elif format == 'json':
             self.dump_json(dump_file_obj, query)
         else:
-            raise Exception('Unknown format: %s' % format)
+            raise Exception('Unknown format: {0!s}'.format(format))
 
     def dump_csv(self, dump_file_obj, query):
         row_dicts = []
@@ -29,7 +29,7 @@ class SimpleDumper(object):
                 if isinstance(value, (list, tuple)):
                     if value and isinstance(value[0], dict) and name == 'resources':
                         for i, res in enumerate(value):
-                            prefix = 'resource-%i' % i
+                            prefix = 'resource-{0:d}'.format(i)
                             pkg_dict[prefix + '-url'] = res['url']
                             pkg_dict[prefix + '-format'] = res['format']
                             pkg_dict[prefix + '-description'] = res['description']
@@ -91,7 +91,7 @@ class Dumper(object):
                 dump_struct[model_class_name][record.id] = recorddict
         if verbose:
             print '---------------------------------'
-            print 'Dumping to %s' % dump_path
+            print 'Dumping to {0!s}'.format(dump_path)
         json.dump(dump_struct, file(dump_path, 'w'), indent=4, sort_keys=True)
 
     def cvt_record_to_dict(self, record, table):
@@ -113,7 +113,7 @@ class Dumper(object):
         ckan.model.metadata.create_all()
         for model_class in self.model_classes:
             if model.Session.query(model_class).count():
-                raise Exception, "Existing '%s' records in database" % model_class
+                raise Exception, "Existing '{0!s}' records in database".format(model_class)
 
         records = {}
         for model_class in self.model_classes:
@@ -165,12 +165,12 @@ class Dumper(object):
             if model_class == ckan.model.User: # ApiKey does not have idseq
                 continue
             table = self.get_table(model_class)
-            seqname = '%s_id_seq' % table.name 
+            seqname = '{0!s}_id_seq'.format(table.name) 
             q = table.select()
             print model_class
             maxid = q.order_by(table.c.id.desc()).execute().fetchone().id
             print seqname, maxid+1
-            sql = "SELECT setval('%s', %s);" % (seqname, maxid+1)
+            sql = "SELECT setval('{0!s}', {1!s});".format(seqname, maxid+1)
             engine = ckan.model.metadata.bind
             engine.execute(sql)
 
@@ -288,11 +288,11 @@ class PackagesXlWriter:
                 del dict_[key]
             if key=='resources':
                 for i, res in enumerate(value):
-                    prefix = 'resource-%i' % i
+                    prefix = 'resource-{0:d}'.format(i)
                     keys = model.Resource.get_columns()
                     keys += [key_ for key_ in pkg.resources[i].extras.keys() if key_ not in keys]
                     for field in keys:
-                        dict_['%s-%s' % (prefix, field)] = res[field]
+                        dict_['{0!s}-{1!s}'.format(prefix, field)] = res[field]
                 del dict_[key]
             elif isinstance(value, (list, tuple)):
                 dict_[key] = ' '.join(value)

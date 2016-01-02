@@ -135,7 +135,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                         'nested': {'a': 'b'}, 'rating with %': '99%'}
                        ]
         }
-        postparams = '%s=1' % json.dumps(cls.data)
+        postparams = '{0!s}=1'.format(json.dumps(cls.data))
         auth = {'Authorization': str(cls.sysadmin_user.apikey)}
         res = cls.app.post('/api/action/datastore_create', params=postparams,
                            extra_environ=auth)
@@ -175,7 +175,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
     def test_search_basic(self):
         data = {'resource_id': self.data['resource_id']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -187,7 +187,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
         # search with parameter id should yield the same results
         data = {'id': self.data['resource_id']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -217,10 +217,10 @@ class TestDatastoreSearch(tests.WsgiAppCase):
              'url': 'https://www.example.com/',
              'package_id': package['id']})
 
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
             'resource_id': resource['id'],
             'force': True
-        })
+        }))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_create', params=postparams,
                             extra_environ=auth)
@@ -228,7 +228,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
         assert res_dict['success'] is True
 
         data = {'resource_id': resource['id']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=403)
@@ -237,7 +237,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
     def test_search_alias(self):
         data = {'resource_id': self.data['aliases']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -249,7 +249,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_invalid_field(self):
         data = {'resource_id': self.data['resource_id'],
                 'fields': [{'id': 'bad'}]}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -259,7 +259,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_fields(self):
         data = {'resource_id': self.data['resource_id'],
                 'fields': [u'b\xfck']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -272,7 +272,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
         data = {'resource_id': self.data['resource_id'],
                 'fields': u'b\xfck, author'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -287,7 +287,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
         data = {'resource_id': self.data['resource_id'],
                 'fields': [u'author'],
                 'distinct': True}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -300,7 +300,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_filters(self):
         data = {'resource_id': self.data['resource_id'],
                 'filters': {u'b\xfck': 'annakarenina'}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -313,7 +313,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_filter_array_field(self):
         data = {'resource_id': self.data['resource_id'],
                 'filters': {u'characters': [u'Princess Anna', u'Sergius']}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -328,7 +328,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'filters': {
                     u'b\xfck': [u'annakarenina', u'warandpeace']
                 }}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -341,7 +341,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_filter_normal_field_passing_multiple_values_in_array(self):
         data = {'resource_id': self.data['resource_id'],
                 'filters': {u'b\xfck': [u'annakarenina', u'warandpeace']}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -365,7 +365,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
         data = {'resource_id': self.data['resource_id'],
                 # invalid because author is not a numeric field
                 'filters': {u'author': 42}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -375,7 +375,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_sort(self):
         data = {'resource_id': self.data['resource_id'],
                 'sort': u'b\xfck asc, author desc'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -388,7 +388,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
         data = {'resource_id': self.data['resource_id'],
                 'sort': [u'b\xfck desc', '"author" asc']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
         res_dict = json.loads(res.body)
@@ -401,7 +401,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_invalid(self):
         data = {'resource_id': self.data['resource_id'],
                 'sort': u'f\xfc\xfc asc'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -414,7 +414,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_limit(self):
         data = {'resource_id': self.data['resource_id'],
                 'limit': 1}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -427,7 +427,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_invalid_limit(self):
         data = {'resource_id': self.data['resource_id'],
                 'limit': 'bad'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -436,7 +436,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
         data = {'resource_id': self.data['resource_id'],
                 'limit': -1}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -447,7 +447,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
         data = {'resource_id': self.data['resource_id'],
                 'limit': 1,
                 'offset': 1}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -460,7 +460,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
     def test_search_invalid_offset(self):
         data = {'resource_id': self.data['resource_id'],
                 'offset': 'bad'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -469,7 +469,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
         data = {'resource_id': self.data['resource_id'],
                 'offset': -1}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -480,7 +480,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
         data = {'resource_id': self.data['resource_id'],
                 'q': 'annakarenina'}
 
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -496,7 +496,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
         data = {'resource_id': self.data['resource_id'],
                 'q': 'tolstoy'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
         res_dict = json.loads(res.body)
@@ -523,7 +523,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
         data = {'resource_id': self.data['resource_id'],
                 'plain': True,
                 'q': 'tolstoy annakarenina'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
         res_dict = json.loads(res.body)
@@ -544,7 +544,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'q': {u"b\xfck": "annakarenina"}
                 }
 
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -559,7 +559,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'q': u'{"b\xfck": "annakarenina"}'
                 }
 
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -574,7 +574,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'q': {'invalid_field_name': 'value'}
                 }
 
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -586,7 +586,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'q': {'author': ['invalid', 'value']}
                 }
 
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -595,7 +595,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
 
     def test_search_table_metadata(self):
         data = {'resource_id': "_table_metadata"}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -607,7 +607,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
             'resource_id': self.data['resource_id'],
             'filters': 'the-filter'
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -622,7 +622,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'invalid-column-name': 'value'
             }
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -637,7 +637,7 @@ class TestDatastoreSearch(tests.WsgiAppCase):
                 'invalid-column-name'
             ]
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth, status=409)
@@ -679,7 +679,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
               {'id': 5, 'date': '2011-06-02', 'x': 6, 'y': 12, 'z': 18, 'country': 'DE', 'title': 'sixth 53.56', 'lat':51.04, 'lon':7.9}
             ]
         )
-        postparams = '%s=1' % json.dumps(cls.data)
+        postparams = '{0!s}=1'.format(json.dumps(cls.data))
         auth = {'Authorization': str(cls.normal_user.apikey)}
         res = cls.app.post('/api/action/datastore_create', params=postparams,
                            extra_environ=auth)
@@ -694,7 +694,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_search_full_text(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': 'DE'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -705,7 +705,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
         data = {'resource_id': self.data['resource_id'],
                 'plain': 'False',
                 'q': 'DE | UK'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -715,7 +715,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_full_text_search_on_integers_within_text_strings(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': '99'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -725,7 +725,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_full_text_search_on_integers(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': '4'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -735,7 +735,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_full_text_search_on_decimal_within_text_strings(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': '53.56'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -745,7 +745,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_full_text_search_on_decimal(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': '52.56'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -755,7 +755,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_full_text_search_on_date(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': '2011-01-01'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -765,7 +765,7 @@ class TestDatastoreFullTextSearch(tests.WsgiAppCase):
     def test_full_text_search_on_json_like_string_succeeds(self):
         data = {'resource_id': self.data['resource_id'],
                 'q': '"{}"'}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_search', params=postparams,
                             extra_environ=auth)
@@ -806,7 +806,7 @@ class TestDatastoreSQL(tests.WsgiAppCase):
                         'author': 'tolstoy',
                         'nested': {'a': 'b'}}]
         }
-        postparams = '%s=1' % json.dumps(cls.data)
+        postparams = '{0!s}=1'.format(json.dumps(cls.data))
         auth = {'Authorization': str(cls.sysadmin_user.apikey)}
         res = cls.app.post('/api/action/datastore_create', params=postparams,
                            extra_environ=auth)
@@ -976,10 +976,10 @@ class TestDatastoreSQL(tests.WsgiAppCase):
              'url': 'https://www.example.com/',
              'package_id': package['id']})
 
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
             'resource_id': resource['id'],
             'force': True
-        })
+        }))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_create', params=postparams,
                             extra_environ=auth)
@@ -1017,10 +1017,10 @@ class TestDatastoreSQL(tests.WsgiAppCase):
              'url': 'https://www.example.co.uk/',
              'package_id': package['id']})
 
-        postparams = '%s=1' % json.dumps({
+        postparams = '{0!s}=1'.format(json.dumps({
             'resource_id': resource['id'],
             'force': True
-        })
+        }))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_create', params=postparams,
                             extra_environ=auth)

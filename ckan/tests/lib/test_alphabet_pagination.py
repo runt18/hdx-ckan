@@ -18,10 +18,10 @@ class TestPages:
         pkgs = []
         for letter in 'abcd12':
             for i in range(0, 10):
-                name = u'testpackage_%s_%s' % (letter, i)
+                name = u'testpackage_{0!s}_{1!s}'.format(letter, i)
                 pkgs.append({
-                    'name': u'testpackage_%s_%s' % (letter, i),
-                    'title': u'%s Testpackage %s' % (letter, i),
+                    'name': u'testpackage_{0!s}_{1!s}'.format(letter, i),
+                    'title': u'{0!s} Testpackage {1!s}'.format(letter, i),
                     })
         cls.num_pkgs = len(pkgs)
         CreateTestData.create_arbitrary(pkgs)
@@ -102,10 +102,10 @@ class TestTooFewToPage:
         pkgs = []
         for letter in 'abcd12':
             for i in range(0, 1):
-                name = u'testpackage_%s_%s' % (letter, i)
+                name = u'testpackage_{0!s}_{1!s}'.format(letter, i)
                 pkgs.append({
-                    'name': u'testpackage_%s_%s' % (letter, i),
-                    'title': u'%s Testpackage %s' % (letter, i),
+                    'name': u'testpackage_{0!s}_{1!s}'.format(letter, i),
+                    'title': u'{0!s} Testpackage {1!s}'.format(letter, i),
                     })
         cls.num_pkgs = len(pkgs)
         CreateTestData.create_arbitrary(pkgs)

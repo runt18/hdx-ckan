@@ -47,16 +47,16 @@ def escape_xml_illegal_chars(val, replacement=''):
 def clear_index():
     import solr.core
     conn = make_connection()
-    query = "+site_id:\"%s\"" % (config.get('ckan.site_id'))
+    query = "+site_id:\"{0!s}\"".format((config.get('ckan.site_id')))
     try:
         conn.delete_query(query)
         conn.commit()
     except socket.error, e:
-        err = 'Could not connect to SOLR %r: %r' % (conn.url, e)
+        err = 'Could not connect to SOLR {0!r}: {1!r}'.format(conn.url, e)
         log.error(err)
         raise SearchIndexError(err)
     except solr.core.SolrException, e:
-        err = 'SOLR %r exception: %r' % (conn.url, e)
+        err = 'SOLR {0!r} exception: {1!r}'.format(conn.url, e)
         log.error(err)
         raise SearchIndexError(err)
     finally:
@@ -79,11 +79,11 @@ class SearchIndex(object):
 
     def update_dict(self, data):
         """ Update data from a dictionary. """
-        log.debug("NOOP Index: %s" % ",".join(data.keys()))
+        log.debug("NOOP Index: {0!s}".format(",".join(data.keys())))
 
     def remove_dict(self, data):
         """ Delete an index entry uniquely identified by ``data``. """
-        log.debug("NOOP Delete: %s" % ",".join(data.keys()))
+        log.debug("NOOP Delete: {0!s}".format(",".join(data.keys())))
 
     def clear(self):
         """ Delete the complete index. """
@@ -153,7 +153,7 @@ class PackageSearchIndex(SearchIndex):
             if tag.get('vocabulary_id'):
                 data = {'id': tag['vocabulary_id']}
                 vocab = logic.get_action('vocabulary_show')(context, data)
-                key = u'vocab_%s' % vocab['name']
+                key = u'vocab_{0!s}'.format(vocab['name'])
                 if key in pkg_dict:
                     pkg_dict[key].append(tag['name'])
                 else:
@@ -267,7 +267,7 @@ class PackageSearchIndex(SearchIndex):
 
         # add a unique index_id to avoid conflicts
         import hashlib
-        pkg_dict['index_id'] = hashlib.md5('%s%s' % (pkg_dict['id'],config.get('ckan.site_id'))).hexdigest()
+        pkg_dict['index_id'] = hashlib.md5('{0!s}{1!s}'.format(pkg_dict['id'], config.get('ckan.site_id'))).hexdigest()
 
         for item in PluginImplementations(IPackageController):
             pkg_dict = item.before_index(pkg_dict)
@@ -294,7 +294,7 @@ class PackageSearchIndex(SearchIndex):
             conn.close()
 
         commit_debug_msg = 'Not commited yet' if defer_commit else 'Commited'
-        log.debug('Updated index for %s [%s]' % (pkg_dict.get('name'), commit_debug_msg))
+        log.debug('Updated index for {0!s} [{1!s}]'.format(pkg_dict.get('name'), commit_debug_msg))
 
     def commit(self):
         try:
@@ -309,7 +309,7 @@ class PackageSearchIndex(SearchIndex):
 
     def delete_package(self, pkg_dict):
         conn = make_connection()
-        query = "+%s:%s (+id:\"%s\" OR +name:\"%s\") +site_id:\"%s\"" % (TYPE_FIELD, PACKAGE_TYPE,
+        query = "+{0!s}:{1!s} (+id:\"{2!s}\" OR +name:\"{3!s}\") +site_id:\"{4!s}\"".format(TYPE_FIELD, PACKAGE_TYPE,
                                                        pkg_dict.get('id'), pkg_dict.get('id'),
                                                        config.get('ckan.site_id'))
         try:

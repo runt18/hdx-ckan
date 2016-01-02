@@ -43,7 +43,7 @@ for i, pkg_name in enumerate(pkg_names):
         pkg.license = model.Session.query(model.License).get(compliant_crown)
         made_change('Click Use -> Crown Copyright OKD compliant', pkg.name)
     else:
-        made_change('No change - left as license %s' % pkg.license, pkg.name)
+        made_change('No change - left as license {0!s}'.format(pkg.license), pkg.name)
     model.Session.flush()
 
     if i+1 % 100 == 0:
@@ -53,4 +53,4 @@ for i, pkg_name in enumerate(pkg_names):
 model.repo.commit_and_remove()
 
 for description, packages in changes.items():
-    print 'CHANGE: %s (%i)' % (description, len(packages))
+    print 'CHANGE: {0!s} ({1:d})'.format(description, len(packages))

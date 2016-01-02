@@ -9,11 +9,11 @@ from ckan.tests import TestController, url_for, setup_test_search_index
 def scrape_search_results(response, object_type):
     assert object_type in ('dataset', 'group_dataset', 'group', 'user')
     if object_type is not 'group_dataset':
-        results = re.findall('href="/%s/%s_(\d\d)"' % (object_type, object_type),
+        results = re.findall('href="/{0!s}/{1!s}_(\d\d)"'.format(object_type, object_type),
                              str(response))
     else:
         object_type = 'dataset'
-        results = re.findall('href="/%s/%s_(\d\d)"' % (object_type, object_type),
+        results = re.findall('href="/{0!s}/{1!s}_(\d\d)"'.format(object_type, object_type),
                              str(response))
     return results
 
@@ -46,7 +46,7 @@ class TestPaginationPackage(TestController):
         for i in range(cls.num_packages_in_large_group):
             packages.append({
                 # CS: nasty_string ignore
-                'name': u'dataset_%s' % str(i).zfill(2),
+                'name': u'dataset_{0!s}'.format(str(i).zfill(2)),
                 'groups': u'group_00'
             })
 
@@ -88,7 +88,7 @@ class TestPaginationGroup(TestController):
         cls.num_groups = 22
 
         # CS: nasty_string ignore
-        groups = [u'group_%s' % str(i).zfill(2) for i in range(0, cls.num_groups)]
+        groups = [u'group_{0!s}'.format(str(i).zfill(2)) for i in range(0, cls.num_groups)]
 
         CreateTestData.create_arbitrary(
             [], extra_group_names=groups
@@ -121,7 +121,7 @@ class TestPaginationUsers(TestController):
         cls.num_users = 21
 
         # CS: nasty_string ignore
-        users = [u'user_%s' % str(i).zfill(2) for i in range(cls.num_users)]
+        users = [u'user_{0!s}'.format(str(i).zfill(2)) for i in range(cls.num_users)]
 
         CreateTestData.create_arbitrary(
             [], extra_user_names = users,

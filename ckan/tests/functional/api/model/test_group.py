@@ -33,7 +33,7 @@ class GroupsTestCase(BaseModelApiTestCase):
 
     def test_register_post_ok(self):
         data = self.testgroupvalues
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         offset = self.group_offset()
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_201_CREATED,
@@ -68,7 +68,7 @@ class GroupsTestCase(BaseModelApiTestCase):
 
         # Test Group Register Post 409 (conflict - create duplicate group).
         offset = self.group_offset()
-        postparams = '%s=1' % self.dumps(self.testgroupvalues)
+        postparams = '{0!s}=1'.format(self.dumps(self.testgroupvalues))
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_409_CONFLICT,
                             extra_environ=self.extra_environ)
@@ -89,7 +89,7 @@ class GroupsTestCase(BaseModelApiTestCase):
         offset = self.group_offset(self.david.name)
         res = self.app.get(offset, status=self.STATUS_200_OK)
         data = self.loads(res.body)
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         res = self.app.post(offset, params=postparams,
                             status=self.STATUS_200_OK,
                             extra_environ=self.admin_extra_environ)
@@ -105,7 +105,7 @@ class GroupsTestCase(BaseModelApiTestCase):
         group = model.Group.by_name(self.testgroupvalues['name'])
         if not group:
             offset = self.offset('/rest/group')
-            postparams = '%s=1' % self.dumps(self.testgroupvalues)
+            postparams = '{0!s}=1'.format(self.dumps(self.testgroupvalues))
             res = self.app.post(offset, params=postparams, status=[201],
                     extra_environ=self.extra_environ)
             model.Session.remove()
@@ -119,7 +119,7 @@ class GroupsTestCase(BaseModelApiTestCase):
         group_vals = {'name':u'somethingnew', 'title':u'newtesttitle',
                       'packages':[u'annakarenina']}
         offset = self.group_offset(self.testgroupvalues['name'])
-        postparams = '%s=1' % self.dumps(group_vals)
+        postparams = '{0!s}=1'.format(self.dumps(group_vals))
         res = self.app.post(offset, params=postparams, status=[200],
                             extra_environ=self.extra_environ)
         model.Session.remove()
@@ -161,7 +161,7 @@ class GroupsTestCase(BaseModelApiTestCase):
         # edit first group to have dupname
         group_vals = {'name':dupname}
         offset = self.group_offset(self.testgroupvalues['name'])
-        postparams = '%s=1' % self.dumps(group_vals)
+        postparams = '{0!s}=1'.format(self.dumps(group_vals))
         res = self.app.post(offset, params=postparams, status=[409],
                             extra_environ=self.admin_extra_environ)
         self.assert_json_response(res, 'Group name already exists')

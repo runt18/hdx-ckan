@@ -53,7 +53,7 @@ def output_errors(filename, errors):
 
 def show_fails(msg, errors):
     if errors:
-        msg = ['\n%s' % msg]
+        msg = ['\n{0!s}'.format(msg)]
         for error in errors:
             msg.append(errors[error])
         msg.append('\n\nFailing Files:\n==============')
@@ -63,7 +63,7 @@ def show_fails(msg, errors):
 
 def show_passing(msg, errors):
     if errors:
-        raise Exception('\n%s\n\n' % msg + '\n'.join(sorted(errors)))
+        raise Exception('\n{0!s}\n\n'.format(msg) + '\n'.join(sorted(errors)))
 
 
 def cs_filter(f, filter_, ignore_comment_lines=True):
@@ -123,7 +123,7 @@ class TestBadSpellings(object):
     def process(cls):
         blacklist = cls.BAD_SPELLING_BLACKLIST_FILES
         re_bad_spelling = re.compile(
-            r'(%s)' % '|'.join([x for x in cls.BAD_SPELLINGS]),
+            r'({0!s})'.format('|'.join([x for x in cls.BAD_SPELLINGS])),
             flags=re.IGNORECASE
         )
         files = itertools.chain.from_iterable([
@@ -139,10 +139,9 @@ class TestBadSpellings(object):
                     bad_words = []
                     for m in matches:
                         if m not in bad_words:
-                            bad_words.append('%s use %s' %
-                                             (m, cls.BAD_SPELLINGS[m.lower()]))
+                            bad_words.append('{0!s} use {1!s}'.format(m, cls.BAD_SPELLINGS[m.lower()]))
                     bad = ', '.join(bad_words)
-                    errors.append('ln:%s \t%s\n<%s>' % (count, line[:-1], bad))
+                    errors.append('ln:{0!s} \t{1!s}\n<{2!s}>'.format(count, line[:-1], bad))
                 count += 1
             if errors and not filename in blacklist:
                 cls.fails[filename] = output_errors(filename, errors)
@@ -195,7 +194,7 @@ class TestNastyString(object):
             errors = []
             for line in cs_filter(f, 'nasty_string'):
                 if re_nasty_str.search(line):
-                    errors.append('ln:%s \t%s' % (count, line[:-1]))
+                    errors.append('ln:{0!s} \t{1!s}'.format(count, line[:-1]))
                 count += 1
             if errors and not filename in blacklist:
                 cls.fails[filename] = output_errors(filename, errors)
@@ -340,8 +339,7 @@ class TestImportStar(object):
             errors = []
             for line in f:
                 if re_import_star.search(line):
-                    errors.append('%s ln:%s import *\n\t%s'
-                                  % (filename, count, line))
+                    errors.append('{0!s} ln:{1!s} import *\n\t{2!s}'.format(filename, count, line))
                 count += 1
             if errors and not filename in blacklist:
                 cls.fails[filename] = output_errors(filename, errors)
@@ -717,7 +715,7 @@ class TestPep8(object):
             if len(parts) == 3:
                 location, error, desc = parts
                 line_no = location.split(':')[1]
-                errors.append('%s ln:%s %s' % (error, line_no, desc))
+                errors.append('{0!s} ln:{1!s} {2!s}'.format(error, line_no, desc))
         return errors
 
     @classmethod
@@ -824,11 +822,11 @@ class TestActionAuth(object):
         def get_functions(module_root):
             fns = {}
             for auth_module_name in ['get', 'create', 'update', 'delete']:
-                module_path = '%s.%s' % (module_root, auth_module_name,)
+                module_path = '{0!s}.{1!s}'.format(module_root, auth_module_name)
                 try:
                     module = __import__(module_path)
                 except ImportError:
-                    print ('No auth module for action "%s"' % auth_module_name)
+                    print ('No auth module for action "{0!s}"'.format(auth_module_name))
 
                 for part in module_path.split('.')[1:]:
                     module = getattr(module, part)
@@ -839,7 +837,7 @@ class TestActionAuth(object):
                     if v.__module__ != module_path:
                         continue
                     if not key.startswith('_'):
-                        name = '%s: %s' % (auth_module_name, key)
+                        name = '{0!s}: {1!s}'.format(auth_module_name, key)
                         fns[name] = v
             return fns
         cls.actions = get_functions('logic.action')
@@ -848,26 +846,24 @@ class TestActionAuth(object):
     def test_actions_have_auth_fn(self):
         actions_no_auth = set(self.actions.keys()) - set(self.auths.keys())
         actions_no_auth -= set(self.ACTION_NO_AUTH_BLACKLIST)
-        assert not actions_no_auth, 'These actions have no auth function\n%s' \
-            % '\n'.join(sorted(list(actions_no_auth)))
+        assert not actions_no_auth, 'These actions have no auth function\n{0!s}'.format('\n'.join(sorted(list(actions_no_auth))))
 
     def test_actions_have_auth_fn_blacklist(self):
         actions_no_auth = set(self.actions.keys()) & set(self.auths.keys())
         actions_no_auth &= set(self.ACTION_NO_AUTH_BLACKLIST)
         assert not actions_no_auth, 'These actions blacklisted but ' + \
-            'shouldn\'t be \n%s' % '\n'.join(sorted(list(actions_no_auth)))
+            'shouldn\'t be \n{0!s}'.format('\n'.join(sorted(list(actions_no_auth))))
 
     def test_auths_have_action_fn(self):
         auths_no_action = set(self.auths.keys()) - set(self.actions.keys())
         auths_no_action -= set(self.AUTH_NO_ACTION_BLACKLIST)
-        assert not auths_no_action, 'These auth functions have no action\n%s' \
-            % '\n'.join(sorted(list(auths_no_action)))
+        assert not auths_no_action, 'These auth functions have no action\n{0!s}'.format('\n'.join(sorted(list(auths_no_action))))
 
     def test_auths_have_action_fn_blacklist(self):
         auths_no_action = set(self.auths.keys()) & set(self.actions.keys())
         auths_no_action &= set(self.AUTH_NO_ACTION_BLACKLIST)
         assert not auths_no_action, 'These auths functions blacklisted but' + \
-            ' shouldn\'t be \n%s' % '\n'.join(sorted(list(auths_no_action)))
+            ' shouldn\'t be \n{0!s}'.format('\n'.join(sorted(list(auths_no_action))))
 
     def test_fn_signatures(self):
         errors = []
@@ -879,8 +875,7 @@ class TestActionAuth(object):
                 if name not in self.ACTION_FN_SIGNATURES_BLACKLIST:
                     errors.append(name)
         assert not errors, 'These action functions have the wrong function' + \
-            ' signature, should be (context, data_dict)\n%s' \
-            % '\n'.join(sorted(errors))
+            ' signature, should be (context, data_dict)\n{0!s}'.format('\n'.join(sorted(errors)))
 
     def test_fn_docstrings(self):
         errors = []
@@ -888,8 +883,7 @@ class TestActionAuth(object):
             if not getattr(fn, '__doc__', None):
                 if name not in self.ACTION_NO_DOC_STR_BLACKLIST:
                     errors.append(name)
-        assert not errors, 'These action functions need docstrings\n%s' \
-            % '\n'.join(sorted(errors))
+        assert not errors, 'These action functions need docstrings\n{0!s}'.format('\n'.join(sorted(errors)))
 
 
 class TestBadExceptions(object):
@@ -936,7 +930,7 @@ class TestBadExceptions(object):
             errors = []
             for line in f:
                 if re_nasty_exception.search(line):
-                    errors.append('ln:%s \t%s' % (count, line[:-1]))
+                    errors.append('ln:{0!s} \t{1!s}'.format(count, line[:-1]))
                 count += 1
             if errors and not filename in blacklist:
                 cls.fails[filename] = output_errors(filename, errors)

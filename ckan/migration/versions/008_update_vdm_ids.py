@@ -63,12 +63,12 @@ def upgrade2(migrate_engine, dropped_fk_constraints):
 
         # So we create via hand ...
         constraint_columns, foreign_key_cols, constraint_name, table_name = fk_constraint
-        oursql = '''ALTER TABLE %(table)s
-            ADD CONSTRAINT %(fkeyname)s
-            FOREIGN KEY (%(col_name)s)
+        oursql = '''ALTER TABLE {table!s}
+            ADD CONSTRAINT {fkeyname!s}
+            FOREIGN KEY ({col_name!s})
             REFERENCES revision (id)
-            ''' % {'table':table_name, 'fkeyname':constraint_name,
-                    'col_name':constraint_columns[0] }
+            '''.format(**{'table':table_name, 'fkeyname':constraint_name,
+                    'col_name':constraint_columns[0] })
         migrate_engine.execute(oursql)
 
     # 4 create uuids for revisions and in related tables
