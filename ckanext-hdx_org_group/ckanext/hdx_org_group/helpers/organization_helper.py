@@ -343,7 +343,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
         customization['image_rect'] = ''
 
-    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
+    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] is not None:
         # Although weird, the FieldStorage instance has a boolean value of False so we need to compare to None
 
         # If old image was uploaded remove it
@@ -355,7 +355,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
                                  'image_sq_upload', 'clear_upload')
 
     if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' \
-            and data_dict['image_rect_upload'] != None:
+            and data_dict['image_rect_upload'] is not None:
         # Although weird, the FieldStorage instance has a boolean value of False so we need to compare to None
 
         if customization['image_rect']:
@@ -367,7 +367,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
     try:
-        if data_dict['image_sq'] != '' and data_dict['image_sq'] != None:
+        if data_dict['image_sq'] != '' and data_dict['image_sq'] is not None:
             data_dict['customization']['image_sq'] = data_dict['image_sq']
         else:
             data_dict['customization']['image_sq'] = customization['image_sq']
@@ -375,7 +375,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_sq'] = ''
 
     try:
-        if data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
+        if data_dict['image_rect'] != '' and data_dict['image_rect'] is not None:
             data_dict['customization']['image_rect'] = data_dict['image_rect']
         else:
             data_dict['customization']['image_rect'] = customization['image_rect']
@@ -515,7 +515,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     except:
         data_dict['customization'] = {}
 
-    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
+    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] is not None:
         # If old image was uploaded remove it
         if customization['image_sq']:
             remove_image(customization['image_sq'])
@@ -525,7 +525,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
                                  'image_sq_upload', 'clear_upload')
 
     if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict[
-        'image_rect_upload'] != None:
+        'image_rect_upload'] is not None:
         if customization['image_rect']:
             remove_image(customization['image_rect'])
         upload2 = uploader.Upload('group', customization['image_rect'])
@@ -535,7 +535,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
     try:
-        if data_dict['image_sq'] != '' and data_dict['image_sq'] != None:
+        if data_dict['image_sq'] != '' and data_dict['image_sq'] is not None:
             data_dict['customization']['image_sq'] = data_dict['image_sq']
         else:
             data_dict['customization']['image_sq'] = customization['image_sq']
@@ -543,7 +543,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
         data_dict['customization']['image_sq'] = ''
 
     try:
-        if data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
+        if data_dict['image_rect'] != '' and data_dict['image_rect'] is not None:
             data_dict['customization']['image_rect'] = data_dict['image_rect']
         else:
             data_dict['customization']['image_rect'] = customization['image_rect']

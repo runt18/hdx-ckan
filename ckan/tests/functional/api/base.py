@@ -80,7 +80,7 @@ class ApiTestCase(object):
 
         [1] http://www.w3.org/International/articles/idn-and-iri/
         """
-        assert self.api_version != None, "API version is missing."
+        assert self.api_version is not None, "API version is missing."
         base = '/api'
         if self.api_version:
             base += '/%s' % self.api_version

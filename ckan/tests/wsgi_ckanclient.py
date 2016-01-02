@@ -29,7 +29,7 @@ class WsgiCkanClient(CkanClient):
             print "ckanclient: Opening %s" % location
         self.last_location = location
 
-        if data != None:
+        if data is not None:
             data = urllib.urlencode({data: 1})
         # Don't use request beyond getting the method
         req = ApiRequest(location, data, headers, method=method)

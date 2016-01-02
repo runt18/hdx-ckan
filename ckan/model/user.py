@@ -183,7 +183,7 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
 
     @classmethod
     def check_name_available(cls, name):
-        return cls.by_name(name) == None
+        return cls.by_name(name) is None
 
     def as_dict(self):
         _dict = domain_object.DomainObject.as_dict(self)

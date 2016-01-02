@@ -240,7 +240,7 @@ class Group(vdm.sqlalchemy.RevisionedObjectMixin,
                       and_(Member.group_id == Group.id,
                            Member.table_name == 'group',
                            Member.state == 'active')).\
-            filter(Member.id == None).\
+            filter(Member.id is None).\
             filter(Group.type == type).\
             filter(Group.state == 'active').\
             order_by(Group.title).all()

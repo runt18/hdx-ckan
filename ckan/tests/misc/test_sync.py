@@ -54,7 +54,7 @@ class _TestSync(TestController):
 
     def sub_app_get_deserialized(offset):
         res = sub_app_get(offset)
-        if res == None:
+        if res is None:
             return None
         else:
             return json.loads(res)
@@ -74,7 +74,7 @@ class _TestSync(TestController):
         
         # find id of last revision synced
         last_sync_rev_id = self._last_synced_revision_id[server]
-        assert last_sync_rev_id == None # no syncs yet
+        assert last_sync_rev_id is None # no syncs yet
 
         # get revision ids since then
         remote_rev_ids = self.sub_app_get_deserialized('%s/api/search/revision?since=%s' % (server, last_sync_rev_id))

@@ -118,7 +118,7 @@ def hdx_find_license_name(license_id, license_name):
     """
     Look up license name by id
     """
-    if license_name == None or len(license_name) == 0 or license_name == license_id:
+    if license_name is None or len(license_name) == 0 or license_name == license_id:
         original_license_list = (
             l.as_dict() for l in package.Package._license_register.licenses)
         license_dict = {l['id']: l['title']
