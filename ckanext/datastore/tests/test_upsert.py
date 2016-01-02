@@ -92,7 +92,6 @@ class TestDatastoreUpsert(tests.WsgiAppCase):
             'method': 'upsert',
             'records': [{
                 'author': 'adams',
-                'nested': {'a': 2, 'b': {'c': 'd'}},
                 'characters': ['Arthur Dent', 'Marvin'],
                 'nested': {'foo': 'bar'},
                 u'b\xfck': hhguide}]
