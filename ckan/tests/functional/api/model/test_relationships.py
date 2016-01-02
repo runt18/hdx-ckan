@@ -295,7 +295,9 @@ class RelationshipsTestCase(BaseModelApiTestCase):
             raise Exception, msg
 
     def check_relationships_rest(self, pkg1_name, pkg2_name=None,
-                                 expected_relationships=[]):
+                                 expected_relationships=None):
+        if expected_relationships is None:
+            expected_relationships = []
         rels = self.get_relationships(package1_name=pkg1_name,
                                       package2_name=pkg2_name)
         self.assert_len_relationships(rels, expected_relationships) 

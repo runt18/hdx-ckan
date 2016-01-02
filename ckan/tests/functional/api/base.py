@@ -37,12 +37,16 @@ class ApiTestCase(object):
     ref_package_by = ''
     ref_group_by = ''
 
-    def get(self, offset, status=[200]):
+    def get(self, offset, status=None):
+        if status is None:
+            status = [200]
         response = self.app.get(offset, status=status,
             extra_environ=self.get_extra_environ())
         return response
 
-    def post(self, offset, data, status=[200,201], *args, **kwds):
+    def post(self, offset, data, status=None, *args, **kwds):
+        if status is None:
+            status = [200,201]
         params = '%s=1' % url_escape(self.dumps(data))
         if 'extra_environ' in kwds:
             self.extra_environ = kwds['extra_environ']
@@ -50,7 +54,9 @@ class ApiTestCase(object):
             extra_environ=self.get_extra_environ())
         return response
 
-    def app_delete(self, offset, status=[200,201], *args, **kwds):
+    def app_delete(self, offset, status=None, *args, **kwds):
+        if status is None:
+            status = [200,201]
         response = self.app.delete(offset, status=status,
             extra_environ=self.get_extra_environ())
         return response

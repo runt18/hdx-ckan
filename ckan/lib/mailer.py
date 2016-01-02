@@ -28,7 +28,9 @@ def add_msg_niceties(recipient_name, body, sender_name, sender_url):
 
 def _mail_recipient(recipient_name, recipient_email,
         sender_name, sender_url, subject,
-        body, headers={}):
+        body, headers=None):
+    if headers is None:
+        headers = {}
     mail_from = config.get('smtp.mail_from')
     body = add_msg_niceties(recipient_name, body, sender_name, sender_url)
     msg = MIMEText(body.encode('utf-8'), 'plain', 'utf-8')
@@ -90,11 +92,15 @@ def _mail_recipient(recipient_name, recipient_email,
         smtp_connection.quit()
 
 def mail_recipient(recipient_name, recipient_email, subject,
-        body, headers={}):
+        body, headers=None):
+    if headers is None:
+        headers = {}
     return _mail_recipient(recipient_name, recipient_email,
             g.site_title, g.site_url, subject, body, headers=headers)
 
-def mail_user(recipient, subject, body, headers={}):
+def mail_user(recipient, subject, body, headers=None):
+    if headers is None:
+        headers = {}
     if (recipient.email is None) or not len(recipient.email):
         raise MailerException(_("No recipient email address available!"))
     mail_recipient(recipient.display_name, recipient.email, subject,

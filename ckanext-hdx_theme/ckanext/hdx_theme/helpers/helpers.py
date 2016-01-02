@@ -483,7 +483,7 @@ def hdx_follow_button(obj_type, obj_id, **kw):
 
 
 def hdx_add_url_param(alternative_url=None, controller=None, action=None,
-                      extras=None, new_params=None, unwanted_keys=[]):
+                      extras=None, new_params=None, unwanted_keys=None):
     '''
     MODIFIED CKAN HELPER THAT ALLOWS REMOVING SOME PARAMS
 
@@ -496,6 +496,8 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
     This can be overriden providing an alternative_url, which will be used
     instead.
     '''
+    if unwanted_keys is None:
+        unwanted_keys = []
 
     params_nopage = [(k, v) for k, v in request.params.items()
                      if k != 'page' and k not in unwanted_keys]
@@ -546,7 +548,9 @@ def count_public_datasets_for_group(datasets_list):
     return a
 
 
-def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
+def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=None, errors=None):
+    if skipped_keys is None:
+        skipped_keys = []
     for key, value in dictionary.iteritems():
         if key not in skipped_keys:
             value = value.strip() if value else value

@@ -153,7 +153,13 @@ class SearchQuery(object):
         """
         return []
 
-    def run(self, query=None, terms=[], fields={}, facet_by=[], options=None, **kwargs):
+    def run(self, query=None, terms=None, fields=None, facet_by=None, options=None, **kwargs):
+        if terms is None:
+            terms = []
+        if fields is None:
+            fields = {}
+        if facet_by is None:
+            facet_by = []
         raise SearchError("SearchQuery.run() not implemented!")
 
     # convenience, allows to query(..)
@@ -202,7 +208,9 @@ class TagSearchQuery(SearchQuery):
 
 class ResourceSearchQuery(SearchQuery):
     """Search for resources."""
-    def run(self, fields={}, options=None, **kwargs):
+    def run(self, fields=None, options=None, **kwargs):
+        if fields is None:
+            fields = {}
         if options is None:
             options = QueryOptions(**kwargs)
         else:

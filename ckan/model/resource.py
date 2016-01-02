@@ -135,7 +135,7 @@ class Resource(vdm.sqlalchemy.RevisionedObjectMixin,
         return cls.extra_columns
 
     @classmethod
-    def get_all_without_views(cls, formats=[]):
+    def get_all_without_views(cls, formats=None):
         '''Returns all resources that have no resource views
 
         :param formats: if given, returns only resources that have no resource
@@ -144,6 +144,8 @@ class Resource(vdm.sqlalchemy.RevisionedObjectMixin,
 
         :rtype: list of ckan.model.Resource objects
         '''
+        if formats is None:
+                formats = []
         query = meta.Session.query(cls).outerjoin(ckan.model.ResourceView) \
                     .filter(ckan.model.ResourceView.id == None)
 

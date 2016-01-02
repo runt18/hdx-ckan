@@ -202,7 +202,7 @@ def get_default_view_plugins(get_datastore_views=False):
 def add_views_to_resource(context,
                           resource_dict,
                           dataset_dict=None,
-                          view_types=[],
+                          view_types=None,
                           create_datastore_views=False):
     '''
     Creates the provided views (if necessary) on the provided resource
@@ -227,6 +227,8 @@ def add_views_to_resource(context,
 
     Returns a list of resource views created (empty if none were created)
     '''
+    if view_types is None:
+        view_types = []
     if not dataset_dict:
         dataset_dict = logic.get_action('package_show')(
             context, {'id': resource_dict['package_id']})
@@ -274,7 +276,7 @@ def add_views_to_resource(context,
 
 def add_views_to_dataset_resources(context,
                                    dataset_dict,
-                                   view_types=[],
+                                   view_types=None,
                                    create_datastore_views=False):
     '''
     Creates the provided views on all resources of the provided dataset
@@ -293,6 +295,8 @@ def add_views_to_dataset_resources(context,
 
     Returns a list of resource views created (empty if none were created)
     '''
+    if view_types is None:
+        view_types = []
 
     created_views = []
     for resource_dict in dataset_dict.get('resources', []):

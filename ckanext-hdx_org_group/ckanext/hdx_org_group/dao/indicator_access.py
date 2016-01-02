@@ -21,7 +21,9 @@ _ = common._
 
 class IndicatorAccess(object):
 
-    def __init__(self, country_code, dataseries_list, additional_cps_params_dict={}):
+    def __init__(self, country_code, dataseries_list, additional_cps_params_dict=None):
+        if additional_cps_params_dict is None:
+            additional_cps_params_dict = {}
         self.__cps_params_dict = {
             'l': country_code.upper(),
             'ds': [el[0] + '___' + el[1] for el in dataseries_list]
