@@ -218,7 +218,7 @@ def package_create(context, data_dict):
     context["package"] = pkg
     ## this is added so that the rest controller can make a new location
     context["id"] = pkg.id
-    log.debug('Created object %s' % pkg.name)
+    log.debug('Created object {0!s}'.format(pkg.name))
 
     # Make sure that a user provided schema is not used on package_show
     context.pop('schema', None)
@@ -541,7 +541,7 @@ def related_create(context, data_dict):
 
     context["related"] = related
     context["id"] = related.id
-    log.debug('Created object %s' % related.title)
+    log.debug('Created object {0!s}'.format(related.title))
     return related_dict
 
 
@@ -579,9 +579,9 @@ def package_relationship_create(context, data_dict):
     pkg1 = model.Package.get(id)
     pkg2 = model.Package.get(id2)
     if not pkg1:
-        raise NotFound('Subject package %r was not found.' % id)
+        raise NotFound('Subject package {0!r} was not found.'.format(id))
     if not pkg2:
-        return NotFound('Object package %r was not found.' % id2)
+        return NotFound('Object package {0!r} was not found.'.format(id2))
 
     data, errors = _validate(data_dict, schema, context)
     if errors:
@@ -651,7 +651,7 @@ def member_create(context, data_dict=None):
     obj_class = ckan.logic.model_name_to_class(model, obj_type)
     obj = obj_class.get(obj_id)
     if not obj:
-        raise NotFound('%s was not found.' % obj_type.title())
+        raise NotFound('{0!s} was not found.'.format(obj_type.title()))
 
     _check_access('member_create', context, data_dict)
 
@@ -784,7 +784,7 @@ def _group_or_org_create(context, data_dict, is_org=False):
     }
     logic.get_action('member_create')(member_create_context, member_dict)
 
-    log.debug('Created object %s' % group.name)
+    log.debug('Created object {0!s}'.format(group.name))
     return model_dictize.group_dictize(group, context)
 
 
@@ -954,7 +954,7 @@ def rating_create(context, data_dict):
                 opts_err = _('Rating must be between %i and %i.') \
                     % (model.MIN_RATING, model.MAX_RATING)
             elif not package:
-                opts_err = _('Not found') + ': %r' % package_ref
+                opts_err = _('Not found') + ': {0!r}'.format(package_ref)
     if opts_err:
         raise ValidationError(opts_err)
 
@@ -1100,7 +1100,7 @@ def _get_random_username_from_email(email):
 
     for i in range(max_name_creation_attempts):
         random_number = random.SystemRandom().random() * 10000
-        name = '%s-%d' % (cleaned_localpart, random_number)
+        name = '{0!s}-{1:d}'.format(cleaned_localpart, random_number)
         if not ckan.model.User.get(name):
             return name
 
@@ -1161,7 +1161,7 @@ def vocabulary_create(context, data_dict):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug('Created Vocabulary %s' % vocabulary.name)
+    log.debug('Created Vocabulary {0!s}'.format(vocabulary.name))
 
     return model_dictize.vocabulary_dictize(vocabulary, context)
 
@@ -1222,7 +1222,7 @@ def activity_create(context, activity_dict, **kw):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug("Created '%s' activity" % activity.activity_type)
+    log.debug("Created '{0!s}' activity".format(activity.activity_type))
     return model_dictize.activity_dictize(activity, context)
 
 
@@ -1278,7 +1278,7 @@ def tag_create(context, data_dict):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug("Created tag '%s' " % tag)
+    log.debug("Created tag '{0!s}' ".format(tag))
     return model_dictize.tag_dictize(tag, context)
 
 

@@ -40,9 +40,8 @@ def sort_out_tags(source_ckan_uri,
             tag_status.record('Unchanged', mangled_tag, do_print=False)
             continue
         if mangled_tag in tag_replace_map and tag_replace_map[mangled_tag] != replacement_tag:
-            print 'Warning - can\'t differentiate %s : %s / %s' % \
-                  (mangled_tag, tag_replace_map[mangled_tag], replacement_tag)
-        tag_status.record('Mapping added', '%s:%s' % (mangled_tag, replacement_tag), do_print=False)
+            print 'Warning - can\'t differentiate {0!s} : {1!s} / {2!s}'.format(mangled_tag, tag_replace_map[mangled_tag], replacement_tag)
+        tag_status.record('Mapping added', '{0!s}:{1!s}'.format(mangled_tag, replacement_tag), do_print=False)
         tag_replace_map[mangled_tag] = replacement_tag
     example_map = tag_replace_map.items()[0]
     print tag_status
@@ -53,7 +52,7 @@ def sort_out_tags(source_ckan_uri,
     # edit packages
     pkg_status = Status('Packages')
     pkgs = ckan2.group_entity_get(group)['packages']
-    print 'Packages in the group: %i' % len(pkgs)
+    print 'Packages in the group: {0:d}'.format(len(pkgs))
     for pkg_name in pkgs:
         pkg = ckan2.package_entity_get(pkg_name)
         original_pkg = copy.deepcopy(pkg)
@@ -69,7 +68,7 @@ def sort_out_tags(source_ckan_uri,
 
         if set(pkg['tags']) != set(edited_tags):
             pkg['tags'] = edited_tags
-            print '%s: %r -> %r' % (pkg_name, sorted(original_pkg['tags']), sorted(edited_tags))
+            print '{0!s}: {1!r} -> {2!r}'.format(pkg_name, sorted(original_pkg['tags']), sorted(edited_tags))
 
         if pkg == original_pkg:
             pkg_status.record('Unchanged', pkg_name)
@@ -78,7 +77,7 @@ def sort_out_tags(source_ckan_uri,
         try:
             ckan2.package_entity_put(pkg)
         except ckanclient.CkanApiError, e:
-            pkg_status.record('Error: %r' % e.args, pkg_name)
+            pkg_status.record('Error: {0!r}'.format(e.args), pkg_name)
             continue
         
         pkg_status.record('Successfully changed', pkg_name)
@@ -93,7 +92,7 @@ parser.add_option("-k", "--destination-ckan-api-key", dest="destination_ckan_api
 
 (options, args) = parser.parse_args()
 
-assert len(args) == 2, 'The source and destination CKAN API URIs are the only two arguments. Found: %r' % args
+assert len(args) == 2, 'The source and destination CKAN API URIs are the only two arguments. Found: {0!r}'.format(args)
 source_ckan_uri, destination_ckan_uri = args
 print 'Key: ', options.destination_ckan_api_key
 

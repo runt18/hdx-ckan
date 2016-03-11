@@ -368,7 +368,7 @@ def package_update(context, data_dict):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug('Updated object %s' % pkg.name)
+    log.debug('Updated object {0!s}'.format(pkg.name))
 
     return_id_only = context.get('return_id_only', False)
 
@@ -475,9 +475,9 @@ def package_relationship_update(context, data_dict):
     pkg1 = model.Package.get(id)
     pkg2 = model.Package.get(id2)
     if not pkg1:
-        raise NotFound('Subject package %r was not found.' % id)
+        raise NotFound('Subject package {0!r} was not found.'.format(id))
     if not pkg2:
-        return NotFound('Object package %r was not found.' % id2)
+        return NotFound('Object package {0!r} was not found.'.format(id2))
 
     data, errors = _validate(data_dict, schema, context)
     if errors:
@@ -904,7 +904,7 @@ def term_translation_update_many(context, data_dict):
 
     model.Session.commit()
 
-    return {'success': '%s rows updated' % (num + 1)}
+    return {'success': '{0!s} rows updated'.format((num + 1))}
 
 
 ## Modifications for rest api
@@ -1051,13 +1051,13 @@ def user_role_update(context, data_dict):
         raise ValidationError('You must provide the "user" parameter.')
     domain_object_ref = _get_or_bust(data_dict, 'domain_object')
     if not isinstance(data_dict['roles'], (list, tuple)):
-        raise ValidationError('Parameter "%s" must be of type: "%s"' % ('role', 'list'))
+        raise ValidationError('Parameter "{0!s}" must be of type: "{1!s}"'.format('role', 'list'))
     desired_roles = set(data_dict['roles'])
 
     if new_user_ref:
         user_object = model.User.get(new_user_ref)
         if not user_object:
-            raise NotFound('Cannot find user %r' % new_user_ref)
+            raise NotFound('Cannot find user {0!r}'.format(new_user_ref))
         data_dict['user'] = user_object.id
         add_user_to_role_func = model.add_user_to_role
         remove_user_from_role_func = model.remove_user_from_role
@@ -1246,7 +1246,7 @@ def _bulk_update_dataset(context, data_dict, update_dict):
             'q': q,
             'fl': 'data_dict',
             'wt': 'json',
-            'fq': 'site_id:"%s"' % config.get('ckan.site_id'),
+            'fq': 'site_id:"{0!s}"'.format(config.get('ckan.site_id')),
             'rows': BATCH_SIZE
         }
 
@@ -1259,7 +1259,7 @@ def _bulk_update_dataset(context, data_dict, update_dict):
     count = 0
     q = []
     for id in datasets:
-        q.append('id:"%s"' % (id))
+        q.append('id:"{0!s}"'.format((id)))
         count += 1
         if count % BATCH_SIZE == 0:
             process_solr(' OR '.join(q))

@@ -375,7 +375,7 @@ class TestGeographicCoverage(TestController):
 
     def _filtered_search(self, value, expected_pkgs, count=None):
         query = {
-            'q': 'geographic_coverage:%s' % value,
+            'q': 'geographic_coverage:{0!s}'.format(value),
             'sort': 'rank'
         }
         result = search.query_for(model.Package).run(query)
@@ -425,7 +425,7 @@ class TestExtraFields(TestController):
         search.clear()
 
     def _do_search(self, department, expected_pkgs, count=None):
-        result = search.query_for(model.Package).run({'q': 'department: %s' % department})
+        result = search.query_for(model.Package).run({'q': 'department: {0!s}'.format(department)})
         pkgs = result['results']
         fields = [model.Package.by_name(pkg_name).name for pkg_name in pkgs]
         if not (count is None):
@@ -476,7 +476,7 @@ class TestRank(TestController):
         }
         result = search.query_for(model.Package).run(query)
         results = result['results']
-        err = 'Wanted %r, got %r' % (wanted_results, results)
+        err = 'Wanted {0!r}, got {1!r}'.format(wanted_results, results)
         assert wanted_results[0] == results[0], err
         assert wanted_results[1] == results[1], err
 

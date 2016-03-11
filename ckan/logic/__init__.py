@@ -25,7 +25,7 @@ class AttributeDict(dict):
         try:
             return self[name]
         except KeyError:
-            raise AttributeError('No such attribute %r' % name)
+            raise AttributeError('No such attribute {0!r}'.format(name))
 
     def __setattr__(self, name, value):
         raise AttributeError(
@@ -352,7 +352,7 @@ def get_action(action):
 
     if _actions:
         if not action in _actions:
-            raise KeyError("Action '%s' not found" % action)
+            raise KeyError("Action '{0!s}' not found".format(action))
         return _actions.get(action)
     # Otherwise look in all the plugins to resolve all possible
     # First get the default ones in the ckan/logic/action directory
@@ -387,7 +387,7 @@ def get_action(action):
         for name, auth_function in plugin.get_actions().items():
             if name in resolved_action_plugins:
                 raise NameConflict(
-                    'The action %r is already implemented in %r' % (
+                    'The action {0!r} is already implemented in {1!r}'.format(
                         name,
                         resolved_action_plugins[name]
                     )
@@ -405,8 +405,7 @@ def get_action(action):
         def make_wrapped(_action, action_name):
             def wrapped(context=None, data_dict=None, **kw):
                 if kw:
-                    log.critical('%s was passed extra keywords %r'
-                                 % (_action.__name__, kw))
+                    log.critical('{0!s} was passed extra keywords {1!r}'.format(_action.__name__, kw))
 
                 context = _prepopulate_context(context)
 
@@ -426,7 +425,7 @@ def get_action(action):
                     audit = context['__auth_audit'][-1]
                     if audit[0] == action_name and audit[1] == id(_action):
                         if action_name not in new_authz.auth_functions_list():
-                            log.debug('No auth function for %s' % action_name)
+                            log.debug('No auth function for {0!s}'.format(action_name))
                         elif not getattr(_action, 'auth_audit_exempt', False):
                             raise Exception(
                                 'Action function {0} did not call its auth function'
@@ -641,14 +640,14 @@ def get_validator(validator):
             for name, fn in plugin.get_validators().items():
                 if name in _validators_cache:
                     raise NameConflict(
-                        'The validator %r is already defined' % (name,)
+                        'The validator {0!r} is already defined'.format(name)
                     )
                 log.debug('Validator function {0} from plugin {1} was inserted'.format(name, plugin.name))
                 _validators_cache[name] = fn
     try:
         return _validators_cache[validator]
     except KeyError:
-        raise UnknownValidator('Validator `%s` does not exist' % validator)
+        raise UnknownValidator('Validator `{0!s}` does not exist'.format(validator))
 
 
 def model_name_to_class(model_module, model_name):
@@ -660,7 +659,7 @@ def model_name_to_class(model_module, model_name):
         model_class_name = model_name.title()
         return getattr(model_module, model_class_name)
     except AttributeError:
-        raise ValidationError("%s isn't a valid model" % model_class_name)
+        raise ValidationError("{0!s} isn't a valid model".format(model_class_name))
 
 def _import_module_functions(module_path):
     '''Import a module and get the functions and return them in a dict'''

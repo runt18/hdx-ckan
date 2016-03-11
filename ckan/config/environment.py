@@ -58,8 +58,7 @@ class _Helpers(object):
         self.functions = functions
 
         if allowed:
-            raise Exception('Template helper function(s) `%s` not defined'
-                            % ', '.join(allowed))
+            raise Exception('Template helper function(s) `{0!s}` not defined'.format(', '.join(allowed)))
 
         # extend helper functions with ones supplied by plugins
         extra_helpers = []
@@ -67,7 +66,7 @@ class _Helpers(object):
             helpers = plugin.get_helpers()
             for helper in helpers:
                 if helper in extra_helpers:
-                    raise Exception('overwritting extra helper %s' % helper)
+                    raise Exception('overwritting extra helper {0!s}'.format(helper))
                 extra_helpers.append(helper)
                 functions[helper] = helpers[helper]
         # logging
@@ -84,7 +83,7 @@ class _Helpers(object):
         ''' return the function/object requested '''
         if name in self.functions:
             if name in self.deprecated:
-                msg = 'Template helper function `%s` is deprecated' % name
+                msg = 'Template helper function `{0!s}` is deprecated'.format(name)
                 self.log.warn(msg)
             return self.functions[name]
         else:
@@ -119,7 +118,7 @@ def load_environment(global_conf, app_conf):
         if '.' in controller or ':' in controller:
             mycontroller = pkg_resources \
                 .EntryPoint \
-                .parse('x=%s' % controller).load(False)
+                .parse('x={0!s}'.format(controller)).load(False)
             self.controller_classes[controller] = mycontroller
             return mycontroller
         return find_controller_generic(self, controller)

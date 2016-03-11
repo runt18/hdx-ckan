@@ -69,17 +69,17 @@ class Option(object):
         self.original = original
 
     def __repr__(self):
-        return '<Option [%s] %s>' % (self.section, self)
+        return '<Option [{0!s}] {1!s}>'.format(self.section, self)
 
     def __str__(self):
         if self.original:
             return self.original
-        return '%s%s = %s' % ('#' if self.is_commented_out else '',
+        return '{0!s}{1!s} = {2!s}'.format('#' if self.is_commented_out else '',
                               self.key, self.value)
 
     @property
     def id(self):
-        return '%s-%s' % (self.section, self.key)
+        return '{0!s}-{1!s}'.format(self.section, self.key)
 
     def comment_out(self):
         self.is_commented_out = True
@@ -120,8 +120,7 @@ def calculate_changes(existing_options_dict, desired_options, edit):
                  else 'add'
         if edit and action != 'edit':
             raise ConfigToolError(
-                'Key "%s" does not exist in section "%s"' %
-                (desired_option.key, desired_option.section))
+                'Key "{0!s}" does not exist in section "{1!s}"'.format(desired_option.key, desired_option.section))
         changes.add(action, desired_option)
     return changes
 
@@ -164,12 +163,11 @@ def make_changes(input_lines, new_sections, changes):
 
     def insert_new_sections(new_sections):
         for section in new_sections:
-            output.append('[%s]' % section)
+            output.append('[{0!s}]'.format(section))
             for option in changes.get(section, 'add'):
                 write_option(option)
             write_option('')
-            print 'Created option %s = "%s" (NEW section "%s")' % \
-                (option.key, option.value, section)
+            print 'Created option {0!s} = "{1!s}" (NEW section "{2!s}")'.format(option.key, option.value, section)
 
     for line in input_lines:
         # leave blank lines alone
@@ -203,16 +201,13 @@ def make_changes(input_lines, new_sections, changes):
             key = existing_option.key
             if existing_option.id in options_already_edited:
                 if not existing_option.is_commented_out:
-                    print 'Commented out repeat of %s (section "%s")' % \
-                        (key, section)
+                    print 'Commented out repeat of {0!s} (section "{1!s}")'.format(key, section)
                     existing_option.comment_out()
                 else:
-                    print 'Left commented out repeat of %s (section "%s")' % \
-                        (key, section)
+                    print 'Left commented out repeat of {0!s} (section "{1!s}")'.format(key, section)
             elif not existing_option.is_commented_out and \
                     updated_option.is_commented_out:
-                changes_made = 'Commented out %s (section "%s")' % \
-                    (key, section)
+                changes_made = 'Commented out {0!s} (section "{1!s}")'.format(key, section)
             elif existing_option.is_commented_out and \
                     not updated_option.is_commented_out:
                 changes_made = 'Option uncommented and set %s = "%s" ' \

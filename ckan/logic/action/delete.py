@@ -178,16 +178,16 @@ def package_relationship_delete(context, data_dict):
     pkg1 = model.Package.get(id)
     pkg2 = model.Package.get(id2)
     if not pkg1:
-        raise NotFound('Subject package %r was not found.' % id)
+        raise NotFound('Subject package {0!r} was not found.'.format(id))
     if not pkg2:
-        return NotFound('Object package %r was not found.' % id2)
+        return NotFound('Object package {0!r} was not found.'.format(id2))
 
     existing_rels = pkg1.get_relationships_with(pkg2, rel)
     if not existing_rels:
         raise NotFound
 
     relationship = existing_rels[0]
-    revisioned_details = 'Package Relationship: %s %s %s' % (id, rel, id2)
+    revisioned_details = 'Package Relationship: {0!s} {1!s} {2!s}'.format(id, rel, id2)
 
     context['relationship'] = relationship
     _check_access('package_relationship_delete', context, data_dict)
@@ -271,7 +271,7 @@ def member_delete(context, data_dict=None):
     obj_class = ckan.logic.model_name_to_class(model, obj_type)
     obj = obj_class.get(obj_id)
     if not obj:
-        raise NotFound('%s was not found.' % obj_type.title())
+        raise NotFound('{0!s} was not found.'.format(obj_type.title()))
 
     _check_access('member_delete', context, data_dict)
 
@@ -305,7 +305,7 @@ def _group_or_org_delete(context, data_dict, is_org=False):
     if group is None:
         raise NotFound('Group was not found.')
 
-    revisioned_details = 'Group: %s' % group.name
+    revisioned_details = 'Group: {0!s}'.format(group.name)
 
     if is_org:
         _check_access('organization_delete', context, data_dict)

@@ -86,17 +86,17 @@ def register_package_plugins(map):
             # Create a connection between the newly named type and the
             # package controller
 
-            map.connect('%s_search' % package_type, '/%s' % package_type,
+            map.connect('{0!s}_search'.format(package_type), '/{0!s}'.format(package_type),
                         controller='package', action='search')
 
-            map.connect('%s_new' % package_type, '/%s/new' % package_type,
+            map.connect('{0!s}_new'.format(package_type), '/{0!s}/new'.format(package_type),
                         controller='package', action='new')
-            map.connect('%s_read' % package_type, '/%s/{id}' % package_type,
+            map.connect('{0!s}_read'.format(package_type), '/{0!s}/{{id}}'.format(package_type),
                         controller='package', action='read')
 
             for action in ['edit', 'authz', 'history']:
-                map.connect('%s_%s' % (package_type, action),
-                            '/%s/%s/{id}' % (package_type, action),
+                map.connect('{0!s}_{1!s}'.format(package_type, action),
+                            '/{0!s}/{1!s}/{{id}}'.format(package_type, action),
                             controller='package',
                             action=action)
 
@@ -154,14 +154,14 @@ def register_group_plugins(map):
             # to happen but it is executed sequentially from inside the
             # routing setup
 
-            map.connect('%s_index' % group_type, '/%s' % group_type,
+            map.connect('{0!s}_index'.format(group_type), '/{0!s}'.format(group_type),
                         controller=group_controller, action='index')
-            map.connect('%s_new' % group_type, '/%s/new' % group_type,
+            map.connect('{0!s}_new'.format(group_type), '/{0!s}/new'.format(group_type),
                         controller=group_controller, action='new')
-            map.connect('%s_read' % group_type, '/%s/{id}' % group_type,
+            map.connect('{0!s}_read'.format(group_type), '/{0!s}/{{id}}'.format(group_type),
                         controller=group_controller, action='read')
-            map.connect('%s_action' % group_type,
-                        '/%s/{action}/{id}' % group_type, controller=group_controller,
+            map.connect('{0!s}_action'.format(group_type),
+                        '/{0!s}/{{action}}/{{id}}'.format(group_type), controller=group_controller,
                         requirements=dict(action='|'.join(['edit', 'authz', 'history'])))
 
             if group_type in _group_plugins:

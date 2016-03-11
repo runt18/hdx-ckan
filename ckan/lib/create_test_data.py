@@ -169,8 +169,8 @@ class CreateTestData(object):
                     if item.has_key(field):
                         pkg_dict[field] = unicode(item[field])
                 if model.Package.by_name(pkg_dict['name']):
-                    log.warning('Cannot create package "%s" as it already exists.' % \
-                                    (pkg_dict['name']))
+                    log.warning('Cannot create package "{0!s}" as it already exists.'.format( \
+                                    (pkg_dict['name'])))
                     continue
                 pkg = model.Package(**pkg_dict)
                 model.Session.add(pkg)
@@ -343,8 +343,8 @@ class CreateTestData(object):
                                 'type', 'is_organization'))
         for group_dict in group_dicts:
             if model.Group.by_name(unicode(group_dict['name'])):
-                log.warning('Cannot create group "%s" as it already exists.' %
-                            group_dict['name'])
+                log.warning('Cannot create group "{0!s}" as it already exists.'.format(
+                            group_dict['name']))
                 continue
             pkg_names = group_dict.pop('packages', [])
             group = model.Group(name=unicode(group_dict['name']))
@@ -550,8 +550,8 @@ left arrow <
         if model.User.by_name(name) or \
                 (user_dict.get('open_id') and
                  model.User.by_openid(user_dict.get('openid'))):
-            log.warning('Cannot create user "%s" as it already exists.' %
-                        name or user_dict['name'])
+            log.warning('Cannot create user "{0!s}" as it already exists.'.format(
+                        name) or user_dict['name'])
             return
         # User objects are not revisioned so no need to create a revision
         user_ref = name or user_dict['openid']

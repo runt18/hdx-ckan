@@ -279,7 +279,7 @@ class HDXSearchController(PackageController):
                         and len(value) and not param.startswith('_'):
                     if not param.startswith('ext_'):
                         c.fields.append((param, value))
-                        fq += ' %s:"%s"' % (param, value)
+                        fq += ' {0!s}:"{1!s}"'.format(param, value)
                         if param not in c.fields_grouped:
                             c.fields_grouped[param] = [value]
                         else:
@@ -348,12 +348,12 @@ class HDXSearchController(PackageController):
         for facet in c.search_facets.keys():
             limit = 1000
             try:
-                limit = int(request.params.get('_%s_limit' % facet,
+                limit = int(request.params.get('_{0!s}_limit'.format(facet),
                                                1000))
             except ValueError:
                 abort(400, _('Parameter "{parameter_name}" is not '
                              'an integer').format(
-                    parameter_name='_%s_limit' % facet
+                    parameter_name='_{0!s}_limit'.format(facet)
                 ))
             c.search_facets_limits[facet] = limit
 

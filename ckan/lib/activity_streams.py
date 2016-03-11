@@ -13,20 +13,17 @@ from ckan.common import _
 # etc.
 
 def get_snippet_actor(activity, detail):
-    return literal('''<span class="actor">%s</span>'''
-        % (h.linked_user(activity['user_id'], 0, 30))
+    return literal('''<span class="actor">{0!s}</span>'''.format((h.linked_user(activity['user_id'], 0, 30)))
         )
 
 def get_snippet_user(activity, detail):
-    return literal('''<span>%s</span>'''
-        % (h.linked_user(activity['object_id'], 0, 20))
+    return literal('''<span>{0!s}</span>'''.format((h.linked_user(activity['object_id'], 0, 20)))
         )
 
 def get_snippet_dataset(activity, detail):
     data = activity['data']
     link = h.dataset_link(data.get('package') or data.get('dataset'))
-    return literal('''<span>%s</span>'''
-        % (link)
+    return literal('''<span>{0!s}</span>'''.format((link))
         )
 
 def get_snippet_tag(activity, detail):
@@ -34,15 +31,14 @@ def get_snippet_tag(activity, detail):
 
 def get_snippet_group(activity, detail):
     link = h.group_link(activity['data']['group'])
-    return literal('''<span>%s</span>'''
-        % (link)
+    return literal('''<span>{0!s}</span>'''.format((link))
         )
 
 def get_snippet_organization(activity, detail):
     return h.organization_link(activity['data']['group'])
 
 def get_snippet_extra(activity, detail):
-    return '"%s"' % detail['data']['package_extra']['key']
+    return '"{0!s}"'.format(detail['data']['package_extra']['key'])
 
 def get_snippet_resource(activity, detail):
     return h.resource_link(detail['data']['resource'],
@@ -249,7 +245,7 @@ def activity_list_to_html(context, activity_stream, extra_vars):
                 if object_type == 'PackageExtra':
                     object_type = 'package_extra'
 
-                new_activity_type = '%s %s' % (detail['activity_type'],
+                new_activity_type = '{0!s} {1!s}'.format(detail['activity_type'],
                                             object_type.lower())
                 if new_activity_type in activity_stream_string_functions:
                     activity_type = new_activity_type

@@ -5,14 +5,14 @@ data_path = os.path.expanduser('~/ckan-local/data/')
 def load_month(month, year):
     assert month < 13
     assert year > 2000
-    data_filepath = os.path.join(data_path, 'ons_hub_%s_%#02d.xml' % (year, month))
+    data_filepath = os.path.join(data_path, 'ons_hub_{0!s}_{1:02d}.xml'.format(year, month))
     try:
-        cmd = 'paster db load-onshub %s' % (data_filepath)
+        cmd = 'paster db load-onshub {0!s}'.format((data_filepath))
         print cmd
         response = os.system(cmd)
-        print '\n%s %r' % (data_filepath, response)
+        print '\n{0!s} {1!r}'.format(data_filepath, response)
     except Exception, e:
-        print '\nEXCEPTION %s %r' % (data_filepath, e.args)
+        print '\nEXCEPTION {0!s} {1!r}'.format(data_filepath, e.args)
 
 
 load_month(1, 2010)

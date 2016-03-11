@@ -97,16 +97,16 @@ class RevisionController(base.BaseController):
                                         'date_updated':
                                     transition += ':date_updated'
                                     break
-                    indication = "%s:%s" % (package.name, transition)
+                    indication = "{0!s}:{1!s}".format(package.name, transition)
                     package_indications.append(indication)
-                pkgs = u'[%s]' % ' '.join(package_indications)
-                item_title = u'r%s ' % (revision.id)
+                pkgs = u'[{0!s}]'.format(' '.join(package_indications))
+                item_title = u'r{0!s} '.format((revision.id))
                 item_title += pkgs
                 if revision.message:
-                    item_title += ': %s' % (revision.message or '')
+                    item_title += ': {0!s}'.format((revision.message or ''))
                 item_link = h.url_for(controller='revision', action='read', id=revision.id)
                 item_description = _('Datasets affected: %s.\n') % pkgs
-                item_description += '%s' % (revision.message or '')
+                item_description += '{0!s}'.format((revision.message or ''))
                 item_author_name = revision.author
                 item_pubdate = revision.timestamp
                 feed.add_item(

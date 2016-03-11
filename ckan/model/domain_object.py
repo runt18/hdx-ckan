@@ -103,13 +103,13 @@ class DomainObject(object):
         return self.__unicode__().encode('utf8')
 
     def __unicode__(self):
-        repr = u'<%s' % self.__class__.__name__
+        repr = u'<{0!s}'.format(self.__class__.__name__)
         table = orm.class_mapper(self.__class__).mapped_table
         for col in table.c:
             try:
-                repr += u' %s=%s' % (col.name, getattr(self, col.name))
+                repr += u' {0!s}={1!s}'.format(col.name, getattr(self, col.name))
             except Exception, inst:
-                repr += u' %s=%s' % (col.name, inst)
+                repr += u' {0!s}={1!s}'.format(col.name, inst)
 
         repr += '>'
         return repr

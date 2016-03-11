@@ -23,8 +23,8 @@ class MailerException(Exception):
 def add_msg_niceties(recipient_name, body, sender_name, sender_url):
     footer = '<br><p><a href="https://data.hdx.rwlabs.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p>'
     return _(u"Dear %s,") % recipient_name \
-           + u"\r\n\r\n%s\r\n\r\n" % body \
-           + u"\r\n%s" % footer
+           + u"\r\n\r\n{0!s}\r\n\r\n".format(body) \
+           + u"\r\n{0!s}".format(footer)
 
 
 def _mail_recipient(recipient_name, recipient_email,
@@ -37,10 +37,10 @@ def _mail_recipient(recipient_name, recipient_email,
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
     msg['From'] = _("%s <%s>") % (sender_name, mail_from)
-    recipient = u"%s <%s>" % (recipient_name, recipient_email)
+    recipient = u"{0!s} <{1!s}>".format(recipient_name, recipient_email)
     msg['To'] = Header(recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
-    msg['X-Mailer'] = "CKAN %s" % ckan.__version__
+    msg['X-Mailer'] = "CKAN {0!s}".format(ckan.__version__)
     part = MIMEText(body, 'html')
     msg.attach(part)
 
@@ -86,7 +86,7 @@ def _mail_recipient(recipient_name, recipient_email,
         log.info("Sent email to {0}".format(recipient_email))
 
     except smtplib.SMTPException, e:
-        msg = '%r' % e
+        msg = '{0!r}'.format(e)
         log.exception(msg)
         raise MailerException(msg)
     finally:

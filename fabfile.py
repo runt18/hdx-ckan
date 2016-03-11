@@ -103,12 +103,12 @@ def config_local(base_dir, ckan_instance_name, db_user=None, db_host=None,
 def config_local_dev(base_dir, ckan_instance_name):
     config_local(base_dir, ckan_instance_name)
     env.config_ini_filename = 'development.ini'
-    env.pyenv_dir = os.path.join(base_dir, 'pyenv-%s' % ckan_instance_name)
+    env.pyenv_dir = os.path.join(base_dir, 'pyenv-{0!s}'.format(ckan_instance_name))
     env.serve_url = 'localhost:5000'
 
 def config_staging_hmg_ckan_net():
     env.user = 'okfn'
-    env.base_dir = '/home/%s' % env.user
+    env.base_dir = '/home/{0!s}'.format(env.user)
     env.ckan_instance_name = 'staging-hmg.ckan.net'
     env.revision = 'stable'
 
@@ -118,7 +118,7 @@ def config_test_hmg_ckan_net():
 
 def config_hmg_ckan_net_1():
     env.user = 'ckan1'
-    env.base_dir = '/home/%s' % env.user
+    env.base_dir = '/home/{0!s}'.format(env.user)
     env.cmd_pyenv = os.path.join(env.base_dir, 'ourenv')
     env.no_sudo = None
     env.ckan_instance_name = 'hmg.ckan.net'
@@ -136,7 +136,7 @@ def config_hmg_ckan_net_2():
 def config_hmg2_ckan_net_1(db_pass=None):
     env.user = 'okfn'
     env.hosts = ['hmg2.ckan.net']
-    env.base_dir = '/home/%s/var/srvc' % env.user
+    env.base_dir = '/home/{0!s}/var/srvc'.format(env.user)
 #    env.wsgi_script_filepath = os.path.join(env.base_dir, 'pylonsapp_modwsgi.py')
     env.revision = 'default'
     env.db_pass = db_pass
@@ -188,21 +188,21 @@ def config_0(name,
     if not hosts_str and not env.hosts:
         env.hosts = [name]
     env.ckan_instance_name = name
-    env.config_ini_filename = '%s.ini' % name
+    env.config_ini_filename = '{0!s}.ini'.format(name)
     # check if the host is just a squid caching a ckan running on another host
     assert len(env.hosts) == 1, 'Must specify one host'
     env.host_string = env.hosts[0]
     if exists('/etc/squid3/squid.conf'):
         # e.g. acl eu7_sites dstdomain ckan.net
-        conf_line = run('grep -E "^acl .* %s" /etc/squid3/squid.conf' % env.host_string)
+        conf_line = run('grep -E "^acl .* {0!s}" /etc/squid3/squid.conf'.format(env.host_string))
         if conf_line:
             host_txt = conf_line.split()[1].replace('_sites', '.okfn.org')
             env.hosts = [host_txt]
-            print 'Found Squid cache is of CKAN host: %s' % host_txt
+            print 'Found Squid cache is of CKAN host: {0!s}'.format(host_txt)
             env.user = 'okfn'
         else:
             print 'Found Squid cache but did not find host in config.'
-    env.base_dir = '/home/%s/var/srvc' % env.user
+    env.base_dir = '/home/{0!s}/var/srvc'.format(env.user)
     env.revision = revision
     env.db_user = db_user or env.user
     env.db_pass = db_pass
@@ -213,15 +213,14 @@ def _setup():
     def _default(key, value):
         if not hasattr(env, key):
             setattr(env, key, value)
-    _default('config_ini_filename', '%s.ini' % env.ckan_instance_name)
+    _default('config_ini_filename', '{0!s}.ini'.format(env.ckan_instance_name))
     _default('instance_path', os.path.join(env.base_dir,
         env.ckan_instance_name))
     if hasattr(env, 'local_backup_dir'):
         env.local_backup_dir = os.path.expanduser(env.local_backup_dir)
     _default('pyenv_dir', os.path.join(env.instance_path, 'pyenv'))
     _default('serve_url', env.ckan_instance_name)
-    _default('wsgi_script_filepath', os.path.join(env.pyenv_dir, 'bin', '%s.py'
-        % env.ckan_instance_name))
+    _default('wsgi_script_filepath', os.path.join(env.pyenv_dir, 'bin', '{0!s}.py'.format(env.ckan_instance_name)))
     _default('who_ini_filepath', os.path.join(env.pyenv_dir, 'src', 'ckan',
         'who.ini'))
     _default('db_user', env.user)
@@ -242,7 +241,7 @@ def deploy():
     with cd(env.instance_path):
 
         # get latest requirements.txt
-        print 'Getting requirements from revision: %s' % env.revision
+        print 'Getting requirements from revision: {0!s}'.format(env.revision)
         latest_pip_file = urllib2.urlopen(pip_req)
         tmp_pip_requirements_filepath = os.path.join('/tmp', pip_requirements)
         local_pip_file = open(tmp_pip_requirements_filepath, 'w')
@@ -254,47 +253,47 @@ def deploy():
 
         # create python environment
         if not exists(env.pyenv_dir):
-            _run_in_cmd_pyenv('virtualenv %s' % env.pyenv_dir)
+            _run_in_cmd_pyenv('virtualenv {0!s}'.format(env.pyenv_dir))
         else:
-            print 'Virtualenv already exists: %s' % env.pyenv_dir
+            print 'Virtualenv already exists: {0!s}'.format(env.pyenv_dir)
 
         # Run pip
-        print 'Pip download cache: %r' % os.environ.get('PIP_DOWNLOAD_CACHE')
-        _pip_cmd('pip -E %s install -r %s' % (env.pyenv_dir, pip_requirements))
+        print 'Pip download cache: {0!r}'.format(os.environ.get('PIP_DOWNLOAD_CACHE'))
+        _pip_cmd('pip -E {0!s} install -r {1!s}'.format(env.pyenv_dir, pip_requirements))
 
         # create config ini file
         if not exists(env.config_ini_filename):
             # paster make-config doesn't overwrite if ini already exists
-            _run_in_pyenv('paster make-config --no-interactive ckan %s' % env.config_ini_filename)
+            _run_in_pyenv('paster make-config --no-interactive ckan {0!s}'.format(env.config_ini_filename))
             dburi = '^sqlalchemy.url.*'
             # e.g. 'postgres://tester:pass@localhost/ckantest3'
-            newdburi = 'sqlalchemy.url = postgres://%s:%s@%s/%s' % (
+            newdburi = 'sqlalchemy.url = postgres://{0!s}:{1!s}@{2!s}/{3!s}'.format(
                     env.db_user, env.db_pass, env.db_host, env.db_name)
             # sed does not find the path if not absolute (!)
             config_path = os.path.join(env.instance_path, env.config_ini_filename)
             sed(config_path, dburi, newdburi, backup='')
             site_id = '^.*ckan.site_id.*'
-            new_site_id = 'ckan.site_id = %s' % env.ckan_instance_name
+            new_site_id = 'ckan.site_id = {0!s}'.format(env.ckan_instance_name)
             sed(config_path, site_id, new_site_id, backup='')
             if not env.skip_setup_db:
                 setup_db()
-            _run_in_pyenv('paster --plugin ckan db init --config %s' % env.config_ini_filename)
+            _run_in_pyenv('paster --plugin ckan db init --config {0!s}'.format(env.config_ini_filename))
         else:
-            print 'Config file already exists: %s/%s' % (env.instance_path, env.config_ini_filename)
-            _run_in_pyenv('paster --plugin ckan db upgrade --config %s' % env.config_ini_filename)
+            print 'Config file already exists: {0!s}/{1!s}'.format(env.instance_path, env.config_ini_filename)
+            _run_in_pyenv('paster --plugin ckan db upgrade --config {0!s}'.format(env.config_ini_filename))
 
         # create wsgi script
         if env.wsgi_script_filepath:
             if not exists(env.wsgi_script_filepath):
-                print 'Creating WSGI script: %s' % env.wsgi_script_filepath
+                print 'Creating WSGI script: {0!s}'.format(env.wsgi_script_filepath)
                 context = {'instance_dir':env.instance_path,
                            'config_file':env.config_ini_filename,
                            } #e.g. pyenv_dir='/home/ckan1/hmg.ckan.net'
                              #     config_file = 'hmg.ckan.net.ini'
                 _create_file_by_template(env.wsgi_script_filepath, wsgi_script, context)
-                run('chmod +r %s' % env.wsgi_script_filepath)
+                run('chmod +r {0!s}'.format(env.wsgi_script_filepath))
             else:
-                print 'WSGI script already exists: %s' % env.wsgi_script_filepath
+                print 'WSGI script already exists: {0!s}'.format(env.wsgi_script_filepath)
         else:
             print 'Leaving WSGI script alone'
 
@@ -302,7 +301,7 @@ def deploy():
         assert exists(env.who_ini_filepath)
         whoini_dest = os.path.join(env.instance_path, 'who.ini')
         if not exists(whoini_dest):
-            run('ln -f -s %s %s' % (env.who_ini_filepath, whoini_dest))
+            run('ln -f -s {0!s} {1!s}'.format(env.who_ini_filepath, whoini_dest))
         else:
             print 'Link to who.ini already exists'
 
@@ -327,17 +326,17 @@ def setup_db(db_details=None):
     if db_details['db_host'] != 'localhost':
         raise Exception('Cannot setup db on non-local host (sudo will not work!)')
     output = sudo('psql -l', user='postgres')
-    if ' %s ' % dbname in output:
-        print 'DB already exists with name: %s' % dbname
+    if ' {0!s} '.format(dbname) in output:
+        print 'DB already exists with name: {0!s}'.format(dbname)
         return 0
     users = sudo('psql -c "\du"', user='postgres')
     dbuser = db_details['db_user']
     if not dbuser in users:
-        createuser = '''psql -c "CREATE USER %s WITH PASSWORD '%s';"''' % (dbuser, db_details['db_pass'])
+        createuser = '''psql -c "CREATE USER {0!s} WITH PASSWORD '{1!s}';"'''.format(dbuser, db_details['db_pass'])
         sudo(createuser, user='postgres')
     else:
-        print('User %s already exists' % dbuser)
-    sudo('createdb --owner %s %s' % (dbuser, dbname), user='postgres')
+        print('User {0!s} already exists'.format(dbuser))
+    sudo('createdb --owner {0!s} {1!s}'.format(dbuser, dbname), user='postgres')
 
 def restart_apache():
     'Restart apache'
@@ -352,7 +351,7 @@ def status():
     _setup()
     with cd(env.instance_path):
         _run_in_cmd_pyenv('pip freeze')
-        run('cat %s' % env.config_ini_filename)
+        run('cat {0!s}'.format(env.config_ini_filename))
     with cd(os.path.join(env.pyenv_dir, 'src', 'ckan')):
         run('git log -n1')
         run('git name-rev --name-only HEAD')
@@ -363,30 +362,30 @@ def apache_config(set_config=None):
     _setup()
     enabled_config = get_enabled_apache_config()
     available_configs = get_available_apache_configs()
-    print 'Available modes: %s' % available_configs
+    print 'Available modes: {0!s}'.format(available_configs)
 
     if set_config == None:
-        print 'Current mode: %s' % enabled_config
+        print 'Current mode: {0!s}'.format(enabled_config)
     else:
         assert set_config in available_configs
         if enabled_config:
-            sudo('a2dissite %s' % enabled_config)
-        sudo('a2ensite %s' % set_config)
+            sudo('a2dissite {0!s}'.format(enabled_config))
+        sudo('a2ensite {0!s}'.format(set_config))
         reload_apache()
 
 def get_available_apache_configs():
-    available_configs = run('ls %s' % env.apache_sites_available).split('\n')
+    available_configs = run('ls {0!s}'.format(env.apache_sites_available)).split('\n')
     related_available_configs = [fname for fname in available_configs if env.apache_config in fname]
     assert related_available_configs, \
-           'No recognised available apache config in: %r' % available_configs
+           'No recognised available apache config in: {0!r}'.format(available_configs)
     return related_available_configs
 
 def get_enabled_apache_config():
     with cd(env.apache_sites_enabled):
-        related_enabled_configs = run('ls %s*' % (env.apache_config)).split('\n')
+        related_enabled_configs = run('ls {0!s}*'.format((env.apache_config))).split('\n')
     assert len(related_enabled_configs) <= 1, \
-           'Seemingly more than one apache config enabled for this site: %r' %\
-           related_enabled_configs
+           'Seemingly more than one apache config enabled for this site: {0!r}'.format(\
+           related_enabled_configs)
     return related_enabled_configs[0] if related_enabled_configs else None
 
 
@@ -401,19 +400,19 @@ def backup():
     pg_dump_filepath = _get_unique_filepath(backup_dir, exists, 'pg_dump')
 
     with cd(env.instance_path):
-        assert exists(env.config_ini_filename), "Can't find config file: %s/%s" % (env.instance_path, env.config_ini_filename)
+        assert exists(env.config_ini_filename), "Can't find config file: {0!s}/{1!s}".format(env.instance_path, env.config_ini_filename)
     db_details = _get_db_config()
     assert db_details['db_type'] in ('postgres', 'postgresql')
-    port_option = '-p %s' % db_details['db_port'] if db_details['db_port'] else ''
-    run('export PGPASSWORD=%s&&pg_dump -U %s -h %s %s %s > %s' % (db_details['db_pass'], db_details['db_user'], db_details['db_host'], port_option, db_details['db_name'], pg_dump_filepath), shell=False)
+    port_option = '-p {0!s}'.format(db_details['db_port']) if db_details['db_port'] else ''
+    run('export PGPASSWORD={0!s}&&pg_dump -U {1!s} -h {2!s} {3!s} {4!s} > {5!s}'.format(db_details['db_pass'], db_details['db_user'], db_details['db_host'], port_option, db_details['db_name'], pg_dump_filepath), shell=False)
     assert exists(pg_dump_filepath)
-    run('ls -l %s' % pg_dump_filepath)
+    run('ls -l {0!s}'.format(pg_dump_filepath))
     # copy backup locally
     if env.host_string != 'localhost':
         # zip it up
         pg_dump_filename = os.path.basename(pg_dump_filepath)
         zipped_pg_dump_filepath = os.path.join('/tmp', pg_dump_filename) + '.gz'
-        run('gzip -c %s > %s' % (pg_dump_filepath, zipped_pg_dump_filepath))
+        run('gzip -c {0!s} > {1!s}'.format(pg_dump_filepath, zipped_pg_dump_filepath))
         # do the copy
         local_backup_dir = os.path.join(env.local_backup_dir, env.host_string)
         if not os.path.exists(local_backup_dir):
@@ -421,9 +420,9 @@ def backup():
         local_zip_filepath = os.path.join(local_backup_dir, pg_dump_filename) + '.gz'
         get(zipped_pg_dump_filepath, local_zip_filepath)
         # unzip it
-        subprocess.check_call('gunzip %s' % local_zip_filepath, shell=True)
+        subprocess.check_call('gunzip {0!s}'.format(local_zip_filepath), shell=True)
         local_filepath = os.path.join(local_backup_dir, pg_dump_filename)
-        print 'Backup saved locally: %s' % local_filepath
+        print 'Backup saved locally: {0!s}'.format(local_filepath)
 
 def restore_from_local(pg_dump_filepath):
     '''Like restore but from a local pg dump'''
@@ -432,11 +431,11 @@ def restore_from_local(pg_dump_filepath):
     pg_dump_filename = os.path.basename(pg_dump_filepath)
     if not pg_dump_filename.endswith('.gz'):
         new_pg_dump_filepath = os.path.join('/tmp', pg_dump_filename) + '.gz'
-        subprocess.check_call('gzip -c %s > %s' % (pg_dump_filepath, new_pg_dump_filepath), shell=True)
+        subprocess.check_call('gzip -c {0!s} > {1!s}'.format(pg_dump_filepath, new_pg_dump_filepath), shell=True)
         pg_dump_filepath = new_pg_dump_filepath
     remote_filepath = os.path.join('/tmp', pg_dump_filename) + '.gz'
     put(pg_dump_filepath, remote_filepath)
-    run('gunzip %s' % remote_filepath)
+    run('gunzip {0!s}'.format(remote_filepath))
     remote_filepath = remote_filepath.rstrip('.gz')
     restore(remote_filepath)
 
@@ -444,19 +443,18 @@ def restore(pg_dump_filepath):
     '''Restore ckan from an existing dump'''
     _setup()
     pg_dump_filepath = os.path.expanduser(pg_dump_filepath)
-    assert exists(pg_dump_filepath), 'Cannot find file: %s' % pg_dump_filepath
+    assert exists(pg_dump_filepath), 'Cannot find file: {0!s}'.format(pg_dump_filepath)
     db_details = _get_db_config()
-    confirm('Are you sure you want to overwrite database for %s %s?' % \
-            (env.host_string, env.ckan_instance_name),
+    confirm('Are you sure you want to overwrite database for {0!s} {1!s}?'.format(env.host_string, env.ckan_instance_name),
             default=False)
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan db clean --config %s' % env.config_ini_filename)
+        _run_in_pyenv('paster --plugin ckan db clean --config {0!s}'.format(env.config_ini_filename))
     assert db_details['db_type'] in ('postgres', 'postgresql')
-    port_option = '-p %s'  % db_details['db_port'] if db_details['db_port'] else ''
-    run('export PGPASSWORD=%s&&psql -U %s -d %s -h %s %s -f %s' % (db_details['db_pass'], db_details['db_user'], db_details['db_name'], db_details['db_host'], port_option, pg_dump_filepath), shell=False)
+    port_option = '-p {0!s}'.format(db_details['db_port']) if db_details['db_port'] else ''
+    run('export PGPASSWORD={0!s}&&psql -U {1!s} -d {2!s} -h {3!s} {4!s} -f {5!s}'.format(db_details['db_pass'], db_details['db_user'], db_details['db_name'], db_details['db_host'], port_option, pg_dump_filepath), shell=False)
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan db upgrade --config %s' % env.config_ini_filename)
-        _run_in_pyenv('paster --plugin ckan db init --config %s' % env.config_ini_filename)
+        _run_in_pyenv('paster --plugin ckan db upgrade --config {0!s}'.format(env.config_ini_filename))
+        _run_in_pyenv('paster --plugin ckan db init --config {0!s}'.format(env.config_ini_filename))
 
 def load_from_local(format, csv_filepath):
     '''Like load but with a local file'''
@@ -472,20 +470,20 @@ def load(format, csv_filepath):
     assert format in ('cospread', 'data4nr')
     _setup()
     csv_filepath = os.path.expanduser(csv_filepath)
-    assert exists(csv_filepath), 'Cannot find file: %s' % csv_filepath
+    assert exists(csv_filepath), 'Cannot find file: {0!s}'.format(csv_filepath)
     db_details = _get_db_config()
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan db load-%s %s --config %s' % (format, csv_filepath, env.config_ini_filename))
+        _run_in_pyenv('paster --plugin ckan db load-{0!s} {1!s} --config {2!s}'.format(format, csv_filepath, env.config_ini_filename))
     
 def test():
     '''Run paster test-data'''
     _setup()
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan test-data %s --config %s' % (env.serve_url, env.config_ini_filename))
+        _run_in_pyenv('paster --plugin ckan test-data {0!s} --config {1!s}'.format(env.serve_url, env.config_ini_filename))
 
 def upload_i18n(lang):
     _setup()
-    localpath = 'ckan/i18n/%s/LC_MESSAGES/ckan.mo' % lang
+    localpath = 'ckan/i18n/{0!s}/LC_MESSAGES/ckan.mo'.format(lang)
     remotepath = os.path.join(env.pyenv_dir, 'src', 'ckan', localpath)
     assert exists(env.pyenv_dir)
     remotedir = os.path.dirname(remotepath)
@@ -493,25 +491,25 @@ def upload_i18n(lang):
     put(localpath, remotepath)
     current_lang = _get_ini_value('lang')
     if current_lang != lang:
-        print "Warning: current language set to '%s' not '%s'." % (current_lang, lang)
+        print "Warning: current language set to '{0!s}' not '{1!s}'.".format(current_lang, lang)
 
 def paster(cmd):
     '''Run specified paster command'''
     _setup()
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan %s --config %s' % (cmd, env.config_ini_filename))
+        _run_in_pyenv('paster --plugin ckan {0!s} --config {1!s}'.format(cmd, env.config_ini_filename))
 
 def sysadmin_list():
     '''Lists sysadmins'''
     _setup()
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan sysadmin list --config %s' % env.config_ini_filename)
+        _run_in_pyenv('paster --plugin ckan sysadmin list --config {0!s}'.format(env.config_ini_filename))
 
 def sysadmin_create(open_id):
     '''Creates sysadmins with the given OpenID'''
     _setup()
     with cd(env.instance_path):
-        _run_in_pyenv('paster --plugin ckan sysadmin create %s --config %s' % (open_id, env.config_ini_filename))
+        _run_in_pyenv('paster --plugin ckan sysadmin create {0!s} --config {1!s}'.format(open_id, env.config_ini_filename))
 
 def switch_instance():
     '''For multiple instance servers, switches the one that is active.'''
@@ -522,14 +520,14 @@ def switch_instance():
         if current_instance:
             next_instance_index = (env.switch_between_ckan_instances.index(current_instance) + 1) % len(env.switch_between_ckan_instances)
             # delete existing symbolic link
-            run('rm %s' % env.ckan_instance_name)
+            run('rm {0!s}'.format(env.ckan_instance_name))
         else:
             next_instance_index = 0
         next_instance = env.switch_between_ckan_instances[next_instance_index]
-        run('ln -s %s %s' % (next_instance, env.ckan_instance_name))
+        run('ln -s {0!s} {1!s}'.format(next_instance, env.ckan_instance_name))
     # restart apache
     restart_apache()
-    print 'Current instance changed %s -> %s' % (current_instance, next_instance)
+    print 'Current instance changed {0!s} -> {1!s}'.format(current_instance, next_instance)
 
 def apache_log(cmd='tail', log='error'):
     '''Displays the apache log.
@@ -537,23 +535,23 @@ def apache_log(cmd='tail', log='error'):
     #todo make this more flexible
     filename = env.log_filename_pattern % log
     run_func = run if hasattr(env, 'no_sudo') else sudo
-    run_func('%s /var/log/apache2/%s' % (cmd, filename))
+    run_func('{0!s} /var/log/apache2/{1!s}'.format(cmd, filename))
 
 def log(cmd='tail'):
     '''Displays the ckan log.'''
     filepath = _get_ckan_log_filename()
-    run('%s %s' % (cmd, filepath))
+    run('{0!s} {1!s}'.format(cmd, filepath))
 
 def current():
     '''Tells you which instance is current for switchable instances'''
     assert env.switch_between_ckan_instances
     current_instance = _get_current_instance()
-    print 'Current instance is: %s' % current_instance
+    print 'Current instance is: {0!s}'.format(current_instance)
     if len(env.switch_between_ckan_instances) == 2:
         current_instance_index = env.switch_between_ckan_instances.index(current_instance)
         reserve_instance_index = (current_instance_index + 1) % 2
         env.ckan_instance_name = env.switch_between_ckan_instances[reserve_instance_index]
-        print 'Reserve instance is: %s' % env.ckan_instance_name
+        print 'Reserve instance is: {0!s}'.format(env.ckan_instance_name)
 
 
 ## ===================================
@@ -561,37 +559,37 @@ def current():
 
 def _mkdir(dir):
     if not exists(dir):
-        run('mkdir -p %s' % dir)
+        run('mkdir -p {0!s}'.format(dir))
     else:
-        print 'Path already exists: %s' % dir
+        print 'Path already exists: {0!s}'.format(dir)
     
 def _get_unique_filepath(dir, exists_func, extension):
     def get_filepath(dir, suffix):
         date = datetime.datetime.today().strftime('%Y-%m-%d')
         if suffix:
-            return os.path.join(dir, '%s.%s.%s.%s' % (env.ckan_instance_name, date, suffix, extension))
+            return os.path.join(dir, '{0!s}.{1!s}.{2!s}.{3!s}'.format(env.ckan_instance_name, date, suffix, extension))
         else:
-            return os.path.join(dir, '%s.%s.%s' % (env.ckan_instance_name, date, extension))
+            return os.path.join(dir, '{0!s}.{1!s}.{2!s}'.format(env.ckan_instance_name, date, extension))
     count = 0
     while count == 0 or exists_func(filepath):
         filepath = get_filepath(dir, count)
         count += 1
-        assert count < 100, 'Unique filename (%s) overflow in dir: %s' % (extension, dir)
+        assert count < 100, 'Unique filename ({0!s}) overflow in dir: {1!s}'.format(extension, dir)
     return filepath
 
 def _get_ini_value(key, ini_filepath=None):
     if not ini_filepath:
         # default to config ini
         ini_filepath = os.path.join(env.instance_path, env.config_ini_filename)
-    assert exists(ini_filepath), 'Could not find CKAN instance config at: ' % ini_filepath
+    assert exists(ini_filepath), 'Could not find CKAN instance config at: '.format(*ini_filepath)
     with settings(warn_only=True):
-        output = run('grep -E "^%s" %s' % (key, ini_filepath))
+        output = run('grep -E "^{0!s}" {1!s}'.format(key, ini_filepath))
     if output == '':
-        print 'Did not find key "%s" in config.' % key
+        print 'Did not find key "{0!s}" in config.'.format(key)
         return None
     lines = output.split('\n')
-    assert len(lines) == 1, 'Difficulty finding key %s in config %s:\n%s' % (key, ini_filepath, output)
-    value = re.match('^%s[^=]=\s*(.*)' % key, lines[0]).groups()[0]
+    assert len(lines) == 1, 'Difficulty finding key {0!s} in config {1!s}:\n{2!s}'.format(key, ini_filepath, output)
+    value = re.match('^{0!s}[^=]=\s*(.*)'.format(key), lines[0]).groups()[0]
     return value
 
 def _get_db_config():
@@ -599,7 +597,7 @@ def _get_db_config():
     # e.g. 'postgres://tester:pass@localhost/ckantest3'
     db_details_match = re.match('^\s*(?P<db_type>\w*)://(?P<db_user>\w*):?(?P<db_pass>[^@]*)@(?P<db_host>[^/:]*):?(?P<db_port>[^/]*)/(?P<db_name>[\w.-]*)', url)
     if not db_details_match:
-        raise Exception('Could not extract db details from url: %r' % url)
+        raise Exception('Could not extract db details from url: {0!r}'.format(url))
     db_details = db_details_match.groupdict()
     return db_details
 
@@ -620,16 +618,16 @@ def _get_open_id_store_dir():
 
 def _create_live_data_dir(readable_name, dir):
     if not exists(dir):
-        print 'Setting up %s directory: %s' % (readable_name, dir)
-        run('mkdir -p %s' % dir)
+        print 'Setting up {0!s} directory: {1!s}'.format(readable_name, dir)
+        run('mkdir -p {0!s}'.format(dir))
         if hasattr(env, 'no_sudo'):
             # Doesn't need sudo
-            run('chmod gu+wx -R %s' % dir)
+            run('chmod gu+wx -R {0!s}'.format(dir))
         else:
-            run('chmod g+wx -R %s' % dir)
-            sudo('chgrp -R www-data %s' % dir)
+            run('chmod g+wx -R {0!s}'.format(dir))
+            sudo('chgrp -R www-data {0!s}'.format(dir))
     else:
-        print '%s directory already exists: %s' % (readable_name, dir)
+        print '{0!s} directory already exists: {1!s}'.format(readable_name, dir)
         
 def _get_ckan_log_filename():
     _setup()
@@ -637,21 +635,21 @@ def _get_ckan_log_filename():
     assert exists(ini_filepath)
     key = 'args'
     with settings(warn_only=True):
-        output = run('grep -E "^%s" %s' % (key, ini_filepath))
+        output = run('grep -E "^{0!s}" {1!s}'.format(key, ini_filepath))
     if output == '':
-        print 'Did not find key "%s" in config.' % key
+        print 'Did not find key "{0!s}" in config.'.format(key)
         return None
     lines = output.split('\n')
     matching_args = []
     for line in lines:
-        match = re.match('^%s\s*=\s*\(["\'](.*?)["\'].*' % key, line)
+        match = re.match('^{0!s}\s*=\s*\(["\'](.*?)["\'].*'.format(key), line)
         if match:
             matching_args.append(match.groups()[0])
     if not matching_args:
-        print 'Could not find %r in config to find CKAN log.' % key
+        print 'Could not find {0!r} in config to find CKAN log.'.format(key)
         return None
     if len(matching_args) > 1:
-        print 'Many matches for %r in config, looking for CKAN log: %r' % (key, matching_args)
+        print 'Many matches for {0!r} in config, looking for CKAN log: {1!r}'.format(key, matching_args)
         return None
     return matching_args[0]
 
@@ -659,7 +657,7 @@ def _run_in_pyenv(command):
     '''For running commands that are installed the instance\'s python
     environment'''
     activate_path = os.path.join(env.pyenv_dir, 'bin', 'activate')
-    run('source %s&&%s' % (activate_path, command))
+    run('source {0!s}&&{1!s}'.format(activate_path, command))
 
 def _pip_cmd(command):
     '''Looks for pip in the pyenv before finding it in the cmd pyenv'''
@@ -675,11 +673,11 @@ def _run_in_cmd_pyenv(command):
     environment specified by env.cmd_pyenv'''
     if hasattr(env, 'cmd_pyenv'):
         activate_path = os.path.join(env.cmd_pyenv, 'bin', 'activate')
-        command = 'source %s&&%s' % (activate_path, command)
+        command = 'source {0!s}&&{1!s}'.format(activate_path, command)
     run(command)
 
 def _create_file_by_template(destination_filepath, template, template_context):
-    run('mkdir -p %s' % os.path.dirname(destination_filepath))
+    run('mkdir -p {0!s}'.format(os.path.dirname(destination_filepath)))
     _upload_template_buffer(template, destination_filepath, template_context)
 
 def _upload_template_buffer(template, destination, context=None, use_sudo=False):
@@ -708,26 +706,25 @@ def _upload_template_buffer(template, destination, context=None, use_sudo=False)
     to_backup = destination
     with settings(hide('everything'), warn_only=True):
         # Is destination a directory?
-        if func('test -f %s' % to_backup).failed:
+        if func('test -f {0!s}'.format(to_backup)).failed:
             # If so, tack on the filename to get "real" destination
             to_backup = destination + '/' + basename
     if exists(to_backup):
-        func("cp %s %s.bak" % (to_backup, to_backup))
+        func("cp {0!s} {1!s}.bak".format(to_backup, to_backup))
     # Actually move uploaded template to destination
-    func("mv %s %s" % (temp_destination, destination))
+    func("mv {0!s} {1!s}".format(temp_destination, destination))
 
 def _get_current_instance():
     '''For switchable instances, returns the current one in use.'''
     if not env.has_key('switch_between_ckan_instances'):
-        print 'CKAN instance "%s" is not switchable.' % env.ckan_instance_name
+        print 'CKAN instance "{0!s}" is not switchable.'.format(env.ckan_instance_name)
         sys.exit(1)
     with cd(env.base_dir):
         if exists(env.ckan_instance_name):
-            current_instance = run('python -c "import os; assert os.path.islink(\'%s\'); print os.path.realpath(\'%s\')"' % (os.path.join(env.base_dir, env.ckan_instance_name), env.ckan_instance_name))
+            current_instance = run('python -c "import os; assert os.path.islink(\'{0!s}\'); print os.path.realpath(\'{1!s}\')"'.format(os.path.join(env.base_dir, env.ckan_instance_name), env.ckan_instance_name))
             current_instance = current_instance.replace(env.base_dir + '/', '')
             assert current_instance in env.switch_between_ckan_instances, \
-                   'Instance "%s" not in list of switchable instances.' \
-                   % current_instance
+                   'Instance "{0!s}" not in list of switchable instances.'.format(current_instance)
         else:
             current_instance = None
     return current_instance

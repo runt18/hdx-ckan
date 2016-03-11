@@ -52,7 +52,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
         p.unload('datastore')
 
     def _create(self):
-        postparams = '%s=1' % json.dumps(self.data)
+        postparams = '{0!s}=1'.format(json.dumps(self.data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_create', params=postparams,
                             extra_environ=auth)
@@ -62,7 +62,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
 
     def _delete(self):
         data = {'resource_id': self.data['resource_id']}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth)
@@ -94,7 +94,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
         self.Session.remove()
 
     def test_delete_invalid_resource_id(self):
-        postparams = '%s=1' % json.dumps({'resource_id': 'bad'})
+        postparams = '{0!s}=1'.format(json.dumps({'resource_id': 'bad'}))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth, status=404)
@@ -108,7 +108,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
         # try and delete just the 'warandpeace' row
         data = {'resource_id': resource_id,
                 'filters': {'book': 'warandpeace'}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth)
@@ -125,7 +125,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
         # shouldn't delete anything
         data = {'resource_id': resource_id,
                 'filters': {'book': 'annakarenina', 'author': 'bad'}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth)
@@ -142,7 +142,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
         # delete the 'annakarenina' row and also only use id
         data = {'id': resource_id,
                 'filters': {'book': 'annakarenina', 'author': 'tolstoy'}}
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.sysadmin_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth)
@@ -166,7 +166,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
                 'invalid-column-name': 'value'
             }
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth, status=409)
@@ -185,7 +185,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
                 'invalid-column-name': 'value'
             }
         }
-        postparams = '%s=1' % json.dumps(data)
+        postparams = '{0!s}=1'.format(json.dumps(data))
         auth = {'Authorization': str(self.normal_user.apikey)}
         res = self.app.post('/api/action/datastore_delete', params=postparams,
                             extra_environ=auth, status=409)

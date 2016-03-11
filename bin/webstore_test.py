@@ -19,11 +19,11 @@ class TestWebstoreExternal:
         dataset = json.loads(out.body)
         resource_id = dataset['resources'][0]['id']
 
-        offset = '/api/data/%s' % resource_id
+        offset = '/api/data/{0!s}'.format(resource_id)
         res = testapp.get(offset, status=400)
         assert res.status == 400
 
-        offset = '/api/data/%s/_search?q=a' % resource_id
+        offset = '/api/data/{0!s}/_search?q=a'.format(resource_id)
         res = testapp.get(offset)
         assert res.status == 200
         out = json.loads(res.body)
@@ -35,13 +35,13 @@ class TestWebstoreExternal:
             "message": "Trying out elasticsearch, so far so good?"
             }
         data = json.dumps(data)
-        offset = '/api/data/%s' % resource_id
+        offset = '/api/data/{0!s}'.format(resource_id)
         testapp.put(offset + '/1', data)
         out = testapp.get(offset + '/1')
         outdata = json.loads(out.body)
         assert outdata['_source']['user'] == 'hamlet', outdata
 
-        offset = '/api/data/%s/_search?q=hamlet' % resource_id
+        offset = '/api/data/{0!s}/_search?q=hamlet'.format(resource_id)
         res = testapp.get(offset)
         assert res.status == 200
         out = json.loads(res.body)

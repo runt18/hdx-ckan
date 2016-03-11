@@ -26,7 +26,7 @@ class WsgiCkanClient(CkanClient):
 
     def open_url(self, location, data=None, headers={}, method=None):
         if self.is_verbose:
-            print "ckanclient: Opening %s" % location
+            print "ckanclient: Opening {0!s}".format(location)
         self.last_location = location
 
         if data != None:
@@ -36,7 +36,7 @@ class WsgiCkanClient(CkanClient):
 
         # Make header values ascii strings
         for key, value in headers.items():
-            headers[key] = str('%s' % value)
+            headers[key] = str('{0!s}'.format(value))
 
         method = req.get_method()
         kwargs = {'status':'*', 'headers':headers}
@@ -52,34 +52,33 @@ class WsgiCkanClient(CkanClient):
                 assert not data
                 res = self.app.delete(location, **kwargs)
             else:
-                raise ClientError('No Paste interface for method \'%s\': %s' % \
-                                  (method, location))
+                raise ClientError('No Paste interface for method \'{0!s}\': {1!s}'.format(method, location))
         except paste.fixture.AppError, inst:
-            print "ckanclient: error: %s" % inst
+            print "ckanclient: error: {0!s}".format(inst)
             self.last_http_error = inst
             self.last_status = 500
             self.last_message = repr(inst.args)
         else:
             if res.status not in (200, 201):
                 print "ckanclient: Received HTTP error code from CKAN resource."
-                print "ckanclient: location: %s" % location
-                print "ckanclient: response code: %s" % res.status
-                print "ckanclient: request headers: %s" % headers
-                print "ckanclient: request data: %s" % data
-                print "ckanclient: error: %s" % res
+                print "ckanclient: location: {0!s}".format(location)
+                print "ckanclient: response code: {0!s}".format(res.status)
+                print "ckanclient: request headers: {0!s}".format(headers)
+                print "ckanclient: request data: {0!s}".format(data)
+                print "ckanclient: error: {0!s}".format(res)
                 self.last_http_error = res
                 self.last_status = res.status
                 self.last_message = res.body
             else:
-                print "ckanclient: OK opening CKAN resource: %s" % location
+                print "ckanclient: OK opening CKAN resource: {0!s}".format(location)
                 self.last_status = res.status
-                print 'ckanclient: last status %s' % self.last_status
+                print 'ckanclient: last status {0!s}'.format(self.last_status)
                 self.last_body = res.body
-                print 'ckanclient: last body %s' % self.last_body
+                print 'ckanclient: last body {0!s}'.format(self.last_body)
                 self.last_headers = dict(res.headers)
-                print 'ckanclient: last headers %s' % self.last_headers
+                print 'ckanclient: last headers {0!s}'.format(self.last_headers)
                 content_type = self.last_headers['Content-Type']
-                print 'ckanclient: content type: %s' % content_type
+                print 'ckanclient: content type: {0!s}'.format(content_type)
                 is_json_response = False
                 if 'json' in content_type:
                     is_json_response = True
@@ -87,7 +86,7 @@ class WsgiCkanClient(CkanClient):
                     self.last_message = self._loadstr(self.last_body)
                 else:
                     self.last_message = self.last_body
-                print 'ckanclient: last message %s' % self.last_message
+                print 'ckanclient: last message {0!s}'.format(self.last_message)
         if self.last_status not in (200, 201):
             raise CkanApiError(self.last_message)
 

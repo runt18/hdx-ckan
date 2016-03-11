@@ -10,7 +10,7 @@ for pkg in model.Session.query(model.Package):
     source = pkg.extras.get('import_source', u'')
     ns = pkg.extras.get('national_statistic', u'')
     remove_national_statistic = not source.startswith('ONS-') and ns == 'yes'
-    print 'Package: name=%s national_statistic=%s source=%s remove_ns=%s' % (pkg.name, ns, source, remove_national_statistic)
+    print 'Package: name={0!s} national_statistic={1!s} source={2!s} remove_ns={3!s}'.format(pkg.name, ns, source, remove_national_statistic)
     
     if remove_national_statistic:
         pkg.extras['national_statistic'] = u''

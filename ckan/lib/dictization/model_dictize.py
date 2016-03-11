@@ -474,7 +474,7 @@ def group_dictize(group, context,
         #of potential vulnerability of dodgy api input
         image_url = munge.munge_filename(image_url)
         result_dict['image_display_url'] = h.url_for_static(
-            'uploads/group/%s' % result_dict.get('image_url'),
+            'uploads/group/{0!s}'.format(result_dict.get('image_url')),
             qualified=True
         )
     return result_dict
@@ -659,7 +659,7 @@ def package_to_api(pkg, context):
 
     site_url = config.get('ckan.site_url', None)
     if site_url:
-        dictized['ckan_url'] = '%s/dataset/%s' % (site_url, pkg.name)
+        dictized['ckan_url'] = '{0!s}/dataset/{1!s}'.format(site_url, pkg.name)
 
     for resource in dictized["resources"]:
         resource_dict_to_api(resource, pkg.id, context)

@@ -44,15 +44,15 @@ class TestPackageForm(TestPackageBase):
     '''Inherit this in tests for these form testing methods'''
     def _check_package_read(self, res, **params):
         assert not 'Error' in res, res
-        assert u'%s - Datasets' % params['title'] in res, res
+        assert u'{0!s} - Datasets'.format(params['title']) in res, res
         main_res = self.main_div(res)
         main_div = main_res
         main_div_str = main_div.encode('utf8')
         assert params['name'] in main_div, main_div_str
         assert params['title'] in main_div, main_div_str
         assert params['version'] in main_div, main_div_str
-        self.check_named_element(main_div, 'a', 'href="%s"' % params['url'])
-        prefix = 'Dataset-%s-' % params.get('id', '')
+        self.check_named_element(main_div, 'a', 'href="{0!s}"'.format(params['url']))
+        prefix = 'Dataset-{0!s}-'.format(params.get('id', ''))
         for res_index, values in self._get_resource_values(params['resources'], by_resource=True):
             self.check_named_element(main_div, 'tr', *values)
         assert params['notes'] in main_div, main_div_str
@@ -61,7 +61,7 @@ class TestPackageForm(TestPackageBase):
         tag_names = list(params['tags'])
         self.check_named_element(main_div, 'ul', *tag_names)
         if params.has_key('state'):
-            assert 'State: %s' % params['state'] in main_div.replace('</strong>', ''), main_div_str
+            assert 'State: {0!s}'.format(params['state']) in main_div.replace('</strong>', ''), main_div_str
         if isinstance(params['extras'], dict):
             extras = []
             for key, value in params['extras'].items():
@@ -145,10 +145,10 @@ class TestPackageForm(TestPackageBase):
             value_in_html_body = self.escape_for_html_body(value)
             key_escaped = genshi_escape(key)
             value_escaped = genshi_escape(value)
-            self.check_tag(main_res, 'extras__%s__key' % num, key_in_html_body)
-            self.check_tag(main_res, 'extras__%s__value' % num, value_escaped)
+            self.check_tag(main_res, 'extras__{0!s}__key'.format(num), key_in_html_body)
+            self.check_tag(main_res, 'extras__{0!s}__value'.format(num), value_escaped)
             if deleted:
-                self.check_tag(main_res, 'extras__%s__deleted' % num, 'checked')
+                self.check_tag(main_res, 'extras__{0!s}__deleted'.format(num), 'checked')
 
         assert params['log_message'] in main_res, main_res
 
@@ -187,8 +187,7 @@ class TestPackageForm(TestPackageBase):
             redirected_to = dict(res.headers).get('Location') or dict(res.headers)['location']
             expected_redirect_url = expected_redirect.replace('<NAME>', new_name)
             assert redirected_to == expected_redirect_url, \
-                   'Redirected to %s but should have been %s' % \
-                   (redirected_to, expected_redirect_url)
+                   'Redirected to {0!s} but should have been {1!s}'.format(redirected_to, expected_redirect_url)
         finally:
             # revert name change or pkg creation
             pkg = model.Package.by_name(new_name)
@@ -229,8 +228,8 @@ class TestReadOnly(TestPackageForm, HtmlCheckMethods, PylonsTestCase):
         res = self.app.get(offset)
         def check_link(res, controller, id):
             id_in_uri = id.strip('"').replace(' ', '%20') # remove quotes and percent-encode spaces
-            self.check_tag_and_data(res, 'a ', '%s/%s' % (controller, id_in_uri),
-                                    '%s:%s' % (controller, id.replace('"', '&#34;')))
+            self.check_tag_and_data(res, 'a ', '{0!s}/{1!s}'.format(controller, id_in_uri),
+                                    '{0!s}:{1!s}'.format(controller, id.replace('"', '&#34;')))
         check_link(res, 'dataset', 'pkg-1')
         check_link(res, 'tag', 'tag_1')
         check_link(res, 'tag', '"multi word with punctuation."')
@@ -330,13 +329,13 @@ class TestReadAtRevision(FunctionalTestCase, HtmlCheckMethods):
                            status=400)
 
     def test_read_revision1(self):
-        offset = self.offset + '@%s' % self.revision_ids[0]
+        offset = self.offset + '@{0!s}'.format(self.revision_ids[0])
         res = self.app.get(offset, status=200)
         main_html = pkg_html = side_html = res.body
         print 'MAIN', main_html
         assert 'This is an old revision of this dataset' in main_html
         assert 'at January 1, 2011, 00:00' in main_html
-        self.check_named_element(main_html, 'a', 'href="/dataset/%s"' % self.pkg_name)
+        self.check_named_element(main_html, 'a', 'href="/dataset/{0!s}"'.format(self.pkg_name))
         print 'PKG', pkg_html
         assert 'title1' in res
         assert 'key2' not in pkg_html
@@ -346,13 +345,13 @@ class TestReadAtRevision(FunctionalTestCase, HtmlCheckMethods):
         assert 'tag 2' not in side_html
 
     def test_read_revision2(self):
-        offset = self.offset + '@%s' % self.revision_ids[1]
+        offset = self.offset + '@{0!s}'.format(self.revision_ids[1])
         res = self.app.get(offset, status=200)
         main_html = pkg_html = side_html = res.body
         print 'MAIN', main_html
         assert 'This is an old revision of this dataset' in main_html
         assert 'at January 2, 2011, 00:00' in main_html
-        self.check_named_element(main_html, 'a', 'href="/dataset/%s"' % self.pkg_name)
+        self.check_named_element(main_html, 'a', 'href="/dataset/{0!s}"'.format(self.pkg_name))
         print 'PKG', pkg_html
         assert 'title2' in res
         assert 'key2' in pkg_html
@@ -362,7 +361,7 @@ class TestReadAtRevision(FunctionalTestCase, HtmlCheckMethods):
         assert 'tag 2' in side_html
 
     def test_read_revision3(self):
-        offset = self.offset + '@%s' % self.revision_ids[2]
+        offset = self.offset + '@{0!s}'.format(self.revision_ids[2])
         res = self.app.get(offset, status=200)
         main_html = pkg_html = side_html = res.body
         print 'MAIN', main_html
@@ -370,7 +369,7 @@ class TestReadAtRevision(FunctionalTestCase, HtmlCheckMethods):
         # It is not an old revision, but working that out is hard. The request
         # was for a particular revision, so assume it is old.
         assert 'at January 3, 2011, 00:00' in main_html
-        self.check_named_element(main_html, 'a', 'href="/dataset/%s"' % self.pkg_name)
+        self.check_named_element(main_html, 'a', 'href="/dataset/{0!s}"'.format(self.pkg_name))
         print 'PKG', pkg_html
         assert 'title3' in res
         assert 'key2' in pkg_html
@@ -431,7 +430,7 @@ class TestEdit(TestPackageForm):
 
     def test_edit_2_not_groups(self):
         # not allowed to edit groups for now
-        prefix = 'Dataset-%s-' % self.pkgid
+        prefix = 'Dataset-{0!s}-'.format(self.pkgid)
         fv = self.res.forms['dataset-edit']
         assert not fv.fields.has_key(prefix + 'groups')
 
@@ -749,7 +748,7 @@ class TestRevisions(TestPackageBase):
         model.repo.rebuild_db()
 
     def test_2_atom_feed(self):
-        offset = "%s?format=atom" % self.offset
+        offset = "{0!s}?format=atom".format(self.offset)
         res = self.app.get(offset)
         assert '<feed' in res, res
         assert 'xmlns="http://www.w3.org/2005/Atom"' in res, res

@@ -175,4 +175,4 @@ def _assert_schema_exists_and_has_keys(schema, expected_keys):
     keys.sort()
     expected_keys.sort()
 
-    assert keys == expected_keys, '%s != %s' % (keys, expected_keys)
+    assert keys == expected_keys, '{0!s} != {1!s}'.format(keys, expected_keys)

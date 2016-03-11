@@ -171,10 +171,10 @@ class MultilingualDataset(SingletonPlugin):
         lang_set.remove(current_lang)
 
         # weight current lang more highly
-        query_fields = 'title_%s^8 text_%s^4' % (current_lang, current_lang)
+        query_fields = 'title_{0!s}^8 text_{1!s}^4'.format(current_lang, current_lang)
 
         for lang in lang_set:
-            query_fields += ' title_%s^2 text_%s' % (lang, lang)
+            query_fields += ' title_{0!s}^2 text_{1!s}'.format(lang, lang)
 
         search_params['qf'] = query_fields
 

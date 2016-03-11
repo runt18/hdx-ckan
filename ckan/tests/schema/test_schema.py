@@ -30,9 +30,9 @@ class TestPackage:
 
         for package_name, expected_errors in bad_names:
             errors = get_package_name_validation_errors(package_name)
-            errors = [err.replace('"%s"' % package_name, 'NAME') for err in errors]
+            errors = [err.replace('"{0!s}"'.format(package_name), 'NAME') for err in errors]
             assert errors==expected_errors, \
-                   '%r: %r != %r' % (package_name, errors, expected_errors)
+                   '{0!r}: {1!r} != {2!r}'.format(package_name, errors, expected_errors)
 
     def test_version_validation(self):
         context = {'model': ckan.model,
@@ -54,9 +54,9 @@ class TestPackage:
 
         for package_version, expected_errors in bad_versions:
             errors = get_package_version_validation_errors(package_version)
-            errors = [err.replace('"%s"' % package_version, 'VERSION') for err in errors]
+            errors = [err.replace('"{0!s}"'.format(package_version), 'VERSION') for err in errors]
             assert errors==expected_errors, \
-                   '%r: %r != %r' % (package_version, errors, expected_errors)
+                   '{0!r}: {1!r} != {2!r}'.format(package_version, errors, expected_errors)
 
 
     def test_convert_from_extras(self):
@@ -107,7 +107,7 @@ class TestTag:
 
         for tag_name, expected_errors in bad_names:
             errors = get_tag_validation_errors(tag_name)
-            errors = [err.replace('"%s"' % tag_name, 'TAG') for err in errors]
+            errors = [err.replace('"{0!s}"'.format(tag_name), 'TAG') for err in errors]
             assert_equal(errors, expected_errors)
 
     def test_tag_string_parsing(self):

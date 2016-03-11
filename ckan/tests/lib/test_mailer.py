@@ -17,7 +17,7 @@ class TestMailer(SmtpServerHarness, PylonsTestCase):
         if smtp_server:
             host, port = smtp_server.split(':')
             port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
-            config['smtp.test_server'] = '%s:%s' % (host, port)
+            config['smtp.test_server'] = '{0!s}:{1!s}'.format(host, port)
         CreateTestData.create_user(name='bob', email='bob@bob.net')
         CreateTestData.create_user(name='mary') #NB No email addr provided
         SmtpServerHarness.setup_class()
@@ -61,7 +61,7 @@ class TestMailer(SmtpServerHarness, PylonsTestCase):
         assert test_email['subject'] in msg[3], msg[3]
         expected_body = self.mime_encode(test_email['body'],
                                          test_email['recipient_name'])
-        assert expected_body in msg[3], '%r not in %r' % (expected_body, msg[3])
+        assert expected_body in msg[3], '{0!r} not in {1!r}'.format(expected_body, msg[3])
 
     def test_mail_user(self):
         msgs = self.get_smtp_messages()
@@ -85,7 +85,7 @@ class TestMailer(SmtpServerHarness, PylonsTestCase):
         assert test_email['subject'] in msg[3], msg[3]
         expected_body = self.mime_encode(test_email['body'],
                                          'bob')
-        assert expected_body in msg[3], '%r not in %r' % (expected_body, msg[3])
+        assert expected_body in msg[3], '{0!r} not in {1!r}'.format(expected_body, msg[3])
 
     def test_mail_user_without_email(self):
         # send email
@@ -109,7 +109,7 @@ class TestMailer(SmtpServerHarness, PylonsTestCase):
         test_msg = mailer.get_reset_link_body(model.User.by_name(u'bob'))
         expected_body = self.mime_encode(test_msg,
                                          u'bob')
-        assert expected_body in msg[3], '%r not in %r' % (expected_body, msg[3])
+        assert expected_body in msg[3], '{0!r} not in {1!r}'.format(expected_body, msg[3])
 
         # reset link tested in user functional test
 
@@ -128,7 +128,7 @@ class TestMailer(SmtpServerHarness, PylonsTestCase):
         test_msg = mailer.get_invite_body(model.User.by_name(u'bob'))
         expected_body = self.mime_encode(test_msg,
                                          u'bob') 
-        assert expected_body in msg[3], '%r not in %r' % (expected_body, msg[3])
+        assert expected_body in msg[3], '{0!r} not in {1!r}'.format(expected_body, msg[3])
         assert user.reset_key is not None, user
         
         # reset link tested in user functional test

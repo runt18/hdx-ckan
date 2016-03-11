@@ -19,7 +19,7 @@ class TestRevisionController(TestController):
     def create_40_revisions(self):
         for i in range(0,40):
             rev = model.repo.new_revision()
-            rev.author = "Test Revision %s" % i
+            rev.author = "Test Revision {0!s}".format(i)
             model.repo.commit()
 
     def assert_click(self, res, link_exp, res2_exp):
@@ -88,10 +88,10 @@ class TestRevisionController(TestController):
     def test_read(self):
         anna = model.Package.by_name(u'annakarenina')
         rev_id = anna.revision.id
-        offset = url_for(controller='revision', action='read', id='%s' % rev_id)
+        offset = url_for(controller='revision', action='read', id='{0!s}'.format(rev_id))
         res = self.app.get(offset)
-        assert 'Revision %s' % rev_id in res
-        assert 'Revision: %s' % rev_id in res
+        assert 'Revision {0!s}'.format(rev_id) in res
+        assert 'Revision: {0!s}'.format(rev_id) in res
         # Todo: Reinstate asserts below, failing on 'Test Revision Deleting'
         #assert 'Author:</strong> tester' in res
         #assert 'Log Message:' in res

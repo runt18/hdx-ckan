@@ -30,9 +30,9 @@ def create_library(name, path, depend_base=True):
         ''' Attempt to get the resource from the current lib or if not try
         assume it is a fully qualified resource name. '''
         try:
-            res = getattr(module, '%s/%s' % (lib_name, resource_name))
+            res = getattr(module, '{0!s}/{1!s}'.format(lib_name, resource_name))
         except AttributeError:
-            res = getattr(module, '%s' % resource_name)
+            res = getattr(module, '{0!s}'.format(resource_name))
         return res
 
     def create_resource(path, lib_name, count, inline=False):
@@ -96,7 +96,7 @@ def create_library(name, path, depend_base=True):
                 setattr(min_res, attribute, getattr(resource, attribute))
 
         # add the resource to this module
-        fanstatic_name = '%s/%s' % (lib_name, path)
+        fanstatic_name = '{0!s}/{1!s}'.format(lib_name, path)
         setattr(module, fanstatic_name, resource)
         return resource
 
@@ -209,10 +209,10 @@ def create_library(name, path, depend_base=True):
     for group_name in groups:
         members = []
         for member in groups[group_name]:
-            fanstatic_name = '%s/%s' % (name, member)
+            fanstatic_name = '{0!s}/{1!s}'.format(name, member)
             members.append(getattr(module, fanstatic_name))
         group = Group(members)
-        fanstatic_name = '%s/%s' % (name, group_name)
+        fanstatic_name = '{0!s}/{1!s}'.format(name, group_name)
         setattr(module, fanstatic_name, group)
 
     # finally add the library to this module

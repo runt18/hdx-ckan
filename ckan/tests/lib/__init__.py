@@ -12,4 +12,4 @@ def check_search_results(terms, expected_count, expected_packages=[]):
     count = result['count']
     assert_equal(count, expected_count)
     for expected_pkg in expected_packages:
-        assert expected_pkg in pkgs, '%s : %s' % (expected_pkg, result)
+        assert expected_pkg in pkgs, '{0!s} : {1!s}'.format(expected_pkg, result)

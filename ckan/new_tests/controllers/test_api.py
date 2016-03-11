@@ -14,7 +14,7 @@ class TestApiController(helpers.FunctionalTestBase):
         app = self._get_test_app()
         org_url = '/api/action/tag_delete'
         data_dict = {'id': u'Delta symbol: \u0394'}  # unicode gets rec'd ok
-        postparams = '%s=1' % json.dumps(data_dict)
+        postparams = '{0!s}=1'.format(json.dumps(data_dict))
         response = app.post(url=org_url, params=postparams, status=404)
         # The unicode is backslash encoded (because that is the default when
         # you do str(exception) )

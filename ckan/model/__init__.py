@@ -304,7 +304,7 @@ class Repository(vdm.sqlalchemy.Repository):
         else:
             tables = reversed(self.metadata.sorted_tables)
         for table in tables:
-            connection.execute('delete from "%s"' % table.name)
+            connection.execute('delete from "{0!s}"'.format(table.name))
         self.session.commit()
         log.info('Database table data deleted')
 
@@ -324,8 +324,7 @@ class Repository(vdm.sqlalchemy.Repository):
         @param version: version to upgrade to (if None upgrade to latest)
         '''
         assert meta.engine.name in ('postgres', 'postgresql'), \
-            'Database migration - only Postgresql engine supported (not %s).' \
-                % meta.engine.name
+            'Database migration - only Postgresql engine supported (not {0!s}).'.format(meta.engine.name)
         import migrate.versioning.api as mig
         self.setup_migration_version_control()
         version_before = mig.db_version(self.metadata.bind, self.migrate_repository)
@@ -402,7 +401,7 @@ class Repository(vdm.sqlalchemy.Repository):
             for cont in to_purge:
                 self.session.delete(cont)
         if leave_record:
-            revision.message = u'PURGED: %s' % datetime.now()
+            revision.message = u'PURGED: {0!s}'.format(datetime.now())
         else:
             self.session.delete(revision)
         self.commit_and_remove()

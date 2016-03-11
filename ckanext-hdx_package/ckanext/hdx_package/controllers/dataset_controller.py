@@ -605,7 +605,7 @@ class DatasetController(PackageController):
             if not ctype:
                 # An unknown format, we'll carry on in case it is a
                 # revision specifier and re-constitute the original id
-                id = "%s.%s" % (id, format)
+                id = "{0!s}.{1!s}".format(id, format)
                 ctype, format = "text/html; charset=utf-8", "html"
         else:
             ctype, format = self._content_type_from_accept()
@@ -1064,8 +1064,8 @@ class DatasetController(PackageController):
         dataset_type = c.pkg_dict['type'] or 'dataset'
 
         # TODO: find a nicer way of doing this
-        c.datastore_api = '%s/api/action' % config.get(
-            'ckan.site_url', '').rstrip('/')
+        c.datastore_api = '{0!s}/api/action'.format(config.get(
+            'ckan.site_url', '').rstrip('/'))
 
         c.related_count = c.pkg.related_count
 

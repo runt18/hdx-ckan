@@ -160,13 +160,13 @@ class TestUser2(object):
 
             rev = model.repo.new_revision()
             pkg = model.Package.by_name(u'annakarenina')
-            pkg.notes = u'Changed notes %i' % i
+            pkg.notes = u'Changed notes {0:d}'.format(i)
             rev.author = u'annafan'
             model.repo.commit_and_remove()
 
             #and each time check that number_of_edits is correct
             assert model.User.by_name(u'annafan').number_of_edits() == i, \
-                   "annafan should have made %i edit(s)" % i
+                   "annafan should have made {0:d} edit(s)".format(i)
 
 
     def test_number_of_administered_packages(self):

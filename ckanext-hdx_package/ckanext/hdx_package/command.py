@@ -50,7 +50,7 @@ class MigrateCommand(p.toolkit.CkanCommand):
             filename = url_parts[len(url_parts)-1]
             response = requests.get(url, stream=True)
             if response.status_code != 200:
-                print "failed to fetch %s (code %s)" % (url,
+                print "failed to fetch {0!s} (code {1!s})".format(url,
                                                         response.status_code)
                 continue
             resource_upload = ResourceUpload({'id': id})
@@ -76,4 +76,4 @@ class MigrateCommand(p.toolkit.CkanCommand):
                             "url = '%s' where id = '%s' and "
                             "revision_id = '%s'" % (filename, id, revision_id))
             Session.commit()
-            print "Saved url %s" % url
+            print "Saved url {0!s}".format(url)

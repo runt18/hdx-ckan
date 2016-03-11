@@ -26,7 +26,7 @@ class TagEditor:
     def edit_tags(self, pkg_name, add_tags, remove_tags):
         pkg = self.ckan.package_entity_get(pkg_name)
         if self.ckan.last_status != 200:
-            print 'Error! Package: %s Error reading package: %s' % (pkg_name, self.ckan.last_status)
+            print 'Error! Package: {0!s} Error reading package: {1!s}'.format(pkg_name, self.ckan.last_status)
             return self.ckan.last_status
         tags = set()
         for tag in pkg['tags']:
@@ -37,13 +37,13 @@ class TagEditor:
         for tag in remove_tags:
             tags.discard(tag)
         if tags == tags_before:
-            print "PKG %s: no change" % (pkg_name)
+            print "PKG {0!s}: no change".format((pkg_name))
             return
-        print "PKG %s: %i->%i tags" % (pkg_name, len(tags_before), len(tags))
+        print "PKG {0!s}: {1:d}->{2:d} tags".format(pkg_name, len(tags_before), len(tags))
         self.ckan.package_entity_put({'name':pkg_name,
                                       'tags':list(tags)})
         if self.ckan.last_status != 200:
-            print 'Error! Package: %s Error writing package: %s' % (pkg_name, self.ckan.last_status)
+            print 'Error! Package: {0!s} Error writing package: {1!s}'.format(pkg_name, self.ckan.last_status)
             return self.ckan.last_status
         return self.ckan.last_status 
         

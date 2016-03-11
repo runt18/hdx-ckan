@@ -26,15 +26,15 @@ class TalisCkan:
         return packages
 
     def load_to_talis(self, pkg_name):
-        print '=== Loading %s ===' % pkg_name
+        print '=== Loading {0!s} ==='.format(pkg_name)
         res = self.ckan.package_entity_get(pkg_name)
         if self.ckan.last_status != 200:
-            print 'Failed to read CKAN package %s: %s' % (pkg_name, self.ckan.last_status)
+            print 'Failed to read CKAN package {0!s}: {1!s}'.format(pkg_name, self.ckan.last_status)
             return
         pkg_dict = res
         res = self._talis.post_pkg(pkg_dict)
         if res:
-            print 'Failed to post package %s to Talis: %s' % (pkg_name, res)
+            print 'Failed to post package {0!s} to Talis: {1!s}'.format(pkg_name, res)
             return
 ##        res = self._talis.get_pkg(pkg_name)
 ##        assert res, res

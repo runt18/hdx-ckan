@@ -132,13 +132,13 @@ def add_fk_constraints(migrate_engine, dropped_fk_constraints, primary_table_nam
 
         # So we create via hand ...
         constraint_columns, foreign_key_cols, constraint_name, table_name = fk_constraint
-        oursql = '''ALTER TABLE %(table)s
-            ADD CONSTRAINT %(fkeyname)s
-            FOREIGN KEY (%(col_name)s)
-            REFERENCES %(primary_table_name)s (id)
-            ''' % {'table':table_name, 'fkeyname':constraint_name,
+        oursql = '''ALTER TABLE {table!s}
+            ADD CONSTRAINT {fkeyname!s}
+            FOREIGN KEY ({col_name!s})
+            REFERENCES {primary_table_name!s} (id)
+            '''.format(**{'table':table_name, 'fkeyname':constraint_name,
                    'col_name':constraint_columns[0],
-                   'primary_table_name':primary_table_name}
+                   'primary_table_name':primary_table_name})
         migrate_engine.execute(oursql)
 
 def create_uuids(migrate_engine, primary_table_name, revision_table_name):
@@ -171,10 +171,10 @@ def drop_sequencies(migrate_engine):
 
 
     for sequence in sequencies:
-        migrate_engine.execute('ALTER TABLE %s ALTER COLUMN id DROP DEFAULT;' % sequence)
+        migrate_engine.execute('ALTER TABLE {0!s} ALTER COLUMN id DROP DEFAULT;'.format(sequence))
 
     for sequence in sequencies:
-        migrate_engine.execute('drop sequence %s_id_seq;' % sequence)
+        migrate_engine.execute('drop sequence {0!s}_id_seq;'.format(sequence))
 
 
             

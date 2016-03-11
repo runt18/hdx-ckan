@@ -134,7 +134,7 @@ def package_id_exists(value, context):
 
     result = session.query(model.Package).get(value)
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Dataset')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Dataset')))
     return value
 
 def package_id_does_not_exist(value, context):
@@ -155,7 +155,7 @@ def package_name_exists(value, context):
     result = session.query(model.Package).filter_by(name=value).first()
 
     if not result:
-        raise Invalid(_('Not found') + ': %s' % value)
+        raise Invalid(_('Not found') + ': {0!s}'.format(value))
     return value
 
 def package_id_or_name_exists(package_id_or_name, context):
@@ -176,7 +176,7 @@ def package_id_or_name_exists(package_id_or_name, context):
             name=package_id_or_name).first()
 
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Dataset')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Dataset')))
 
     return package_id_or_name
 
@@ -185,7 +185,7 @@ def resource_id_exists(value, context):
     model = context['model']
     session = context['session']
     if not session.query(model.Resource).get(value):
-        raise Invalid('%s: %s' % (_('Not found'), _('Resource')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Resource')))
     return value
 
 
@@ -199,7 +199,7 @@ def user_id_exists(user_id, context):
 
     result = session.query(model.User).get(user_id)
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('User')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('User')))
     return user_id
 
 def user_id_or_name_exists(user_id_or_name, context):
@@ -216,7 +216,7 @@ def user_id_or_name_exists(user_id_or_name, context):
         return user_id_or_name
     result = session.query(model.User).filter_by(name=user_id_or_name).first()
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('User')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('User')))
     return user_id_or_name
 
 def group_id_exists(group_id, context):
@@ -229,7 +229,7 @@ def group_id_exists(group_id, context):
 
     result = session.query(model.Group).get(group_id)
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Group')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Group')))
     return group_id
 
 
@@ -243,7 +243,7 @@ def related_id_exists(related_id, context):
 
     result = session.query(model.Related).get(related_id)
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Related')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Related')))
     return related_id
 
 def group_id_or_name_exists(reference, context):
@@ -267,7 +267,7 @@ def activity_type_exists(activity_type):
     if activity_type in object_id_validators:
         return activity_type
     else:
-        raise Invalid('%s: %s' % (_('Not found'), _('Activity type')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Activity type')))
 
 def resource_id_exists(value, context):
 
@@ -276,7 +276,7 @@ def resource_id_exists(value, context):
 
     result = session.query(model.Resource).get(value)
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Resource')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('Resource')))
     return value
 
 # A dictionary mapping activity_type values from activity dicts to functions
@@ -447,7 +447,7 @@ def tag_not_uppercase(value, context):
 
     tagname_uppercase = re.compile('[A-Z]')
     if tagname_uppercase.search(value):
-        raise Invalid(_('Tag "%s" must not be uppercase' % (value)))
+        raise Invalid(_('Tag "{0!s}" must not be uppercase'.format((value))))
     return value
 
 def tag_string_convert(key, data, errors, context):
@@ -713,7 +713,7 @@ def user_name_exists(user_name, context):
     session = context['session']
     result = session.query(model.User).filter_by(name=user_name).first()
     if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('User')))
+        raise Invalid('{0!s}: {1!s}'.format(_('Not found'), _('User')))
     return result.name
 
 
@@ -757,7 +757,7 @@ def list_of_strings(key, data, errors, context):
         raise Invalid(_('Not a list'))
     for x in value:
         if not isinstance(x, basestring):
-            raise Invalid('%s: %s' % (_('Not a string'), x))
+            raise Invalid('{0!s}: {1!s}'.format(_('Not a string'), x))
 
 def if_empty_guess_format(key, data, errors, context):
     value = data[key]

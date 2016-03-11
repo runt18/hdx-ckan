@@ -205,9 +205,9 @@ class GroupController(base.BaseController):
         q = c.q = request.params.get('q', '')
         # Search within group
         if c.group_dict.get('is_organization'):
-            q += ' owner_org:"%s"' % c.group_dict.get('id')
+            q += ' owner_org:"{0!s}"'.format(c.group_dict.get('id'))
         else:
-            q += ' groups:"%s"' % c.group_dict.get('name')
+            q += ' groups:"{0!s}"'.format(c.group_dict.get('name'))
 
         c.description_formatted = h.render_markdown(c.group_dict.get('description'))
 
@@ -268,7 +268,7 @@ class GroupController(base.BaseController):
                         and len(value) and not param.startswith('_'):
                     if not param.startswith('ext_'):
                         c.fields.append((param, value))
-                        q += ' %s: "%s"' % (param, value)
+                        q += ' {0!s}: "{1!s}"'.format(param, value)
                     else:
                         search_extras[param] = value
 
@@ -339,7 +339,7 @@ class GroupController(base.BaseController):
             c.search_facets = query['search_facets']
             c.search_facets_limits = {}
             for facet in c.facets.keys():
-                limit = int(request.params.get('_%s_limit' % facet,
+                limit = int(request.params.get('_{0!s}_limit'.format(facet),
                                                g.facets_default_number))
                 c.search_facets_limits[facet] = limit
             c.page.items = query['results']
@@ -556,7 +556,7 @@ class GroupController(base.BaseController):
             if id != group['name']:
                 self._force_reindex(group)
 
-            h.redirect_to('%s_read' % group['type'], id=group['name'])
+            h.redirect_to('{0!s}_read'.format(group['type']), id=group['name'])
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
         except NotFound, e:
@@ -769,14 +769,14 @@ class GroupController(base.BaseController):
                 if dayAge >= dayHorizon:
                     break
                 if revision_dict['message']:
-                    item_title = u'%s' % revision_dict['message'].\
-                        split('\n')[0]
+                    item_title = u'{0!s}'.format(revision_dict['message'].\
+                        split('\n')[0])
                 else:
-                    item_title = u'%s' % revision_dict['id']
+                    item_title = u'{0!s}'.format(revision_dict['id'])
                 item_link = h.url_for(controller='revision', action='read',
                                       id=revision_dict['id'])
                 item_description = _('Log message: ')
-                item_description += '%s' % (revision_dict['message'] or '')
+                item_description += '{0!s}'.format((revision_dict['message'] or ''))
                 item_author_name = revision_dict['author']
                 item_pubdate = revision_date
                 feed.add_item(

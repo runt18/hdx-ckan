@@ -27,7 +27,7 @@ class TestDb:
 
     def test_simple_dump_csv(self):
         csv_filepath = '/tmp/dump.tmp'
-        self.db.args = ('simple-dump-csv %s' % csv_filepath).split()
+        self.db.args = ('simple-dump-csv {0!s}'.format(csv_filepath)).split()
         self.db.simple_dump_csv()
         assert os.path.exists(csv_filepath), csv_filepath
         f_obj = open(csv_filepath, "r")
@@ -40,7 +40,7 @@ class TestDb:
 
     def test_simple_dump_json(self):
         json_filepath = '/tmp/dump.tmp'
-        self.db.args = ('simple-dump-json %s' % json_filepath).split()
+        self.db.args = ('simple-dump-json {0!s}'.format(json_filepath)).split()
         self.db.simple_dump_json()
         assert os.path.exists(json_filepath), json_filepath
         f_obj = open(json_filepath, "r")

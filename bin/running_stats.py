@@ -60,7 +60,7 @@ class StatsCount(dict):
         indent_str = '\t' * indent
         for category in categories:
             value = self.report_value(category)
-            lines.append(indent_str + '%s: %s' % (category, value))
+            lines.append(indent_str + '{0!s}: {1!s}'.format(category, value))
         if not categories:
             lines = [indent_str + 'None']
         return '\n'.join(lines)
@@ -75,7 +75,7 @@ class StatsList(StatsCount):
 
     def report_value(self, category):
         value = self[category]
-        value_str = '%i %r' % (len(value), value)
+        value_str = '{0:d} {1!r}'.format(len(value), value)
         if len(value_str) > self.report_value_limit:
             value_str = value_str[:self.report_value_limit] + '...'
         return value_str

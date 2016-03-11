@@ -23,7 +23,7 @@ class TestSearchIndex(object):
 
         cls.solr_client = search.make_connection()
 
-        cls.fq = " +site_id:\"%s\" " % config['ckan.site_id']
+        cls.fq = " +site_id:\"{0!s}\" ".format(config['ckan.site_id'])
 
         cls.package_index = search.PackageSearchIndex()
 

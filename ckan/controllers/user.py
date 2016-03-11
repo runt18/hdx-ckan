@@ -504,7 +504,7 @@ class UserController(base.BaseController):
             except DataError:
                 h.flash_error(_(u'Integrity Error'))
             except ValidationError, e:
-                h.flash_error(u'%r' % e.error_dict)
+                h.flash_error(u'{0!r}'.format(e.error_dict))
             except ValueError, ve:
                 h.flash_error(unicode(ve))
 

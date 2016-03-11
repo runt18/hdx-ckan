@@ -62,7 +62,7 @@ class DatasetActivitySessionExtension(SessionExtension):
             # revision.author is their IP address. Just log them as 'not logged
             # in' rather than logging their IP address.
             user_id = 'not logged in'
-        logger.debug('user_id: %s' % user_id)
+        logger.debug('user_id: {0!s}'.format(user_id))
 
         # The top-level objects that we will append to the activity table. The
         # keys here are package IDs, and the values are model.activity:Activity
@@ -79,14 +79,14 @@ class DatasetActivitySessionExtension(SessionExtension):
         # logged as changed packages.
         logger.debug("Looking for new packages...")
         for obj in object_cache['new']:
-            logger.debug("Looking at object %s" % obj)
+            logger.debug("Looking at object {0!s}".format(obj))
             activity = activity_stream_item(obj, 'new', revision, user_id)
             if activity is None:
                 continue
             # If the object returns an activity stream item we know that the
             # object is a package.
             logger.debug("Looks like this object is a package")
-            logger.debug("activity: %s" % activity)
+            logger.debug("activity: {0!s}".format(activity))
 
             # Don't create activities for private datasets.
             if obj.private:
@@ -96,7 +96,7 @@ class DatasetActivitySessionExtension(SessionExtension):
 
             activity_detail = activity_stream_detail(obj, activity.id, "new")
             if activity_detail is not None:
-                logger.debug("activity_detail: %s" % activity_detail)
+                logger.debug("activity_detail: {0!s}".format(activity_detail))
                 activity_details[activity.id] = [activity_detail]
 
         # Now process other objects.
@@ -104,7 +104,7 @@ class DatasetActivitySessionExtension(SessionExtension):
         for activity_type in ('new', 'changed', 'deleted'):
             objects = object_cache[activity_type]
             for obj in objects:
-                logger.debug("Looking at %s object %s" % (activity_type, obj))
+                logger.debug("Looking at {0!s} object {1!s}".format(activity_type, obj))
 
                 if not hasattr(obj,"id"):
                     logger.debug("Object has no id, skipping...")
@@ -118,7 +118,7 @@ class DatasetActivitySessionExtension(SessionExtension):
 
                 try:
                     related_packages = obj.related_packages()
-                    logger.debug("related_packages: %s" % related_packages)
+                    logger.debug("related_packages: {0!s}".format(related_packages))
                 except (AttributeError, TypeError):
                     logger.debug("Object did not have a suitable "
                             "related_packages() method, skipping it.")
@@ -137,11 +137,11 @@ class DatasetActivitySessionExtension(SessionExtension):
                         activity = activity_stream_item(package, "changed",
                                 revision, user_id)
                         if activity is None: continue
-                    logger.debug("activity: %s" % activity)
+                    logger.debug("activity: {0!s}".format(activity))
 
                     activity_detail = activity_stream_detail(obj, activity.id,
                             activity_type)
-                    logger.debug("activity_detail: %s" % activity_detail)
+                    logger.debug("activity_detail: {0!s}".format(activity_detail))
                     if activity_detail is not None:
                         if not package.id in activities:
                             activities[package.id] = activity
@@ -152,14 +152,12 @@ class DatasetActivitySessionExtension(SessionExtension):
                             activity_details[activity.id] =  [activity_detail]
 
         for key, activity in activities.items():
-            logger.debug("Emitting activity: %s %s"
-                    % (activity.id, activity.activity_type))
+            logger.debug("Emitting activity: {0!s} {1!s}".format(activity.id, activity.activity_type))
             session.add(activity)
 
         for key, activity_detail_list in activity_details.items():
             for activity_detail_obj in activity_detail_list:
-                logger.debug("Emitting activity detail: %s %s %s"
-                        % (activity_detail_obj.activity_id,
+                logger.debug("Emitting activity detail: {0!s} {1!s} {2!s}".format(activity_detail_obj.activity_id,
                             activity_detail_obj.activity_type,
                             activity_detail_obj.object_type))
                 session.add(activity_detail_obj)

@@ -28,7 +28,7 @@ def purge(revision):
     cmd = ckan.commands.revision.PurgeRevision(
             revision=revision,
             leave_record=False)
-    print 'Purging revision: %s' % revision.id
+    print 'Purging revision: {0!s}'.format(revision.id)
     cmd.execute()
 
 def purge_packages_by_name():

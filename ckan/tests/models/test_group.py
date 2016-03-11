@@ -228,7 +228,7 @@ class TestGroupRevisions:
         assert len(all_rev) == num_descs, len(all_rev)
         for i, rev in enumerate(all_rev):
             assert rev.description == self.descriptions[num_descs - i - 1], \
-                '%s != %s' % (rev.description, self.descriptions[i])
+                '{0!s} != {1!s}'.format(rev.description, self.descriptions[i])
                 
     def test_2_extras(self):
         all_rev = self.grp.all_revisions

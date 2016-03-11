@@ -129,8 +129,7 @@ class Tag(domain_object.DomainObject):
                 vocab = vocabulary.Vocabulary.get(vocab_id_or_name)
                 if vocab is None:
                     # The user specified an invalid vocab.
-                    raise ckan.logic.NotFound("could not find vocabulary '%s'"
-                            % vocab_id_or_name)
+                    raise ckan.logic.NotFound("could not find vocabulary '{0!s}'".format(vocab_id_or_name))
             else:
                 vocab = None
             tag = Tag.by_name(tag_id_or_name, vocab=vocab)
@@ -188,8 +187,7 @@ class Tag(domain_object.DomainObject):
             vocab = vocabulary.Vocabulary.get(vocab_id_or_name)
             if vocab is None:
                 # The user specified an invalid vocab.
-                raise ckan.logic.NotFound("could not find vocabulary '%s'"
-                        % vocab_id_or_name)
+                raise ckan.logic.NotFound("could not find vocabulary '{0!s}'".format(vocab_id_or_name))
             query = meta.Session.query(Tag).filter(Tag.vocabulary_id==vocab.id)
         else:
             query = meta.Session.query(Tag).filter(Tag.vocabulary_id == None)
@@ -213,7 +211,7 @@ class Tag(domain_object.DomainObject):
         return packages
 
     def __repr__(self):
-        return '<Tag %s>' % self.name
+        return '<Tag {0!s}>'.format(self.name)
 
 class PackageTag(vdm.sqlalchemy.RevisionedObjectMixin,
         vdm.sqlalchemy.StatefulObjectMixin,
@@ -226,7 +224,7 @@ class PackageTag(vdm.sqlalchemy.RevisionedObjectMixin,
             setattr(self, k, v)
 
     def __repr__(self):
-        s = u'<PackageTag package=%s tag=%s>' % (self.package.name, self.tag.name)
+        s = u'<PackageTag package={0!s} tag={1!s}>'.format(self.package.name, self.tag.name)
         return s.encode('utf8')
 
     def activity_stream_detail(self, activity_id, activity_type):

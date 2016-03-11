@@ -209,7 +209,7 @@ class TestRevisions(FunctionalTestCase):
     def test_2_atom_feed(self):
         offset = url_for(controller='group', action='history',
                          id=self.grp.name)
-        offset = "%s?format=atom" % offset
+        offset = "{0!s}?format=atom".format(offset)
         res = self.app.get(offset)
         assert '<feed' in res, res
         assert 'xmlns="http://www.w3.org/2005/Atom"' in res, res

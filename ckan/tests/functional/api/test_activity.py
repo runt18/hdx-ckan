@@ -214,7 +214,7 @@ class TestActivity:
             extra_environ = {'Authorization': str(apikey)}
         else:
             extra_environ = None
-        response = self.app.get("/api/2/rest/user/%s/activity" % user_id,
+        response = self.app.get("/api/2/rest/user/{0!s}/activity".format(user_id),
                 extra_environ=extra_environ)
         return json.loads(response.body)
 
@@ -223,7 +223,7 @@ class TestActivity:
             extra_environ = {'Authorization': str(apikey)}
         else:
             extra_environ = None
-        response = self.app.get("/api/2/rest/dataset/%s/activity" % package_id,
+        response = self.app.get("/api/2/rest/dataset/{0!s}/activity".format(package_id),
                 extra_environ=extra_environ)
         return json.loads(response.body)
 
@@ -232,7 +232,7 @@ class TestActivity:
             extra_environ = {'Authorization': str(apikey)}
         else:
             extra_environ = None
-        response = self.app.get("/api/2/rest/group/%s/activity" % group_id,
+        response = self.app.get("/api/2/rest/group/{0!s}/activity".format(group_id),
                 extra_environ=extra_environ)
         return json.loads(response.body)
 
@@ -252,7 +252,7 @@ class TestActivity:
 
     def activity_details(self, activity):
         response = self.app.get(
-                "/api/2/rest/activity/%s/details" % activity['id'])
+                "/api/2/rest/activity/{0!s}/details".format(activity['id']))
         return json.loads(response.body)
 
     def record_details(self, user_id, package_id=None, group_ids=None,
@@ -497,7 +497,7 @@ class TestActivity:
                 apikey=apikey)
         extras_after = updated_package['extras']
         assert len(extras_after) == len(extras_before) - 1, (
-                "%s != %s" % (len(extras_after), len(extras_before) - 1))
+                "{0!s} != {1!s}".format(len(extras_after), len(extras_before) - 1))
 
         # Find the new activity in the user's activity stream.
         user_new_activities = (find_new_activities(
@@ -546,14 +546,13 @@ class TestActivity:
         # Test for the presence of a correct activity detail item.
         details = self.activity_details(activity)
         assert len(details) == 1, (
-                "There should be 1 activity detail but found %s"
-                % len(details))
+                "There should be 1 activity detail but found {0!s}".format(len(details)))
         detail = details[0]
         assert detail['activity_id'] == activity['id'], \
             str(detail['activity_id'])
         deleted_extras = [extra for extra in extras_before if extra not in
                 extras_after]
-        assert len(deleted_extras) == 1, "%s != 1" % len(deleted_extras)
+        assert len(deleted_extras) == 1, "{0!s} != 1".format(len(deleted_extras))
         deleted_extra = deleted_extras[0]
         assert detail['object_type'] == "PackageExtra", (
             str(detail['object_type']))
@@ -591,7 +590,7 @@ class TestActivity:
                 apikey=apikey)
         extras_after = updated_package['extras']
         assert len(extras_after) == len(extras_before), (
-                "%s != %s" % (len(extras_after), len(extras_before)))
+                "{0!s} != {1!s}".format(len(extras_after), len(extras_before)))
 
         # Find the new activity in the user's activity stream.
         user_new_activities = (find_new_activities(
@@ -640,14 +639,13 @@ class TestActivity:
         # Test for the presence of a correct activity detail item.
         details = self.activity_details(activity)
         assert len(details) == 1, (
-                "There should be 1 activity detail but found %s"
-                % len(details))
+                "There should be 1 activity detail but found {0!s}".format(len(details)))
         detail = details[0]
         assert detail['activity_id'] == activity['id'], \
             str(detail['activity_id'])
         new_extras = [extra for extra in extras_after if extra not in
                 extras_before]
-        assert len(new_extras) == 1, "%s != 1" % len(new_extras)
+        assert len(new_extras) == 1, "{0!s} != 1".format(len(new_extras))
         new_extra = new_extras[0]
         assert detail['object_type'] == "PackageExtra", (
             str(detail['object_type']))
@@ -683,7 +681,7 @@ class TestActivity:
                 apikey=apikey)
         extras_after = updated_package['extras']
         assert len(extras_after) == len(extras_before) + 1, (
-                "%s != %s" % (len(extras_after), len(extras_before) + 1))
+                "{0!s} != {1!s}".format(len(extras_after), len(extras_before) + 1))
 
         # Find the new activity in the user's activity stream.
         user_new_activities = (find_new_activities(
@@ -732,14 +730,13 @@ class TestActivity:
         # Test for the presence of a correct activity detail item.
         details = self.activity_details(activity)
         assert len(details) == 1, (
-                "There should be 1 activity detail but found %s"
-                % len(details))
+                "There should be 1 activity detail but found {0!s}".format(len(details)))
         detail = details[0]
         assert detail['activity_id'] == activity['id'], \
             str(detail['activity_id'])
         new_extras = [extra for extra in extras_after if extra not in
                 extras_before]
-        assert len(new_extras) == 1, "%s != 1" % len(new_extras)
+        assert len(new_extras) == 1, "{0!s} != 1".format(len(new_extras))
         new_extra = new_extras[0]
         assert detail['object_type'] == "PackageExtra", (
             str(detail['object_type']))
@@ -950,8 +947,7 @@ class TestActivity:
         assert len(details) == num_resources
         for detail in details:
             assert detail['activity_id'] == activity['id'], (
-                "activity_id should be %s but is %s"
-                % (activity['id'], detail['activity_id']))
+                "activity_id should be {0!s} but is {1!s}".format(activity['id'], detail['activity_id']))
             assert detail['object_id'] in resource_ids, (
                 str(detail['object_id']))
             assert detail['object_type'] == "Resource", (

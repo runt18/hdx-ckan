@@ -322,7 +322,7 @@ class RevisionStats(object):
             return weekly_pkg_ids
         if cache_enabled:
             week_commences = cls.get_date_week_started(datetime.date.today())
-            key = '%s_by_week_%s' % (cls._object_type, week_commences.strftime(DATE_FORMAT))
+            key = '{0!s}_by_week_{1!s}'.format(cls._object_type, week_commences.strftime(DATE_FORMAT))
             objects_by_week_ = our_cache.get_value(key=key,
                                     createfunc=objects_by_week)
         else:

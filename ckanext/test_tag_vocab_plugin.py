@@ -76,7 +76,7 @@ class MockVocabTagsPlugin(plugins.SingletonPlugin):
                 tags = c.pkg_dict.get('vocab_tags_selected', [])
                 for tag in tags:
                     stream = stream | Transformer('body')\
-                        .append(HTML('<p>%s</p>' % tag))
+                        .append(HTML('<p>{0!s}</p>'.format(tag)))
         if routes.get('controller') == 'package' \
             and routes.get('action') == 'edit':
                 # add vocabs tag select box to edit page
@@ -84,9 +84,9 @@ class MockVocabTagsPlugin(plugins.SingletonPlugin):
                 selected_tags = c.pkg_dict.get('vocab_tags_selected', [])
                 for tag in c.vocab_tags:
                     if tag in selected_tags:
-                        html += '<option selected="selected" value="%s">%s</option>' % (tag, tag)
+                        html += '<option selected="selected" value="{0!s}">{1!s}</option>'.format(tag, tag)
                     else:
-                        html += '<option value="%s">%s</option>' % (tag, tag)
+                        html += '<option value="{0!s}">{1!s}</option>'.format(tag, tag)
                 html += '</select>'
                 stream = stream | Transformer('fieldset[@id="basic-information"]').append(HTML(html))
         return stream

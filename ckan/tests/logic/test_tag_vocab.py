@@ -101,7 +101,7 @@ class TestVocabFacets(object):
         model.repo.rebuild_db()
 
     def test_vocab_facets(self):
-        vocab_facet = 'vocab_%s' % TEST_VOCAB_NAME
+        vocab_facet = 'vocab_{0!s}'.format(TEST_VOCAB_NAME)
 
         context = {'model': model, 'session': model.Session}
         data = {

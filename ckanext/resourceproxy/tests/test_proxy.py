@@ -165,7 +165,7 @@ class TestProxyPrettyfied(tests.WsgiAppCase, unittest.TestCase):
         schemes = ['file', 'ws']
 
         for scheme in schemes:
-            url = '%s://ckan.org' % scheme
+            url = '{0!s}://ckan.org'.format(scheme)
             data_dict = set_resource_url(url)
             non_proxied_url = proxy.get_proxified_resource_url(data_dict)
             proxied_url = proxy.get_proxified_resource_url(data_dict, scheme)

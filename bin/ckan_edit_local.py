@@ -29,7 +29,7 @@ def ons_prefix():
             pkgs_changed.append(pkg.name)
     
     model.Session.remove()
-    print 'Removed ONS prefix from %i packages out of %i' % (len(pkgs_changed), model.Session.query(model.Package).count())
+    print 'Removed ONS prefix from {0:d} packages out of {1:d}'.format(len(pkgs_changed), model.Session.query(model.Package).count())
             
 def dump_data4nr_names(csv_filepath):
     '''Dumps a list of the old and new names for packages in data4nr csv data'''
@@ -46,7 +46,7 @@ def dump_data4nr_names(csv_filepath):
         data4nr_dict = data4nr._parse_line(row_list, index)
         if data4nr_dict:
             old_name, new_name = data4nr._create_name(data4nr_dict)
-            print '%s %s' % (old_name, new_name)
+            print '{0!s} {1!s}'.format(old_name, new_name)
         index += 1
 
 def munge_old_data4nr_names(old_names_filepath):
@@ -69,9 +69,9 @@ def munge_old_data4nr_names(old_names_filepath):
                 break
             bit_of_name = bit_of_name[:-1]
         if new_name:
-            print '%s %s' % (old_name, new_name)
+            print '{0!s} {1!s}'.format(old_name, new_name)
         else:
-            print '%s UNKNOWN' % old_name
+            print '{0!s} UNKNOWN'.format(old_name)
     f_obj.close()
             
 def canada_extras():
@@ -115,7 +115,7 @@ def canada_extras():
                key not in key_mapping.values():
                 unmapped_keys.add(key, pkg.name)
     rev.finished()
-    print 'Packages: %i' % model.Session.query(model.Package).count()
+    print 'Packages: {0:d}'.format(model.Session.query(model.Package).count())
     print 'Changed keys:\n', keys_changed.report()
     print 'Unmapped keys:\n', unmapped_keys.report()
     print 'Changed licenses:\n', licenses_changed.report()
@@ -154,5 +154,5 @@ if __name__ == '__main__':
     elif command == 'canada_extras':
         canada_extras()
     else:
-        print 'Command %r not found' % command
+        print 'Command {0!r} not found'.format(command)
         print usage

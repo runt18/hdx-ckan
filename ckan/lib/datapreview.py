@@ -97,7 +97,7 @@ def get_preview_plugin(data_dict, return_first=False):
     if num_plugins == 0:
         # we didn't find any.  see if any could be made to work
         for plug in plugins_fixable:
-            log.info('%s would allow previews.  To fix: %s' % (
+            log.info('{0!s} would allow previews.  To fix: {1!s}'.format(
                 plug['plugin'], plug['fixable']))
         preview_plugin = None
     elif num_plugins == 1:

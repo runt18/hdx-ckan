@@ -15,7 +15,7 @@ class TestMockMailServer(SmtpServerHarness, PylonsTestCase):
         if smtp_server:
             host, port = smtp_server.split(':')
             port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
-            config['smtp.test_server'] = '%s:%s' % (host, port)
+            config['smtp.test_server'] = '{0!s}:{1!s}'.format(host, port)
         SmtpServerHarness.setup_class()
         PylonsTestCase.setup_class()
 

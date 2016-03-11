@@ -121,7 +121,7 @@ def downgrade(migrate_engine):
 def _check_map_has_old_license_titles(old_license_titles, map):
     for title in old_license_titles.values():
         if title not in map:
-            raise Exception, "The old license title '%s' wasn't found in the upgrade map. Decide which new license id should be substituted for this license and add an entry to the map (in ckan/migration/versions/018_adjust_licenses.py)." % title
+            raise Exception, "The old license title '{0!s}' wasn't found in the upgrade map. Decide which new license id should be substituted for this license and add an entry to the map (in ckan/migration/versions/018_adjust_licenses.py).".format(title)
 
 def _get_old_license_titles(migrate_engine):
     "Returns a dict of old license titles, keyed by old license id."
@@ -158,7 +158,7 @@ def _switch_package_license_ids(old_ids, old_license_titles, map):
             old_license_title = old_license_titles[old_license_id]
             new_license_id = map[old_license_title]
             new_ids[package_id] = new_license_id
-            print "Switched license_id %s to %s" % (old_license_id, new_license_id)
+            print "Switched license_id {0!s} to {1!s}".format(old_license_id, new_license_id)
     return new_ids
 
 def _set_new_package_license_ids(migrate_engine, new_ids):
@@ -166,7 +166,7 @@ def _set_new_package_license_ids(migrate_engine, new_ids):
         _set_package_license_id(migrate_engine, package_id, license_id)
 
 def _set_package_license_id(migrate_engine, package_id, license_id):
-    set_package_license_id = """UPDATE package SET license_id ='%s' where id = '%s';""" % (license_id, package_id)
+    set_package_license_id = """UPDATE package SET license_id ='{0!s}' where id = '{1!s}';""".format(license_id, package_id)
     migrate_engine.execute(set_package_license_id)
 
 def _set_new_package_revision_license_ids(migrate_engine, new_ids):
@@ -174,7 +174,7 @@ def _set_new_package_revision_license_ids(migrate_engine, new_ids):
         _set_package_revision_license_id(migrate_engine, package_id, license_id)
 
 def _set_package_revision_license_id(migrate_engine, package_id, license_id):
-    set_package_license_id = """UPDATE package_revision SET license_id ='%s' where id = '%s';""" % (license_id, package_id)
+    set_package_license_id = """UPDATE package_revision SET license_id ='{0!s}' where id = '{1!s}';""".format(license_id, package_id)
     migrate_engine.execute(set_package_license_id)
 
 

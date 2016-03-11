@@ -36,19 +36,16 @@ class RelationshipsTestCase(BaseModelApiTestCase):
         package_1_ref = self.package_ref_from_name(package_1_name)
         if package_2_name is None:
             if not relationship_type:
-                return self.offset('/rest/dataset/%s/relationships' % \
-                                   package_1_ref)
+                return self.offset('/rest/dataset/{0!s}/relationships'.format( \
+                                   package_1_ref))
             else:
-                return self.offset('/rest/dataset/%s/%s' %
-                                   (package_1_ref, relationship_type))
+                return self.offset('/rest/dataset/{0!s}/{1!s}'.format(package_1_ref, relationship_type))
         else:
             package_2_ref = self.package_ref_from_name(package_2_name)
             if not relationship_type:
-                return self.offset('/rest/dataset/%s/relationships/%s' % \
-                                   (package_1_ref, package_2_ref))
+                return self.offset('/rest/dataset/{0!s}/relationships/{1!s}'.format(package_1_ref, package_2_ref))
             else:
-                return self.offset('/rest/dataset/%s/%s/%s' % \
-                                   (package_1_ref,
+                return self.offset('/rest/dataset/{0!s}/{1!s}/{2!s}'.format(package_1_ref,
                                     relationship_type,
                                     package_2_ref))
 
@@ -131,7 +128,7 @@ class RelationshipsTestCase(BaseModelApiTestCase):
         data = {'type': 'links_to',
                 'object': 'warandpeace',
                 'comment':self.comment}
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         res = self.app.post(offset, params=postparams, status=[201],
                             extra_environ=self.extra_environ)
         # Check the response
@@ -178,7 +175,7 @@ class RelationshipsTestCase(BaseModelApiTestCase):
 
     def test_create_relationship_unknown(self):
         offset = self.relationship_offset('annakarenina', 'unheard_of_type', 'warandpeace')
-        postparams = '%s=1' % self.dumps({'comment':self.comment})
+        postparams = '{0!s}=1'.format(self.dumps({'comment':self.comment}))
         res = self.app.post(offset, params=postparams, status=[409],
                             extra_environ=self.extra_environ)
         # error message is wrong - ends up in package_create,
@@ -210,7 +207,7 @@ class RelationshipsTestCase(BaseModelApiTestCase):
             offset = self.relationship_offset('annakarenina', 'relationships', 'warandpeace')
             data = {'type': 'parent_of',
                     'comment':self.comment}
-        postparams = '%s=1' % self.dumps(data)
+        postparams = '{0!s}=1'.format(self.dumps(data))
         res = self.app.post(offset, params=postparams, status=[201],
                             extra_environ=self.extra_environ)
         # Check the response
@@ -228,7 +225,7 @@ class RelationshipsTestCase(BaseModelApiTestCase):
 
     def update_annakarenina_parent_of_war_and_peace(self, comment=u'New comment.'):
         offset = self.relationship_offset('annakarenina', 'parent_of', 'warandpeace')
-        postparams = '%s=1' % self.dumps({'comment':comment})
+        postparams = '{0!s}=1'.format(self.dumps({'comment':comment}))
         res = self.app.put(offset, params=postparams, status=[200], extra_environ=self.extra_environ)
         # Check the response
         rel = self.loads(res.body)
@@ -247,7 +244,7 @@ class RelationshipsTestCase(BaseModelApiTestCase):
     def test_update_relationship_incorrectly(self):
         self.create_annakarenina_parent_of_war_and_peace()
         offset = self.relationship_offset('annakarenina', 'parent_of', 'warandpeace')
-        postparams = '%s=1' % self.dumps({'type': 'cat', 'object': 'Matilda', 'comment': 'Tabby'})
+        postparams = '{0!s}=1'.format(self.dumps({'type': 'cat', 'object': 'Matilda', 'comment': 'Tabby'}))
         # Should only be able to change the comment.
         # Todo: validate this properly and return an error
         # Currently it just ignores the changed type and subject/object
@@ -285,12 +282,12 @@ class RelationshipsTestCase(BaseModelApiTestCase):
         len_relationships = len(relationships)
         len_expected_relationships = len(expected_relationships)
         if len_relationships != len_expected_relationships:
-            msg = 'Found %i relationships, ' % len_relationships
-            msg += 'but expected %i.' % len_expected_relationships
+            msg = 'Found {0:d} relationships, '.format(len_relationships)
+            msg += 'but expected {0:d}.'.format(len_expected_relationships)
             if len_relationships:
                 msg += ' Found: '
                 for r in relationships:
-                    msg += '%s %s %s; ' % (r['subject'], r['type'], r['object'])
+                    msg += '{0!s} {1!s} {2!s}; '.format(r['subject'], r['type'], r['object'])
                 msg += '.'
             raise Exception, msg
 
@@ -307,8 +304,7 @@ class RelationshipsTestCase(BaseModelApiTestCase):
                     the_expected_rel = expected_rel
                     break
             if not the_expected_rel:
-                raise Exception('Unexpected relationship: %s %s %s' %
-                                (rel['subject'], rel['type'], rel['object']))
+                raise Exception('Unexpected relationship: {0!s} {1!s} {2!s}'.format(rel['subject'], rel['type'], rel['object']))
             for field in ('subject', 'object', 'type', 'comment'):
                 if the_expected_rel.has_key(field):
                     value = rel[field]

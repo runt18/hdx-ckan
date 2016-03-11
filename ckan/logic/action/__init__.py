@@ -41,7 +41,7 @@ def get_domain_object(model, domain_object_ref):
     user = model.User.get(domain_object_ref)
     if user:
         return user
-    raise NotFound('Domain object %r not found' % domain_object_ref)
+    raise NotFound('Domain object {0!r} not found'.format(domain_object_ref))
 
 
 def error_summary(error_dict):

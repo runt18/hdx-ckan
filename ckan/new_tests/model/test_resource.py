@@ -68,5 +68,5 @@ class TestResource(object):
         resources = Resource.get_all_without_views(['FORMAT'])
 
         length = len(resources)
-        assert length == 1, 'Expected 1 resource, but got %d' % length
+        assert length == 1, 'Expected 1 resource, but got {0:d}'.format(length)
         assert_equals([resources[0].id], [resource_id])

@@ -44,7 +44,7 @@ def munge_title_to_name(name):
         year_match = re.match('.*?[_-]((?:\d{2,4}[-/])?\d{2,4})$', name)
         if year_match:
             year = year_match.groups()[0]
-            name = '%s-%s' % (name[:(max_length-len(year)-1)], year)
+            name = '{0!s}-{1!s}'.format(name[:(max_length-len(year)-1)], year)
         else:
             name = name[:max_length]
     name = _munge_to_length(name, model.PACKAGE_NAME_MIN_LENGTH,

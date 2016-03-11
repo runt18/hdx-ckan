@@ -66,7 +66,7 @@ def make_plugin(secret=None,
     if secretfile:
         secretfile = os.path.abspath(os.path.expanduser(secretfile))
         if not os.path.exists(secretfile):
-            raise ValueError("No such 'secretfile': %s" % secretfile)
+            raise ValueError("No such 'secretfile': {0!s}".format(secretfile))
         secret = open(secretfile).read().strip()
     if timeout:
         timeout = int(timeout)

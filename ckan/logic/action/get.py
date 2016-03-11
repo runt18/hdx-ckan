@@ -883,8 +883,7 @@ def package_relationships_list(context, data_dict):
     relationships = pkg1.get_relationships(with_package=pkg2, type=rel)
 
     if rel and not relationships:
-        raise NotFound('Relationship "%s %s %s" not found.'
-                       % (id, rel, id2))
+        raise NotFound('Relationship "{0!s} {1!s} {2!s}" not found.'.format(id, rel, id2))
 
     relationship_dicts = [
         rel.as_dict(pkg1, ref_package_by=ref_package_by)
@@ -1439,7 +1438,7 @@ def package_autocomplete(context, data_dict):
     limit = data_dict.get('limit', 10)
     q = data_dict['q']
 
-    like_q = u"%s%%" % q
+    like_q = u"{0!s}%".format(q)
 
     query = model.Session.query(model.Package)
     query = query.filter(model.Package.state == 'active')
@@ -1456,7 +1455,7 @@ def package_autocomplete(context, data_dict):
             match_displayed = package.name
         else:
             match_field = 'title'
-            match_displayed = '%s (%s)' % (package.title, package.name)
+            match_displayed = '{0!s} ({1!s})'.format(package.title, package.name)
         result_dict = {
             'name': package.name,
             'title': package.title,
@@ -1714,8 +1713,7 @@ def package_search(context, data_dict):
             ## if the index has got a package that is not in ckan then
             ## ignore it.
             if not pkg:
-                log.warning('package %s in index but not in database'
-                            % package)
+                log.warning('package {0!s} in index but not in database'.format(package))
                 continue
             ## use data in search index if there
             if package_dict:
@@ -1942,9 +1940,9 @@ def resource_search(context, data_dict):
 
                 like = _or_(
                     model_attr.ilike(
-                        u'''%%"%s": "%%%s%%",%%''' % (field, term)),
+                        u'''%"{0!s}": "%{1!s}%",%'''.format(field, term)),
                     model_attr.ilike(
-                        u'''%%"%s": "%%%s%%"}''' % (field, term))
+                        u'''%"{0!s}": "%{1!s}%"}}'''.format(field, term))
                 )
                 q = q.filter(like)
 
@@ -3277,13 +3275,13 @@ def _unpick_search(sort, allowed_fields=None, total=None):
             order = 'asc'
         if allowed_fields:
             if field not in allowed_fields:
-                raise ValidationError('Cannot sort by field `%s`' % field)
+                raise ValidationError('Cannot sort by field `{0!s}`'.format(field))
         if order not in ['asc', 'desc']:
-            raise ValidationError('Invalid sort direction `%s`' % order)
+            raise ValidationError('Invalid sort direction `{0!s}`'.format(order))
         sorts.append((field, order))
     if total and len(sorts) > total:
         raise ValidationError(
-            'Too many sort criteria provided only %s allowed' % total)
+            'Too many sort criteria provided only {0!s} allowed'.format(total))
     return sorts
 
 

@@ -184,7 +184,7 @@ class PackageController(base.BaseController):
             params = params_nosort[:]
 
             if fields:
-                sort_string = ', '.join('%s %s' % f for f in fields)
+                sort_string = ', '.join('{0!s} {1!s}'.format(*f) for f in fields)
                 params.append(('sort', sort_string))
             return search_url(params, package_type)
 
@@ -214,7 +214,7 @@ class PackageController(base.BaseController):
                         and len(value) and not param.startswith('_'):
                     if not param.startswith('ext_'):
                         c.fields.append((param, value))
-                        fq += ' %s:"%s"' % (param, value)
+                        fq += ' {0!s}:"{1!s}"'.format(param, value)
                         if param not in c.fields_grouped:
                             c.fields_grouped[param] = [value]
                         else:
@@ -289,12 +289,12 @@ class PackageController(base.BaseController):
         c.search_facets_limits = {}
         for facet in c.search_facets.keys():
             try:
-                limit = int(request.params.get('_%s_limit' % facet,
+                limit = int(request.params.get('_{0!s}_limit'.format(facet),
                                                g.facets_default_number))
             except ValueError:
                 abort(400, _('Parameter "{parameter_name}" is not '
                              'an integer').format(
-                                 parameter_name='_%s_limit' % facet
+                                 parameter_name='_{0!s}_limit'.format(facet)
                              ))
             c.search_facets_limits[facet] = limit
 
@@ -359,7 +359,7 @@ class PackageController(base.BaseController):
             if not ctype:
                 # An unknown format, we'll carry on in case it is a
                 # revision specifier and re-constitute the original id
-                id = "%s.%s" % (id, format)
+                id = "{0!s}.{1!s}".format(id, format)
                 ctype, format = "text/html; charset=utf-8", "html"
         else:
             ctype, format = self._content_type_from_accept()
@@ -487,14 +487,14 @@ class PackageController(base.BaseController):
                 if dayAge >= dayHorizon:
                     break
                 if revision_dict['message']:
-                    item_title = u'%s' % revision_dict['message'].\
-                        split('\n')[0]
+                    item_title = u'{0!s}'.format(revision_dict['message'].\
+                        split('\n')[0])
                 else:
-                    item_title = u'%s' % revision_dict['id']
+                    item_title = u'{0!s}'.format(revision_dict['id'])
                 item_link = h.url_for(controller='revision', action='read',
                                       id=revision_dict['id'])
                 item_description = _('Log message: ')
-                item_description += '%s' % (revision_dict['message'] or '')
+                item_description += '{0!s}'.format((revision_dict['message'] or ''))
                 item_author_name = revision_dict['author']
                 item_pubdate = revision_date
                 feed.add_item(
@@ -1032,7 +1032,7 @@ class PackageController(base.BaseController):
         '''
         assert action in ('new', 'edit')
         url = request.params.get('return_to') or \
-            config.get('package_%s_return_url' % action)
+            config.get('package_{0!s}_return_url'.format(action))
         if url:
             url = url.replace('<NAME>', pkgname)
         else:
@@ -1128,7 +1128,7 @@ class PackageController(base.BaseController):
             c.package['isopen'] = False
 
         # TODO: find a nicer way of doing this
-        c.datastore_api = '%s/api/action' % config.get('ckan.site_url', '').rstrip('/')
+        c.datastore_api = '{0!s}/api/action'.format(config.get('ckan.site_url', '').rstrip('/'))
 
         c.related_count = c.pkg.related_count
 

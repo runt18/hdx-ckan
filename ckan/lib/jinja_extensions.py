@@ -107,11 +107,9 @@ class CkanExtend(ext.Extension):
         if parser.stream.current.type != 'block_end':
             provided_template = parser.parse_expression().value
             if provided_template != filename:
-                raise Exception('ckan_extends tag wrong path %s in %s'
-                                % (provided_template, template_path))
+                raise Exception('ckan_extends tag wrong path {0!s} in {1!s}'.format(provided_template, template_path))
             else:
-                log.critical('Remove path from ckan_extend tag in %s'
-                             % template_path)
+                log.critical('Remove path from ckan_extend tag in {0!s}'.format(template_path))
 
         # provide our magic format
         # format is *<search path parent index>*<template name>
@@ -189,8 +187,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 contents = f.read().decode(self.encoding)
             except UnicodeDecodeError, e:
                 log.critical(
-                    'Template corruption in `%s` unicode decode errors'
-                    % filename
+                    'Template corruption in `{0!s}` unicode decode errors'.format(filename)
                 )
                 raise e
             finally:

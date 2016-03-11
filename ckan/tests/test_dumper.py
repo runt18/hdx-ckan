@@ -51,7 +51,7 @@ class TestSimpleDump(TestController):
 
     def assert_correct_field_order(self, res):
         correct_field_order = ('id', 'name', 'title', 'version', 'url')
-        field_position = [res.find('"%s"' % field) for field in correct_field_order]
+        field_position = [res.find('"{0!s}"'.format(field)) for field in correct_field_order]
         field_position_sorted = field_position[:]
         field_position_sorted.sort()
         assert field_position == field_position_sorted, field_position
@@ -64,7 +64,7 @@ class TestDumper(object):
         CreateTestData.create()
         d = Dumper()
         ts = int(time())
-        self.outpath = '/tmp/mytestdump-%s.js' % ts
+        self.outpath = '/tmp/mytestdump-{0!s}.js'.format(ts)
         if os.path.exists(self.outpath):
             os.remove(self.outpath)
         d.dump_json(self.outpath)
@@ -79,9 +79,9 @@ class TestDumper(object):
         assert dumpeddata['version'] == ckan.__version__
         tables = dumpeddata.keys()
         for key in ['Package', 'Tag', 'Group', 'Member', 'PackageExtra']:
-            assert key in tables, '%r not in %s' % (key, tables)
+            assert key in tables, '{0!r} not in {1!s}'.format(key, tables)
         for key in ['User']:
-            assert key not in tables, '%s should not be in %s' % (key, tables)
+            assert key not in tables, '{0!s} should not be in {1!s}'.format(key, tables)
         assert len(dumpeddata['Package']) == 2, len(dumpeddata['Package'])
         assert len(dumpeddata['Tag']) == 3, len(dumpeddata['Tag'])
         assert len(dumpeddata['PackageRevision']) == 2, len(dumpeddata['PackageRevision'])

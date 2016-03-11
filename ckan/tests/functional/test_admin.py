@@ -59,17 +59,17 @@ class _TestAdminAuthzController(WsgiAppCase):
 
 
         def check_and_set_checkbox(theform, user, role, should_be, set_to):
-           user_role_string = '%s$%s' % (user, role)
+           user_role_string = '{0!s}${1!s}'.format(user, role)
            checkboxes = [x for x in theform.fields[user_role_string] \
                                            if x.__class__.__name__ == 'Checkbox']
 
            assert(len(checkboxes)==1), \
-                "there should only be one checkbox for %s/%s" % (user, role)
+                "there should only be one checkbox for {0!s}/{1!s}".format(user, role)
            checkbox = checkboxes[0]
 
            #checkbox should be unticked
            assert checkbox.checked==should_be, \
-                         "%s/%s checkbox in unexpected state" % (user, role)
+                         "{0!s}/{1!s} checkbox in unexpected state".format(user, role)
 
            #tick or untick the box and submit the form
            checkbox.checked=set_to

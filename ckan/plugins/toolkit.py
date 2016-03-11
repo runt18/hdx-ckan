@@ -200,7 +200,7 @@ content type, cookies, etc.
         # check contents list correct
         errors = set(t).symmetric_difference(set(self.contents))
         if errors:
-            raise Exception('Plugin toolkit error %s not matching' % errors)
+            raise Exception('Plugin toolkit error {0!s} not matching'.format(errors))
 
     # wrappers
     # Wrapper for the render_snippet function as it uses keywords rather than
@@ -345,10 +345,9 @@ content type, cookies, etc.
         if not cls._check_ckan_version(min_version=min_version,
                                        max_version=max_version):
             if not max_version:
-                error = 'Requires ckan version %s or higher' % min_version
+                error = 'Requires ckan version {0!s} or higher'.format(min_version)
             else:
-                error = 'Requires ckan version between %s and %s' % \
-                            (min_version, max_version)
+                error = 'Requires ckan version between {0!s} and {1!s}'.format(min_version, max_version)
             raise CkanVersionException(error)
 
     def __getattr__(self, name):
@@ -360,7 +359,7 @@ content type, cookies, etc.
         else:
             if name == '__bases__':
                 return self.__class__.__bases__
-            raise AttributeError('`%s` not found in plugins toolkit' % name)
+            raise AttributeError('`{0!s}` not found in plugins toolkit'.format(name))
 
     def __dir__(self):
         if not self._toolkit:

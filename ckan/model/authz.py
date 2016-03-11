@@ -130,8 +130,7 @@ system_role_table = Table('system_role', meta.metadata,
 
 class RoleAction(domain_object.DomainObject):
     def __repr__(self):
-        return '<%s role="%s" action="%s" context="%s">' % \
-               (self.__class__.__name__, self.role, self.action, self.context)
+        return '<{0!s} role="{1!s}" action="{2!s}" context="{3!s}">'.format(self.__class__.__name__, self.role, self.action, self.context)
 
 
 # dictionary mapping protected objects (e.g. Package) to related ObjectRole
@@ -143,8 +142,7 @@ class UserObjectRole(domain_object.DomainObject):
 
     def __repr__(self):
         if self.user:
-            return '<%s user="%s" role="%s" context="%s">' % \
-                (self.__class__.__name__, self.user.name, self.role, self.context)
+            return '<{0!s} user="{1!s}" role="{2!s}" context="{3!s}">'.format(self.__class__.__name__, self.user.name, self.role, self.context)
         else:
             assert False, "UserObjectRole is not a user"
 
@@ -153,7 +151,7 @@ class UserObjectRole(domain_object.DomainObject):
         protected_object = protected_objects.get(domain_obj.__class__, None)
         if protected_object is None:
             # TODO: make into an authz exception
-            msg = '%s is not a protected object, i.e. a subject of authorization' % domain_obj
+            msg = '{0!s} is not a protected object, i.e. a subject of authorization'.format(domain_obj)
             raise Exception(msg)
         else:
             return protected_object
@@ -209,10 +207,9 @@ class PackageRole(UserObjectRole):
 
     def __repr__(self):
         if self.user:
-            return '<%s user="%s" role="%s" package="%s">' % \
-                (self.__class__.__name__, self.user.name, self.role, self.package.name)
+            return '<{0!s} user="{1!s}" role="{2!s}" package="{3!s}">'.format(self.__class__.__name__, self.user.name, self.role, self.package.name)
         else:
-            assert False, "%s is not a user" % self.__class__.__name__
+            assert False, "{0!s} is not a user".format(self.__class__.__name__)
 
 protected_objects[PackageRole.protected_object] = PackageRole
 
@@ -222,10 +219,9 @@ class GroupRole(UserObjectRole):
 
     def __repr__(self):
         if self.user:
-            return '<%s user="%s" role="%s" group="%s">' % \
-                (self.__class__.__name__, self.user.name, self.role, self.group.name)
+            return '<{0!s} user="{1!s}" role="{2!s}" group="{3!s}">'.format(self.__class__.__name__, self.user.name, self.role, self.group.name)
         else:
-            assert False, "%s is not a user" % self.__class__.__name__
+            assert False, "{0!s} is not a user".format(self.__class__.__name__)
 
 protected_objects[GroupRole.protected_object] = GroupRole
 
@@ -294,7 +290,7 @@ def setup_user_roles(_domain_object, visitor_roles, logged_in_roles, admins=[]):
         if admin is not None:
             assert isinstance(admin, _user.User), admin
             if admin.name in (PSEUDO_USER__LOGGED_IN, PSEUDO_USER__VISITOR):
-                raise NotRealUserException('Invalid user for domain object admin %r' % admin.name)
+                raise NotRealUserException('Invalid user for domain object admin {0!r}'.format(admin.name))
             for role in admin_roles:
                 add_user_to_role(admin, role, _domain_object)
 
@@ -308,7 +304,7 @@ def give_all_packages_default_user_roles():
         # weird - should already be in session but complains w/o this
         meta.Session.add(pkg)
         if len(pkg.roles) > 0:
-            print 'Skipping (already has roles): %s' % pkg.name
+            print 'Skipping (already has roles): {0!s}'.format(pkg.name)
             continue
         # work out the authors and make them admins
         admins = []
@@ -322,7 +318,7 @@ def give_all_packages_default_user_roles():
         # remove duplicates
         admins = list(set(admins))
         # gives default permissions
-        print 'Creating default user for for %s with admins %s' % (pkg.name, admins)
+        print 'Creating default user for for {0!s} with admins {1!s}'.format(pkg.name, admins)
         setup_default_user_roles(pkg, admins)
 
 # default user roles - used when the config doesn\'t specify them
@@ -338,15 +334,14 @@ _default_user_roles_cache = weakref.WeakKeyDictionary()
 def get_default_user_roles(_domain_object):
     # TODO: Should this func go in lib rather than model now?
     def _get_default_user_roles(_domain_object):
-        config_key = 'ckan.default_roles.%s' % obj_type
+        config_key = 'ckan.default_roles.{0!s}'.format(obj_type)
         user_roles_json = config.get(config_key)
         if user_roles_json is None:
             user_roles_str = default_default_user_roles[obj_type]
         else:
             user_roles_str = json.loads(user_roles_json) if user_roles_json else {}
         unknown_keys = set(user_roles_str.keys()) - set(('visitor', 'logged_in'))
-        assert not unknown_keys, 'Auth config for %r has unknown key %r' % \
-               (_domain_object, unknown_keys)
+        assert not unknown_keys, 'Auth config for {0!r} has unknown key {1!r}'.format(_domain_object, unknown_keys)
         user_roles_ = {}
         for user in ('visitor', 'logged_in'):
             roles_str = user_roles_str.get(user, [])

@@ -405,7 +405,7 @@ def hdx_follow_link(obj_type, obj_id, extra_text, cls=None):
     # If the user is logged in show the follow/unfollow button
     if c.user:
         context = {'model': model, 'session': model.Session, 'user': c.user}
-        action = 'am_following_%s' % obj_type
+        action = 'am_following_{0!s}'.format(obj_type)
         following = logic.get_action(action)(context, {'id': obj_id})
         return h.snippet('search/snippets/follow_link.html',
                          following=following,
@@ -422,7 +422,7 @@ def follow_status(obj_type, obj_id):
     # If the user is logged in show the follow/unfollow button
     if c.user:
         context = {'model': model, 'session': model.Session, 'user': c.user}
-        action = 'am_following_%s' % obj_type
+        action = 'am_following_{0!s}'.format(obj_type)
         following = logic.get_action(action)(context, {'id': obj_id})
         return following
     return False
@@ -468,7 +468,7 @@ def hdx_follow_button(obj_type, obj_id, **kw):
     # If the user is logged in show the follow/unfollow button
     if c.user:
         context = {'model': model, 'session': model.Session, 'user': c.user}
-        action = 'am_following_%s' % obj_type
+        action = 'am_following_{0!s}'.format(obj_type)
         following = logic.get_action(action)(context, {'id': obj_id})
         follow_extra_text = _('This Data')
         if kw and 'follow_extra_text' in kw:

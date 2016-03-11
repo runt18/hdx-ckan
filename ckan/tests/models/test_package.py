@@ -271,7 +271,7 @@ class TestPackageRevisions:
         num_notes = len(self.notes)
         assert len(all_rev) == num_notes, len(all_rev)
         for i, rev in enumerate(all_rev):
-            assert rev.notes == self.notes[num_notes - i - 1], '%s != %s' % (rev.notes, self.notes[i])
+            assert rev.notes == self.notes[num_notes - i - 1], '{0!s} != {1!s}'.format(rev.notes, self.notes[i])
             #assert rev.extras['mykey'] == self.notes[num_notes - i - 1], '%s != %s' % (rev.extras['mykey'], self.notes[i])
 
 
@@ -368,10 +368,10 @@ class TestRelatedRevisions:
         assert diff.get('PackageExtra-c-value') == u'- \n+ d', diff
         assert diff.get('PackageExtra-c-state') == u'- \n+ active', diff
         def test_res(diff, res, field, expected_value):
-            key = 'Resource-%s-%s' % (res.id[:4], field)
+            key = 'Resource-{0!s}-{1!s}'.format(res.id[:4], field)
             got_value = diff.get(key)
-            expected_value = u'- \n+ %s' % expected_value
-            assert got_value == expected_value, 'Key: %s Got: %r Expected: %r' % (key, got_value, expected_value)
+            expected_value = u'- \n+ {0!s}'.format(expected_value)
+            assert got_value == expected_value, 'Key: {0!s} Got: {1!r} Expected: {2!r}'.format(key, got_value, expected_value)
         test_res(diff, self.res1, 'url', 'http://url1.com/edited')
         test_res(diff, self.res1, 'position', '0')
         test_res(diff, self.res1, 'format', 'xls')

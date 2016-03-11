@@ -114,10 +114,10 @@ ALTER TABLE resource
     migrate_engine.execute('''
 insert into resource_group 
     select 
-        %s, id, 'default', null, null, state, revision_id
+        {0!s}, id, 'default', null, null, state, revision_id
     from
         package;
-''' %  make_new_uuid("id")
+'''.format(make_new_uuid("id"))
 )
 
     migrate_engine.execute('''
@@ -130,11 +130,9 @@ insert into resource_group_revision
 )
 
     ## update resource table with new ids generated from the
-    migrate_engine.execute('update resource set resource_group_id = %s' 
-                           % make_new_uuid('resource_group_id'))
+    migrate_engine.execute('update resource set resource_group_id = {0!s}'.format(make_new_uuid('resource_group_id')))
 
-    migrate_engine.execute('update resource_revision set resource_group_id = %s' 
-                           % make_new_uuid('resource_group_id'))
+    migrate_engine.execute('update resource_revision set resource_group_id = {0!s}'.format(make_new_uuid('resource_group_id')))
 
 ##add back contraints
 

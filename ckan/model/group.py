@@ -104,16 +104,15 @@ class Member(vdm.sqlalchemy.RevisionedObjectMixin,
     def __unicode__(self):
         # refer to objects by name, not ID, to help debugging
         if self.table_name == 'package':
-            table_info = 'package=%s' % meta.Session.query(_package.Package).\
-                get(self.table_id).name
+            table_info = 'package={0!s}'.format(meta.Session.query(_package.Package).\
+                get(self.table_id).name)
         elif self.table_name == 'group':
-            table_info = 'group=%s' % meta.Session.query(Group).\
-                get(self.table_id).name
+            table_info = 'group={0!s}'.format(meta.Session.query(Group).\
+                get(self.table_id).name)
         else:
-            table_info = 'table_name=%s table_id=%s' % (self.table_name,
+            table_info = 'table_name={0!s} table_id={1!s}'.format(self.table_name,
                                                         self.table_id)
-        return u'<Member group=%s %s capacity=%s state=%s>' % \
-               (self.group.name if self.group else repr(self.group),
+        return u'<Member group={0!s} {1!s} capacity={2!s} state={3!s}>'.format(self.group.name if self.group else repr(self.group),
                 table_info, self.capacity, self.state)
 
 
@@ -372,7 +371,7 @@ class Group(vdm.sqlalchemy.RevisionedObjectMixin,
         return sorted(result_list, cmp=ourcmp)
 
     def __repr__(self):
-        return '<Group %s>' % self.name
+        return '<Group {0!s}>'.format(self.name)
 
 meta.mapper(Group, group_table,
             extension=[vdm.sqlalchemy.Revisioner(group_revision_table), ], )

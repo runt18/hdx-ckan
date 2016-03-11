@@ -440,7 +440,7 @@ def create_indexes(context, data_dict):
         fields_string = u', '.join(
             ['(("{0}").json::text)'.format(field)
                 if field in json_fields else
-                '"%s"' % field
+                '"{0!s}"'.format(field)
                 for field in index_fields])
         sql_index_strings.append(sql_index_string.format(
             res_id=data_dict['resource_id'],
@@ -624,8 +624,8 @@ def upsert_data(context, data_dict):
     fields = _get_fields(context, data_dict)
     field_names = _pluck('id', fields)
     records = data_dict['records']
-    sql_columns = ", ".join(['"%s"' % name.replace(
-        '%', '%%') for name in field_names] + ['"_full_text"'])
+    sql_columns = ", ".join(['"{0!s}"'.format(name.replace(
+        '%', '%%')) for name in field_names] + ['"_full_text"'])
 
     if method == _INSERT:
         rows = []
@@ -962,7 +962,7 @@ def search_data(context, data_dict):
         distinct = ''
 
     if sort:
-        sort_clause = 'ORDER BY %s' % (', '.join(sort)).replace('%', '%%')
+        sort_clause = 'ORDER BY {0!s}'.format((', '.join(sort)).replace('%', '%%'))
     else:
         sort_clause = ''
 

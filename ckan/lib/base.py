@@ -77,7 +77,7 @@ def render_snippet(template_name, **kw):
     cache_force = kw.pop('cache_force', None)
     output = render(template_name, extra_vars=kw, cache_force=cache_force,
                     renderer='snippet')
-    output = '\n<!-- Snippet %s start -->\n%s\n<!-- Snippet %s end -->\n' % (
+    output = '\n<!-- Snippet {0!s} start -->\n{1!s}\n<!-- Snippet {2!s} end -->\n'.format(
         template_name, output, template_name)
     return literal(output)
 
@@ -130,7 +130,7 @@ def render(template_name, extra_vars=None, cache_key=None, cache_type=None,
         except render_.TemplateNotFound:
             raise
 
-        log.debug('rendering %s [%s]' % (template_path, template_type))
+        log.debug('rendering {0!s} [{1!s}]'.format(template_path, template_type))
         if config.get('debug'):
             context_vars = globs.get('c')
             if context_vars:
@@ -202,7 +202,7 @@ def render(template_name, extra_vars=None, cache_key=None, cache_type=None,
         try:
             cache_expire = int(config.get('ckan.cache_expires', 0))
             response.headers["Cache-Control"] += \
-                ", max-age=%s, must-revalidate" % cache_expire
+                ", max-age={0!s}, must-revalidate".format(cache_expire)
         except ValueError:
             pass
     else:
@@ -217,8 +217,7 @@ def render(template_name, extra_vars=None, cache_key=None, cache_type=None,
                                loader_class=loader_class)
     except ckan.exceptions.CkanUrlException, e:
         raise ckan.exceptions.CkanUrlException(
-            '\nAn Exception has been raised for template %s\n%s' %
-            (template_name, e.message))
+            '\nAn Exception has been raised for template {0!s}\n{1!s}'.format(template_name, e.message))
     except render_.TemplateNotFound:
         raise
 
@@ -373,7 +372,7 @@ class BaseController(WSGIController):
             self._set_cors()
         r_time = time.time() - c.__timer
         url = request.environ['CKAN_CURRENT_URL'].split('?')[0]
-        log.info(' %s render time %.3f seconds' % (url, r_time))
+        log.info(' {0!s} render time {1:.3f} seconds'.format(url, r_time))
 
     def _set_cors(self):
         '''
@@ -413,7 +412,7 @@ class BaseController(WSGIController):
                 apikey = ''
         if not apikey:
             return None
-        self.log.debug("Received API Key: %s" % apikey)
+        self.log.debug("Received API Key: {0!s}".format(apikey))
         apikey = unicode(apikey)
         query = model.Session.query(model.User)
         user = query.filter_by(apikey=apikey).first()

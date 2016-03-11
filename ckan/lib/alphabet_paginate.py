@@ -118,7 +118,7 @@ class AlphaPage(object):
                 attribute = column.next()['expr']
             if self.item_count >= self.paging_threshold:
                 if self.page != self.other_text:
-                    query = query.filter(attribute.ilike(u'%s%%' % self.page))
+                    query = query.filter(attribute.ilike(u'{0!s}%'.format(self.page)))
                 else:
                     # regexp search
                     query = query.filter(attribute.op('~')(u'^[^a-zA-Z].*'))

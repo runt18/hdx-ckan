@@ -146,12 +146,12 @@ class TestComplicated:
 
     def test_rels(self):
         rels = model.Package.by_name(u'homer').relationships
-        assert len(rels) == 5, '%i: %s' % (len(rels), [rel for rel in rels])
+        assert len(rels) == 5, '{0:d}: {1!s}'.format(len(rels), [rel for rel in rels])
         def check(rels, subject, type, object):
             for rel in rels:
                 if rel.subject.name == subject and rel.type == type and rel.object.name == object:
                     return
-            assert 0, 'Could not find relationship in: %r' % rels
+            assert 0, 'Could not find relationship in: {0!r}'.format(rels)
         check(rels, 'homer', 'child_of', 'abraham')
         check(rels, 'bart', 'child_of', 'homer')
         check(rels, 'lisa', 'child_of', 'homer')
@@ -201,12 +201,12 @@ class TestComplicated:
     def test_01_rels(self):
         "audit the simpsons family relationships"
         rels = model.Package.by_name(u'homer').get_relationships()
-        assert len(rels) == 5, '%i: %s' % (len(rels), [rel for rel in rels])
+        assert len(rels) == 5, '{0:d}: {1!s}'.format(len(rels), [rel for rel in rels])
         def check(rels, subject, type, object):
             for rel in rels:
                 if rel.subject.name == subject and rel.type == type and rel.object.name == object:
                     return
-            assert 0, 'Could not find relationship in: %r' % rels
+            assert 0, 'Could not find relationship in: {0!r}'.format(rels)
         check(rels, 'homer', 'child_of', 'abraham')
         check(rels, 'bart', 'child_of', 'homer')
         check(rels, 'lisa', 'child_of', 'homer')
@@ -246,7 +246,7 @@ class TestComplicated:
         marge = model.Package.by_name(u"marge")
 
         rels = bart.get_relationships()
-        assert len(rels) == 0, "expected bart to have no relations, found %s" % rels
+        assert len(rels) == 0, "expected bart to have no relations, found {0!s}".format(rels)
 
         model.repo.new_revision()
         bart.add_relationship(u"child_of", homer)
@@ -254,15 +254,15 @@ class TestComplicated:
         model.repo.commit_and_remove()
 
         rels = bart.get_relationships()
-        assert len(rels) == 2, "expected bart to have one relation, found %s" % rels
+        assert len(rels) == 2, "expected bart to have one relation, found {0!s}".format(rels)
 
         q = model.Session.query(model.PackageRelationship).filter_by(subject=bart)
         count = q.count()
-        assert count == 2, "bart has %d relationships, expected 2" % count
+        assert count == 2, "bart has {0:d} relationships, expected 2".format(count)
         active = q.filter_by(state=model.State.ACTIVE).count()
-        assert active == 2, "bart has %d active relationships, expected 2" % active
+        assert active == 2, "bart has {0:d} active relationships, expected 2".format(active)
         deleted = q.filter_by(state=model.State.DELETED).count()
-        assert deleted == 0, "bart has %d deleted relationships, expect 0" % deleted
+        assert deleted == 0, "bart has {0:d} deleted relationships, expect 0".format(deleted)
 
     def test_04_relationship_display(self):
 
