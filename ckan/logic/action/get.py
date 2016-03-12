@@ -821,7 +821,7 @@ def user_list(context, data_dict):
     else:
         query = query.order_by(
             _case([(
-                _or_(model.User.fullname == None,
+                _or_(model.User.fullname is None,
                      model.User.fullname == ''),
                 model.User.name)],
                 else_=model.User.fullname))
@@ -2002,7 +2002,7 @@ def _tag_search(context, data_dict):
         q = q.filter(model.Tag.vocabulary_id == vocab.id)
     else:
         # If no vocabulary_name in data dict then show free tags only.
-        q = q.filter(model.Tag.vocabulary_id == None)
+        q = q.filter(model.Tag.vocabulary_id is None)
         # If we're searching free tags, limit results to tags that are
         # currently applied to a package.
         q = q.distinct().join(model.Tag.package_tags)

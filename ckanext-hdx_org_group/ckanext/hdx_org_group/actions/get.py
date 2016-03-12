@@ -74,7 +74,7 @@ def hdx_datasets_for_group(context, data_dict):
         key + ":" + value for key, value in data_dict.iteritems() if key not in skipped_keys]
     search_param_list.append(u'groups:{}'.format(id))
 
-    if search_param_list != None:
+    if search_param_list is not None:
         new_data_dict['fq'] = " ".join(
             search_param_list) + ' +dataset_type:dataset'
 

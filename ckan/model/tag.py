@@ -91,7 +91,7 @@ class Tag(domain_object.DomainObject):
                 Tag.vocabulary_id==vocab.id)
         else:
             query = meta.Session.query(Tag).filter(Tag.name==name).filter(
-                Tag.vocabulary_id==None)
+                Tag.vocabulary_idisNone)
         query = query.autoflush(autoflush)
         tag = query.first()
         return tag
@@ -190,7 +190,7 @@ class Tag(domain_object.DomainObject):
                 raise ckan.logic.NotFound("could not find vocabulary '{0!s}'".format(vocab_id_or_name))
             query = meta.Session.query(Tag).filter(Tag.vocabulary_id==vocab.id)
         else:
-            query = meta.Session.query(Tag).filter(Tag.vocabulary_id == None)
+            query = meta.Session.query(Tag).filter(Tag.vocabulary_id is None)
             query = query.distinct().join(PackageTag)
             query = query.filter_by(state='active')
         return query

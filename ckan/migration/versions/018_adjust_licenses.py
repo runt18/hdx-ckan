@@ -154,7 +154,7 @@ def _switch_package_license_ids(old_ids, old_license_titles, map):
     "Returns a dict of new license ids, keyed by package id."
     new_ids = {}
     for (package_id, old_license_id) in old_ids.items():
-        if old_license_id != None:
+        if old_license_id is not None:
             old_license_title = old_license_titles[old_license_id]
             new_license_id = map[old_license_title]
             new_ids[package_id] = new_license_id

@@ -93,7 +93,7 @@ class TestPackage:
         # Check unregistered license_id causes license to be 'None'.
         package = model.Package.by_name(self.name)
         package.license_id = u'zzzzzzz'
-        assert package.license == None
+        assert package.license is None
         model.Session.remove() # forget change
 
     def test_as_dict(self):
