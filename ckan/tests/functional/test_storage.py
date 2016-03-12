@@ -147,7 +147,7 @@ class _TestStorageAPIControllerGoogle:
         url = url_for('storage_api_auth_form', label='abc',
                 success_action_redirect='abc')
         res = self.app.get(url, extra_environ=self.extra_environ, status=200)
-        fields = dict([ (x['name'], x['value']) for x in res.json['fields'] ])
+        fields = {x['name']: x['value'] for x in res.json['fields']}
         assert fields['success_action_redirect'] == u'http://localhost/storage/upload/success_empty?label=abc'
 
     # TODO: re-enable
