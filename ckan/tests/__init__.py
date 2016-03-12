@@ -90,8 +90,12 @@ class BaseCase(object):
 class CommonFixtureMethods(BaseCase):
 
     @classmethod
-    def create_package(self, data={}, admins=[], **kwds):
+    def create_package(self, data=None, admins=None, **kwds):
         # Todo: A simpler method for just creating a package.
+        if data is None:
+                data = {}
+        if admins is None:
+                admins = []
         CreateTestData.create_arbitrary(package_dicts=[data or kwds], admins=admins)
 
     @classmethod

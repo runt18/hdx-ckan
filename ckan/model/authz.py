@@ -273,8 +273,10 @@ def init_authz_const_data():
     meta.Session.remove()
 
 ## TODO: this should be removed
-def setup_user_roles(_domain_object, visitor_roles, logged_in_roles, admins=[]):
+def setup_user_roles(_domain_object, visitor_roles, logged_in_roles, admins=None):
     '''NB: leaves caller to commit change'''
+    if admins is None:
+        admins = []
     assert type(admins) == type([])
     admin_roles = [Role.ADMIN]
     visitor = _user.User.by_name(PSEUDO_USER__VISITOR)
@@ -353,11 +355,13 @@ def get_default_user_roles(_domain_object):
         _default_user_roles_cache[_domain_object] = _get_default_user_roles(_domain_object)
     return _default_user_roles_cache[_domain_object]
 
-def setup_default_user_roles(_domain_object, admins=[]):
+def setup_default_user_roles(_domain_object, admins=None):
     ''' sets up roles for visitor, logged-in user and any admins provided
     @param admins - a list of User objects
     NB: leaves caller to commit change.
     '''
+    if admins is None:
+        admins = []
     assert isinstance(_domain_object, (_package.Package, group.Group, core.System)), _domain_object
     assert isinstance(admins, list)
     user_roles_ = get_default_user_roles(_domain_object)

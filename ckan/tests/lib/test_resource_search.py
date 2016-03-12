@@ -55,7 +55,11 @@ class TestSearch(object):
     def teardown_class(self):
         model.repo.rebuild_db()
 
-    def res_search(self, query='', fields={}, terms=[], options=search.QueryOptions()):
+    def res_search(self, query='', fields=None, terms=None, options=search.QueryOptions()):
+        if fields is None:
+            fields = {}
+        if terms is None:
+            terms = []
         result = search.query_for(model.Resource).run(query=query, fields=fields, terms=terms, options=options)
         resources = [model.Session.query(model.Resource).get(resource_id) for resource_id in result['results']]
         urls = set([resource.url for resource in resources])

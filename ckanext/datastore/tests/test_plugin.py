@@ -191,7 +191,15 @@ class TestPluginDatastoreSearch(object):
 
         assert_equal(result['where'], expected_where)
 
-    def _datastore_search(self, context={}, data_dict={}, fields_types={}, query_dict={}):
+    def _datastore_search(self, context=None, data_dict=None, fields_types=None, query_dict=None):
+        if context is None:
+            context = {}
+        if data_dict is None:
+            data_dict = {}
+        if fields_types is None:
+            fields_types = {}
+        if query_dict is None:
+            query_dict = {}
         _query_dict = {
             'select': [],
             'sort': [],

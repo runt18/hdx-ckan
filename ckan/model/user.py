@@ -282,11 +282,13 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
         return query
 
     @classmethod
-    def user_ids_for_name_or_id(self, user_list=[]):
+    def user_ids_for_name_or_id(self, user_list=None):
         '''
         This function returns a list of ids from an input that can be a list of
         names or ids
         '''
+        if user_list is None:
+                user_list = []
         query = meta.Session.query(self.id)
         query = query.filter(or_(self.name.in_(user_list),
                                  self.id.in_(user_list)))

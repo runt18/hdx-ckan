@@ -30,17 +30,23 @@ class CreateTestData(object):
         cls.create_arbitrary(search_items)
 
     @classmethod
-    def create_gov_test_data(cls, extra_users=[]):
+    def create_gov_test_data(cls, extra_users=None):
+        if extra_users is None:
+                extra_users = []
         cls.create_arbitrary(gov_items, extra_user_names=extra_users)
 
     @classmethod
-    def create_family_test_data(cls, extra_users=[]):
+    def create_family_test_data(cls, extra_users=None):
+        if extra_users is None:
+                extra_users = []
         cls.create_arbitrary(family_items,
                               relationships=family_relationships,
                               extra_user_names=extra_users)
 
     @classmethod
-    def create_group_hierarchy_test_data(cls, extra_users=[]):
+    def create_group_hierarchy_test_data(cls, extra_users=None):
+        if extra_users is None:
+                extra_users = []
         cls.create_users(group_hierarchy_users)
         cls.create_groups(group_hierarchy_groups)
         cls.create_arbitrary(group_hierarchy_datasets)
@@ -132,9 +138,9 @@ class CreateTestData(object):
         warandpeace.add_tag_by_name('alessio-boni', vocab=actors_vocab)
 
     @classmethod
-    def create_arbitrary(cls, package_dicts, relationships=[],
-            extra_user_names=[], extra_group_names=[],
-            admins=[]):
+    def create_arbitrary(cls, package_dicts, relationships=None,
+            extra_user_names=None, extra_group_names=None,
+            admins=None):
         '''Creates packages and a few extra objects as well at the
         same time if required.
         @param package_dicts - a list of dictionaries with the package
@@ -147,6 +153,14 @@ class CreateTestData(object):
         @param admins - a list of user names to make admins of all the
                                packages created.
         '''
+        if relationships is None:
+                relationships = []
+        if extra_user_names is None:
+                extra_user_names = []
+        if extra_group_names is None:
+                extra_group_names = []
+        if admins is None:
+                admins = []
         assert isinstance(relationships, (list, tuple))
         assert isinstance(extra_user_names, (list, tuple))
         assert isinstance(extra_group_names, (list, tuple))
@@ -572,11 +586,19 @@ left arrow <
         return user
 
     @classmethod
-    def flag_for_deletion(cls, pkg_names=[], tag_names=[], group_names=[],
-                          user_names=[]):
+    def flag_for_deletion(cls, pkg_names=None, tag_names=None, group_names=None,
+                          user_names=None):
         '''If you create a domain object manually in your test then you
         can name it here (flag it up) and it will be deleted when you next
         call CreateTestData.delete().'''
+        if pkg_names is None:
+                pkg_names = []
+        if tag_names is None:
+                tag_names = []
+        if group_names is None:
+                group_names = []
+        if user_names is None:
+                user_names = []
         if isinstance(pkg_names, basestring):
             pkg_names = [pkg_names]
         cls.pkg_names.extend(pkg_names)

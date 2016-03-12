@@ -1,7 +1,9 @@
 
 class CheckException(Exception):
-    def __init__(self, message, exceptions=[]):
+    def __init__(self, message, exceptions=None):
 
+        if exceptions is None:
+            exceptions = []
         super(Exception, self).__init__(message)
 
         self.errors = exceptions
