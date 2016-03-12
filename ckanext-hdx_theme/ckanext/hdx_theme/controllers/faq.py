@@ -18,7 +18,7 @@ FaqCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotVal
 
 for section in faq_data:
     s_id = ''.join(i if i.isalnum() else '_' for i in section['title'])
-    s_id = 'faq-{}'.format(s_id)
+    s_id = 'faq-{0}'.format(s_id)
     section['id'] = s_id
     for question in section['questions']:
         q_id = ''.join(i if i.isalnum() else '_' for i in question['q'])

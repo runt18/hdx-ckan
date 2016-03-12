@@ -102,7 +102,7 @@ class IndicatorAccess(object):
         indic_code_list = [el[0] for el in self.__dataseries_list]
         self.__ckan_data = {}
         fq = '+extras_indicator_type_code:('
-        fq += ' OR '.join(['"{}"'.format(code) for code in indic_code_list])
+        fq += ' OR '.join(['"{0}"'.format(code) for code in indic_code_list])
         fq += ')'
         data_dict = {
             'rows': 25,

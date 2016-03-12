@@ -116,7 +116,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     'ignore_missing'), tk.get_converter('convert_to_extras')]})
                 return schema
         except TypeError, e:
-            log.warn('Exception in db_to_form_schema: {}'.format(str(e)))
+            log.warn('Exception in db_to_form_schema: {0}'.format(str(e)))
 
         return None
 

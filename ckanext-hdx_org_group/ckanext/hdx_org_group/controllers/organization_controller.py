@@ -182,7 +182,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             params['page'] = page
             return h.url_for('organization_read', id=org_code, **params) + suffix
 
-        fq = 'organization:"{}"'.format(org_code)
+        fq = 'organization:"{0}"'.format(org_code)
         facets = {
             'vocab_Topics': _('Topics')
         }

@@ -386,7 +386,7 @@ class HDXSearchController(PackageController):
         query = get_action('package_search')(context, data_dict)
 
         if not query.get('results', None):
-            log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
+            log.warn('No query results found for data_dict: {0}. Query dict is: {1}. Query time {2}'.format(
                 str(data_dict), str(query), datetime.datetime.now()))
 
         c.facets = query['facets']

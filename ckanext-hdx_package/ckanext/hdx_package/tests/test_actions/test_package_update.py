@@ -181,17 +181,17 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         for key, value in modified_package.iteritems():
             if key not in modified_fields.keys():
                 if key != 'groups' and key in package:
-                    assert package[key] == value, 'Problem with key {}: has value {} instead of {}'.format(
+                    assert package[key] == value, 'Problem with key {0}: has value {1} instead of {2}'.format(
                         key, value, package[key])
             else:
-                assert value == modified_fields[key], 'Problem with key {}: has value {} instead of {}'.format(
+                assert value == modified_fields[key], 'Problem with key {0}: has value {1} instead of {2}'.format(
                     key, value, modified_fields[key])
 
         # Checking that all modifications were applied
         for key, value in modified_fields.iteritems():
-            assert value == modified_package[key], 'Problem with key {}: has value {} instead of {}'.format(
+            assert value == modified_package[key], 'Problem with key {0}: has value {1} instead of {2}'.format(
                 key, modified_package[key], value)
 
         assert len(modified_package['groups']) == len(
-            package['groups']), 'There should be {} item in groups but instead there is {}'.format(
+            package['groups']), 'There should be {0} item in groups but instead there is {1}'.format(
             len(package['groups']), len(modified_package['groups']))

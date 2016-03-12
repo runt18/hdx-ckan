@@ -45,7 +45,7 @@ def _erase_tracking_summary(resource_dict):
 
 def _find_old_urls_for_resource(resource_id):
     q = sqlalchemy.text(
-        "SELECT url, extras FROM resource_revision WHERE id='{}'".format(resource_id)
+        "SELECT url, extras FROM resource_revision WHERE id='{0}'".format(resource_id)
     )
     result = model.Session.connection().execute(q)
 
@@ -72,5 +72,5 @@ def _extract_perma_links(extras_text_list):
                 if perma_link:
                     response.append(perma_link)
             except:
-                log.warn('problem parsing json string {}'.format(jsonstring))
+                log.warn('problem parsing json string {0}'.format(jsonstring))
     return response

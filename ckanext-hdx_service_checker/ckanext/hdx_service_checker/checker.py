@@ -29,7 +29,7 @@ class Checker(object):
         for config in config_list:
             class_name = config['class_name']
             module_name = config['module_name']
-            key = '{}:{}'.format(module_name, class_name)
+            key = '{0}:{1}'.format(module_name, class_name)
 
             self.__replace_runtime_vars(config, runtime_vars)
 
@@ -56,7 +56,7 @@ class Checker(object):
             var_name = match.group(1)
             var_value = runtime_vars.get(var_name)
             if not var_value:
-                raise exceptions.ParamMissingException('{} is not a runtime variable'.format(var_name))
+                raise exceptions.ParamMissingException('{0} is not a runtime variable'.format(var_name))
             else:
                 return str(var_value)
 
@@ -69,7 +69,7 @@ class Checker(object):
     def run_checks(self):
         result_list = []
         for check in self.checks:
-            log.debug('Running check: {}'.format(str(check.config)))
+            log.debug('Running check: {0}'.format(str(check.config)))
             result = check.run_check()
             result_list.append(result)
             log.info(str(result))

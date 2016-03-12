@@ -185,8 +185,8 @@ class PagesController(HDXSearchController):
         style = 'width: 100%; '
         max_height = section.get('max_height')
         height = max_height if max_height else '400px'
-        style += 'max-height: {}; '.format(max_height) if max_height else ''
-        style += 'height: {}; '.format(height)
+        style += 'max-height: {0}; '.format(max_height) if max_height else ''
+        style += 'height: {0}; '.format(height)
         section['style'] = style
 
     def _generate_dataset_results(self, page_id, type, saved_filters):
@@ -206,7 +206,7 @@ class PagesController(HDXSearchController):
         search_params = {}
         for key, values_list in saved_filters.items():
             if key == 'q':
-                fq = '"{}" {}'.format(values_list[0], fq)
+                fq = '"{0}" {1}'.format(values_list[0], fq)
             elif key in get_default_facet_titles().keys():
                 for value in values_list:
                     fq += '{0!s}:"{1!s}" '.format(key, value)

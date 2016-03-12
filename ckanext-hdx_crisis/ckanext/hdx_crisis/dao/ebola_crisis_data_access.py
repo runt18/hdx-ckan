@@ -29,7 +29,7 @@ class EbolaCrisisDataAccess(DataAccess):
             },
             EbolaCrisisDataAccess.APPEAL_COVERAGE: {
                 'resource_id': appeal_res_id,
-                'sql': 'SELECT "Date", "Value" FROM "{}" ORDER BY "Date" desc;'.format(appeal_res_id)
+                'sql': 'SELECT "Date", "Value" FROM "{0}" ORDER BY "Date" desc;'.format(appeal_res_id)
             }
         }
         sql = ('SELECT "Indicator", "Date", sum(value) AS value '
@@ -60,7 +60,7 @@ class EbolaCrisisDataAccess(DataAccess):
                 self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
                     DataAccess.SPARKLINES_FIELD] = []
         else:
-            log.error('Could not find {} field in results for {}'.format(
+            log.error('Could not find {0} field in results for {1}'.format(
                 DataAccess.SPARKLINES_FIELD, EbolaCrisisDataAccess.APPEAL_COVERAGE))
 
     def _process_cases_and_deaths(self):
@@ -102,7 +102,7 @@ class EbolaCrisisDataAccess(DataAccess):
                     DataAccess.SPARKLINES_FIELD] = []
                 log.warn('There is no data in the deaths_sparklines')
         else:
-            log.error('Could not find {} field in results for {}'.format(
+            log.error('Could not find {0} field in results for {1}'.format(
                 DataAccess.SPARKLINES_FIELD, EbolaCrisisDataAccess.CUMULATIVE_CASES))
 
     def _post_process(self):

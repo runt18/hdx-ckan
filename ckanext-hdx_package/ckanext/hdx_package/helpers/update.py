@@ -272,7 +272,7 @@ def hdx_package_update_metadata(context, data_dict):
 
     if len(requested_groups) != len(db_groups):
         not_saved_groups = set(requested_groups) - set(db_groups)
-        log.warn('Indicator: {} - num of groups in request is {} but only {} are in the db. Difference: {}'.
+        log.warn('Indicator: {0} - num of groups in request is {1} but only {2} are in the db. Difference: {3}'.
                  format(package.get('name','unknown'),len(requested_groups), len(db_groups), ", ".join(not_saved_groups)))
 
     return package

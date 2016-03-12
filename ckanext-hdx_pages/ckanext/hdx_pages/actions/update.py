@@ -34,5 +34,5 @@ def page_update(context, data_dict):
         return dictize.page_dictize(page)
     except Exception as e:
         ex_msg = e.message if hasattr(e, 'message') else str(e)
-        message = 'Something went wrong while processing the request: {}'.format(ex_msg)
+        message = 'Something went wrong while processing the request: {0}'.format(ex_msg)
         raise logic.ValidationError({'message': message}, error_summary=message)

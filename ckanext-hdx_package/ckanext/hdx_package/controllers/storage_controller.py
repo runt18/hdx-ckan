@@ -128,7 +128,7 @@ class FileDownloadController(storage.StorageController):
                 else:
                     file_name = res_name_encoded
                 headers[
-                    'Content-Disposition'] = 'inline; filename="{}"'.format(file_name)
+                    'Content-Disposition'] = 'inline; filename="{0}"'.format(file_name)
             fapp = FileApp(filepath, headers=None, **headers)
             return fapp(request.environ, self.start_response)
         else:

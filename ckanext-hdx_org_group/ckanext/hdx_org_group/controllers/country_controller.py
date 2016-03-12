@@ -124,7 +124,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         if not top_line_data:
             log.warn(
-                'No top line numbers found for country: {}'.format(country_id))
+                'No top line numbers found for country: {0}'.format(country_id))
             top_line_data = []
         sorted_top_line_data = sorted(top_line_data,
                                       key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
@@ -143,7 +143,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         chart_dao.fetch_indicator_data_from_cps()
         chart_dataseries_dict = chart_dao.get_structured_data_from_cps()
         if not chart_dataseries_dict:
-            log.warn('No chart data found for country: {}'.format(country_id))
+            log.warn('No chart data found for country: {0}'.format(country_id))
             chart_dataseries_dict = {}
 
         # We can do the steps below because, in this case,
@@ -274,7 +274,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             params['page'] = page
             return h.url_for('country_read', id=country_code, **params) + suffix
 
-        fq = 'groups:"{}"'.format(country_code)
+        fq = 'groups:"{0}"'.format(country_code)
         facets = {
             'vocab_Topics': _('Topics')
         }

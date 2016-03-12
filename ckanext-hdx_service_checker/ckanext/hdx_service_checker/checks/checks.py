@@ -44,7 +44,7 @@ class HttpStatusCodeCheck(checks.Check):
                 self.error_message = ''
             else:
                 self.result = 'Failed'
-                self.error_message = 'Status code is {} instead of: {}'.format(status, ' or '.join(accepted_codes))
+                self.error_message = 'Status code is {0} instead of: {1}'.format(status, ' or '.join(accepted_codes))
         except Exception as e:
             self.result = 'Failed'
             self.error_message = str(e)
@@ -82,7 +82,7 @@ class HttpResponseTextCheck(checks.Check):
                 self.error_message = ''
             else:
                 self.result = 'Failed'
-                self.error_message = '"{}" was not found in HTTP response'.format(included_text)
+                self.error_message = '"{0}" was not found in HTTP response'.format(included_text)
         except Exception as e:
             self.result = 'Failed'
             self.error_message = str(e)

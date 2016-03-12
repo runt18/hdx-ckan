@@ -322,7 +322,7 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
             url = h.url_for('show_custom_country', id=country_code, **params) + '#datasets-section'
             return url
 
-        fq = 'groups:"{}"'.format(country_code)
+        fq = 'groups:"{0}"'.format(country_code)
         package_type = 'dataset'
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
         locations = full_facet_info.get('facets', {}).get('groups', {}).get('items', [])

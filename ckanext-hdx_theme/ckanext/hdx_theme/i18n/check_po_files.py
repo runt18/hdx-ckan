@@ -103,7 +103,7 @@ class CheckPoFiles(paste.script.command.Command):
         test_mapping_keys()
         test_replacement_fields()
         for path in self.args:
-            print u'Checking file {}'.format(path)
+            print u'Checking file {0}'.format(path)
             po = polib.pofile(path)
             for entry in po.translated_entries():
                 if not entry.msgstr:
