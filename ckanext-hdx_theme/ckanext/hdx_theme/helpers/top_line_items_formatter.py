@@ -64,12 +64,12 @@ def round_up_decimal_value(value):
     return decimal_value
 
 def format_decimal_number(value, places=1):
-    places_format = '{}f'.format(places)
+    places_format = '{0}f'.format(places)
     format = '{:,.' + places_format + '}'
     rounded_value = round_up_x_decimal_value(value, places)
     int_value = int(rounded_value)
     if int_value == rounded_value:
-        formatted_value = '{:,}'.format(int_value)
+        formatted_value = '{0:,}'.format(int_value)
     else:
         formatted_value = format.format(rounded_value)
     return formatted_value

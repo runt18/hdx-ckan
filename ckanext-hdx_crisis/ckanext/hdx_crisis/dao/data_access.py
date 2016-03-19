@@ -106,7 +106,7 @@ class DataAccess:
 
         for code, res_dict in self.resources_dict.iteritems():
             if code != 'top-line-numbers':
-                log.info("Fetching data for datastore: {} ".format(
+                log.info("Fetching data for datastore: {0} ".format(
                     res_dict['resource_id']))
                 res_id = res_dict['resource_id']
                 if not res_id:
@@ -119,6 +119,6 @@ class DataAccess:
                         DataAccess.SPARKLINES_FIELD] = sparkline_items
                 else:
                     log.error(
-                        "{} is not in the results dict".format(code))
+                        "{0} is not in the results dict".format(code))
 
         self._post_process()

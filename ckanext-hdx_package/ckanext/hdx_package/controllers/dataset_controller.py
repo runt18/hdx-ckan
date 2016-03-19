@@ -896,7 +896,7 @@ class DatasetController(PackageController):
         try:
             short = item['id']
         except Exception as e:
-            log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))
+            log.warning('There was a problem shortening url {0}. Shortener response: {1}'.format(url, r.text))
             short = url
         return self._finish(200, {'url': short}, content_type='json')
 
@@ -995,7 +995,7 @@ class DatasetController(PackageController):
 
         try:
             rsc = get_action('resource_show')(context, {'id': resource_id})
-            response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(rsc.get('name', 'download'))
+            response.headers['Content-Disposition'] = 'inline; filename="{0}"'.format(rsc.get('name', 'download'))
         except NotFound:
             abort(404, _('Resource not found'))
         except NotAuthorized:

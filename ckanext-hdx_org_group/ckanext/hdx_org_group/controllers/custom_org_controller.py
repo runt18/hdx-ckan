@@ -202,7 +202,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             {'model': model, 'session': model.Session},
             {'id': org_info['id']}
         )
-        add_data_url = h.url_for('add dataset') + '?organization_id={}'.format(org_info['id'])
+        add_data_url = h.url_for('add dataset') + '?organization_id={0}'.format(org_info['id'])
         template_data = {
             'data': {
                 'org_info': org_info,
@@ -447,7 +447,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             params['page'] = page
             return h.url_for('organization_read', id=org_code, **params) + suffix
 
-        fq = 'organization:"{}"'.format(org_code)
+        fq = 'organization:"{0}"'.format(org_code)
         facets = {
             'vocab_Topics': _('Topics')
         }

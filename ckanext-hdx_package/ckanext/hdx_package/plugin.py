@@ -523,7 +523,7 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
                     pass
                 geo_columns_dict = [{'value': item, 'text': item} for item in sorted(geo_columns)]
         except Exception as e:
-            log.warn(u'Error accessing resource size for resource {}: {}'.format(resource_dict.get('name', ''),
+            log.warn(u'Error accessing resource size for resource {0}: {1}'.format(resource_dict.get('name', ''),
                                                                                  str(e)))
             geo_columns_dict = {}
         return geo_columns_dict

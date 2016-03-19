@@ -414,10 +414,10 @@ def _add_to_filter_list(src, param_name, filter_list):
     if src:
         if isinstance(src, list):
             temp_filters = [
-                '{}={}'.format(param_name, elem) for elem in src]
+                '{0}={1}'.format(param_name, elem) for elem in src]
             filter_list = filter_list + temp_filters
         else:
-            filter_list.append('{}={}'.format(param_name, src))
+            filter_list.append('{0}={1}'.format(param_name, src))
 
     return filter_list
 

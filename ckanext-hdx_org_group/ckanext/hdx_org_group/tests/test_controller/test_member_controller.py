@@ -61,7 +61,7 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         for idx, val in enumerate(user_list):
             if idx < len(user_list)-1 and user_list[idx] and user_list[idx+1]:
-                assert user_list[idx] < user_list[idx+1], "{} should be before {}".\
+                assert user_list[idx] < user_list[idx+1], "{0} should be before {1}".\
                     format(user_list[idx], user_list[idx+1])
 
         # Sorting alphabetically desc
@@ -71,7 +71,7 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         for idx, val in enumerate(user_list):
             if idx < len(user_list)-1 and user_list[idx] and user_list[idx+1]:
-                assert user_list[idx] > user_list[idx+1], "{} should be before {}".\
+                assert user_list[idx] > user_list[idx+1], "{0} should be before {1}".\
                     format(user_list[idx], user_list[idx+1])
 
         # Sorting alphabetically desc

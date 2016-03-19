@@ -539,5 +539,5 @@ def filesize_format(size_in_bytes):
             size /= d
         return "{0:.1f}{1!s}".format(size, 'Yi')
     except Exception, e:
-        log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
+        log.warn('Error occured when formatting the numner {0}. Error {1}'.format(size_in_bytes, str(e)))
         return size_in_bytes
