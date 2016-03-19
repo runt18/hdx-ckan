@@ -33,9 +33,7 @@ auto_update = [
 ]
 
 config_details = {
-    'ckan.favicon': {}, # default gets set in config.environment.py
-    'ckan.template_head_end': {},
-    'ckan.template_footer_end': {},
+    'ckan.favicon': {},
         # has been setup in load_environment():
     'ckan.site_id': {},
     'ckan.recaptcha.publickey': {'name': 'recaptcha_publickey'},
