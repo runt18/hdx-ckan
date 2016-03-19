@@ -24,7 +24,9 @@ class WsgiCkanClient(CkanClient):
         self.app = app
         super(WsgiCkanClient, self).__init__(**kwargs)
 
-    def open_url(self, location, data=None, headers={}, method=None):
+    def open_url(self, location, data=None, headers=None, method=None):
+        if headers is None:
+            headers = {}
         if self.is_verbose:
             print "ckanclient: Opening {0!s}".format(location)
         self.last_location = location

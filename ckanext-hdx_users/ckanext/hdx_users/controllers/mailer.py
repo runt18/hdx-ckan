@@ -29,7 +29,9 @@ def add_msg_niceties(recipient_name, body, sender_name, sender_url):
 
 def _mail_recipient(recipient_name, recipient_email,
                     sender_name, sender_url, subject,
-                    body, headers={}):
+                    body, headers=None):
+    if headers is None:
+        headers = {}
     mail_from = config.get('smtp.mail_from')
     body = add_msg_niceties(recipient_name, body, sender_name, sender_url)
     msg = MIMEMultipart('alternative')
@@ -94,6 +96,8 @@ def _mail_recipient(recipient_name, recipient_email,
 
 
 def mail_recipient(recipient_name, recipient_email, subject,
-                   body, headers={}):
+                   body, headers=None):
+    if headers is None:
+        headers = {}
     return _mail_recipient(recipient_name, recipient_email,
                            'HDX', g.site_url, subject, body, headers=headers)

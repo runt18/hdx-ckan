@@ -9,7 +9,9 @@ from ckan.tests.pylons_controller import PylonsTestCase
 
 class TestI18n(PylonsTestCase):
 
-    def handle_request(self, session_language=None, languages_header=[]):
+    def handle_request(self, session_language=None, languages_header=None):
+        if languages_header is None:
+            languages_header = []
         session['locale'] = session_language
         class FakePylons:
             translator = None

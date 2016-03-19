@@ -30,7 +30,9 @@ class PackagesTestCase(BaseModelApiTestCase):
     def teardown(self):
         self.purge_package_by_name(self.package_fixture_data['name'])
 
-    def get_groups_identifiers(self, test_groups, users=[]):
+    def get_groups_identifiers(self, test_groups, users=None):
+        if users is None:
+            users = []
         groups = []
         for grp in test_groups:
             group = model.Group.get(grp)

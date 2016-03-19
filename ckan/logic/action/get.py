@@ -49,7 +49,7 @@ _case = sqlalchemy.case
 _text = sqlalchemy.text
 
 
-def _filter_activity_by_user(activity_list, users=[]):
+def _filter_activity_by_user(activity_list, users=None):
     '''
     Return the given ``activity_list`` with activities from the specified
     users removed. The users parameters should be a list of ids.
@@ -57,6 +57,8 @@ def _filter_activity_by_user(activity_list, users=[]):
     A *new* filtered list is returned, the given ``activity_list`` itself is
     not modified.
     '''
+    if users is None:
+        users = []
     if not len(users):
         return activity_list
     new_list = []

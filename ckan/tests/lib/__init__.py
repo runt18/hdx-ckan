@@ -3,7 +3,9 @@ from nose.tools import assert_equal
 from ckan import model
 import ckan.lib.search as search
 
-def check_search_results(terms, expected_count, expected_packages=[]):
+def check_search_results(terms, expected_count, expected_packages=None):
+    if expected_packages is None:
+        expected_packages = []
     query = {
         'q': unicode(terms),
     }

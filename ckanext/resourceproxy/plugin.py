@@ -9,13 +9,15 @@ from pylons import config
 log = getLogger(__name__)
 
 
-def get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
+def get_proxified_resource_url(data_dict, proxy_schemes=None):
     '''
     :param data_dict: contains a resource and package dict
     :type data_dict: dictionary
     :param proxy_schemes: list of url schemes to proxy for.
     :type data_dict: list
     '''
+    if proxy_schemes is None:
+        proxy_schemes = ['http','https']
 
     ckan_url = config.get('ckan.site_url', '//localhost:5000')
     url = data_dict['resource']['url']
@@ -62,10 +64,12 @@ class ResourceProxy(p.SingletonPlugin):
         return {'view_resource_url': self.view_resource_url}
 
     def view_resource_url(self, resource_view, resource,
-                          package, proxy_schemes=['http','https']):
+                          package, proxy_schemes=None):
         '''
         Returns the proxy url if its availiable
         '''
+        if proxy_schemes is None:
+            proxy_schemes = ['http','https']
         data_dict = {'resource_view': resource_view,
                      'resource': resource,
                      'package': package}
