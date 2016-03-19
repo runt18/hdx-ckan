@@ -147,7 +147,7 @@ class Resource(vdm.sqlalchemy.RevisionedObjectMixin,
         if formats is None:
                 formats = []
         query = meta.Session.query(cls).outerjoin(ckan.model.ResourceView) \
-                    .filter(ckan.model.ResourceView.id == None)
+                    .filter(ckan.model.ResourceView.id is None)
 
         if formats:
             lowercase_formats = [f.lower() for f in formats]

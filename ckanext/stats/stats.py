@@ -62,7 +62,7 @@ class Stats(object):
         s = select([member.c.group_id, func.count(member.c.table_id)]).\
             select_from(j).\
             group_by(member.c.group_id).\
-            where(and_(member.c.group_id!=None, member.c.table_name=='package', package.c.private==False, package.c.state=='active')).\
+            where(and_(member.c.group_idis notNone, member.c.table_name=='package', package.c.private==False, package.c.state=='active')).\
             order_by(func.count(member.c.table_id).desc()).\
             limit(limit)
 
@@ -105,7 +105,7 @@ class Stats(object):
         package = table('package')
         s = select([user_object_role.c.user_id, func.count(user_object_role.c.role)], from_obj=[user_object_role.join(package_role).join(package)]).\
             where(user_object_role.c.role==model.authz.Role.ADMIN).\
-            where(user_object_role.c.user_id!=None).\
+            where(user_object_role.c.user_idis notNone).\
             where(and_(package.c.private==False, package.c.state=='active')). \
             group_by(user_object_role.c.user_id).\
             order_by(func.count(user_object_role.c.role).desc()).\

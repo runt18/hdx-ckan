@@ -168,7 +168,7 @@ class TestDatastoreUpsert(tests.WsgiAppCase):
         records = results.fetchall()
         assert records[2][u'b\xfck'] == hhguide
         assert records[2].author == 'adams'
-        assert records[2].published == None
+        assert records[2].published is None
         self.Session.remove()
 
         data = {
@@ -506,7 +506,7 @@ class TestDatastoreUpdate(tests.WsgiAppCase):
         records = results.fetchall()
         assert records[2][u'b\xfck'] == hhguide
         assert records[2].author == 'adams'
-        assert records[2].published == None
+        assert records[2].published is None
 
     def test_update_missing_key(self):
         data = {

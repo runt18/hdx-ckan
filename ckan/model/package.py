@@ -78,7 +78,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
         '''Returns a package object referenced by its id or name.'''
         query = meta.Session.query(cls).filter(cls.id==reference)
         pkg = query.first()
-        if pkg == None:
+        if pkg is None:
             pkg = cls.by_name(reference)
         return pkg
     # Todo: Make sure package names can't be changed to look like package IDs?
@@ -159,7 +159,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
         if vocab:
             query = query.filter(model.Tag.vocabulary_id == vocab.id)
         else:
-            query = query.filter(model.Tag.vocabulary_id == None)
+            query = query.filter(model.Tag.vocabulary_id is None)
         query = query.order_by(model.Tag.name)
         tags = query.all()
         return tags

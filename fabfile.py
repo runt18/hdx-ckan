@@ -93,9 +93,9 @@ def config_local(base_dir, ckan_instance_name, db_user=None, db_host=None,
         env.db_pass = db_pass
     if db_host:
         env.db_host = db_host
-    if skip_setup_db != None:
+    if skip_setup_db is not None:
         env.skip_setup_db = skip_setup_db    
-    if no_sudo != None:
+    if no_sudo is not None:
         env.no_sudo = no_sudo
     env.revision = revision if revision else 'metastable'
         
@@ -364,7 +364,7 @@ def apache_config(set_config=None):
     available_configs = get_available_apache_configs()
     print 'Available modes: {0!s}'.format(available_configs)
 
-    if set_config == None:
+    if set_config is None:
         print 'Current mode: {0!s}'.format(enabled_config)
     else:
         assert set_config in available_configs
@@ -661,7 +661,7 @@ def _run_in_pyenv(command):
 
 def _pip_cmd(command):
     '''Looks for pip in the pyenv before finding it in the cmd pyenv'''
-    if env.pip_from_pyenv == None:
+    if env.pip_from_pyenv is None:
         env.pip_from_pyenv = bool(exists(os.path.join(env.pyenv_dir, 'bin', 'pip')))
     if env.pip_from_pyenv:
         return _run_in_pyenv(command)

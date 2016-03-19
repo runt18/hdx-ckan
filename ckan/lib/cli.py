@@ -71,7 +71,7 @@ def query_yes_no(question, default="yes"):
     """
     valid = {"yes":"yes",   "y":"yes",  "ye":"yes",
              "no":"no",     "n":"no"}
-    if default == None:
+    if default is None:
         prompt = " [y/n] "
     elif default == "yes":
         prompt = " [Y/n] "
@@ -684,7 +684,7 @@ class Sysadmin(CkanCommand):
         import ckan.model as model
 
         cmd = self.args[0] if self.args else None
-        if cmd == None or cmd == 'list':
+        if cmd is None or cmd == 'list':
             self.list()
         elif cmd == 'add':
             self.add()
@@ -1083,7 +1083,7 @@ class Ratings(CkanCommand):
         import ckan.model as model
         q = model.Session.query(model.Rating)
         print "{0:d} ratings".format(q.count())
-        q = q.filter(model.Rating.user_id == None)
+        q = q.filter(model.Rating.user_id is None)
         print "of which {0:d} are anonymous ratings".format(q.count())
 
     def clean(self, user_ratings=True):
@@ -1091,7 +1091,7 @@ class Ratings(CkanCommand):
         q = model.Session.query(model.Rating)
         print "{0:d} ratings".format(q.count())
         if not user_ratings:
-            q = q.filter(model.Rating.user_id == None)
+            q = q.filter(model.Rating.user_id is None)
             print "of which {0:d} are anonymous ratings".format(q.count())
         ratings = q.all()
         for rating in ratings:
